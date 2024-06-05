@@ -16,6 +16,15 @@ final class RMCharacterViewController: UIViewController {
         view.backgroundColor = .systemBackground
         title = "Characters"
 
+        RMService.shared.execute(.listCharactersRequests, expecting: RMGetAllCharactersResponse.self) { result in
+            switch result {
+            case .success(let model):
+                print("Total \(model.info.count)")
+                print("Page result count: \(model.results.count)")
+            case .failure(let error):
+                print(String(describing: error))
+            }
+        }
     }
 
 }
