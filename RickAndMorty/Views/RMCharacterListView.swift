@@ -12,7 +12,7 @@ final class RMCharacterListView: UIView {
 
     private let viewModel = RMCharacterListViewViewModel()
     
-    // MARK: - Subview properties creation
+    // MARK: - Subview properties
     private let spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
         spinner.hidesWhenStopped = true
@@ -27,8 +27,8 @@ final class RMCharacterListView: UIView {
         collectionView.isHidden = true
         collectionView.alpha = 0
         collectionView.register(
-            UICollectionViewCell.self,
-            forCellWithReuseIdentifier: "cell")
+            RMCharacterCollectionViewCell.self,
+            forCellWithReuseIdentifier: RMCharacterCollectionViewCell.cellIdentifier)
         return collectionView
     }()
     
