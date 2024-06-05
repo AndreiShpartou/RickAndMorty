@@ -10,21 +10,20 @@ import UIKit
 /// Controller to show and search for Characters
 final class RMCharacterViewController: UIViewController {
 
+    private let characterListView = RMCharacterListView()
+
+    // MARK: - LifeCycle
+    override func loadView() {
+        view = characterListView
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        SetupView()
+    }
+    // MARK: - SetupView
+    private func SetupView() {
         view.backgroundColor = .systemBackground
         title = "Characters"
-
-        RMService.shared.execute(.listCharactersRequests, expecting: RMGetAllCharactersResponse.self) { result in
-            switch result {
-            case .success(let model):
-                print("Total \(model.info.count)")
-                print("Page result count: \(model.results.count)")
-            case .failure(let error):
-                print(String(describing: error))
-            }
-        }
     }
-
 }
