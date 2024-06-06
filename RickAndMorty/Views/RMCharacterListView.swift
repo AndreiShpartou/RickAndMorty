@@ -9,7 +9,6 @@ import UIKit
 
 /// View that handles showing list of characters, loader, etc.
 final class RMCharacterListView: UIView {
-
     private let viewModel = RMCharacterListViewViewModel()
     
     // MARK: - Subview properties
@@ -43,6 +42,10 @@ final class RMCharacterListView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+    }
+    
     // MARK: - Setup View
     private func SetupView() {
         addSubviews(collectionView, spinner)
@@ -52,6 +55,7 @@ final class RMCharacterListView: UIView {
 
     private func setupSubviews() {
         spinner.startAnimating()
+        viewModel.delegate = self
         viewModel.fetchCharacters()
         SetupCollectionView()
     }
@@ -59,17 +63,20 @@ final class RMCharacterListView: UIView {
     private func SetupCollectionView() {
         collectionView.dataSource = viewModel
         collectionView.delegate = viewModel
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2,
-                                      execute: {
-            self.spinner.stopAnimating()
-            self.collectionView.isHidden = false
-            UIView.animate(withDuration: 0.4) {
-                self.collectionView.alpha = 1
-            }
-        })
     }
     
+}
+
+// MARK: - RMCharacterListViewViewModelDelegate
+extension RMCharacterListView: RMCharacterListViewViewModelDelegate {
+    func didLoadInitialCharacters() {
+        self.spinner.stopAnimating()
+        self.collectionView.isHidden = false
+        collectionView.reloadData() // Initial fetch of characters
+        UIView.animate(withDuration: 0.4) {
+            self.collectionView.alpha = 1
+        }
+    }
 }
 
 // MARK: - Constraints
