@@ -72,7 +72,6 @@ final class RMCharacterListViewViewModel: NSObject {
     /// Paginate if additional characters are needed
     public func fetchAdditionalCharacters(url: URL) {
         isLoadingMoreCharacters = true
-        print("Fetching more characters")
         guard let request = RMRequest(url: url) else {
             print("Failed to create request")
             return
@@ -111,6 +110,7 @@ final class RMCharacterListViewViewModel: NSObject {
     }
 
 }
+
 // MARK: - CollectionView DataSource
 extension RMCharacterListViewViewModel: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

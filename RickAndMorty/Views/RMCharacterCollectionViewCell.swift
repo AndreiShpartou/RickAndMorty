@@ -77,8 +77,10 @@ final class RMCharacterCollectionViewCell: UICollectionViewCell {
         contentView.layer.shadowOffset = CGSize(width: -4, height: 4)
         contentView.layer.shadowOpacity = 0.3
     }
+}
 
-    // MARK: - Public Methods
+// MARK: - PublicMethods
+extension RMCharacterCollectionViewCell {
     public func configure(with viewModel: RMCharacterCollectionViewCellViewModel) {
         nameLabel.text = viewModel.characterName
         statusLabel.text = viewModel.characterStatusText

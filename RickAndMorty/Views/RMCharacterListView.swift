@@ -59,6 +59,7 @@ final class RMCharacterListView: UIView {
     
     // MARK: - Setup View
     private func setupView() {
+        backgroundColor = .systemBackground
         addSubviews(collectionView, spinner)
         addConstraints()
         setupSubviews()
