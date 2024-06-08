@@ -10,10 +10,19 @@ import UIKit
 final class RMCharacterPhotoCollectionViewCell: UICollectionViewCell {
     static let cellIdentifier = "RMCharacterPhotoCollectionViewCell"
     
+    // MARK: - View Properties
+    private let imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        return imageView
+    }()
+    
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
+        setupView()
     }
     
     required init?(coder: NSCoder) {
@@ -23,10 +32,13 @@ final class RMCharacterPhotoCollectionViewCell: UICollectionViewCell {
     // MARK: - LifeCycle
     override func prepareForReuse() {
         super.prepareForReuse()
+        
+        imageView.image = nil
     }
         
     // MARK: - SetupView
     private func setupView() {
+        contentView.addSubviews(imageView)
         addConstraints()
     }
 
@@ -34,14 +46,28 @@ final class RMCharacterPhotoCollectionViewCell: UICollectionViewCell {
 
 // MARK: - Public Methods
 extension RMCharacterPhotoCollectionViewCell {
-    public func configure(with: RMCharacterPhotoCollectionViewCellViewModel) {
-        
+    public func configure(with viewModel: RMCharacterPhotoCollectionViewCellViewModel) {
+        viewModel.fetchImage { [weak self] result in
+            switch result {
+            case .success(let data):
+                DispatchQueue.main.async {
+                    self?.imageView.image = UIImage(data: data)
+                }
+            case .failure:
+                break
+            }
+        }
     }
 }
 
 // MARK: - Constraints
 private extension RMCharacterPhotoCollectionViewCell {
     private func addConstraints() {
-        
+        NSLayoutConstraint.activate([
+            imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+        ])
     }
 }

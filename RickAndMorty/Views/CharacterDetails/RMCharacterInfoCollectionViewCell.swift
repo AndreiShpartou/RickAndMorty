@@ -10,9 +10,13 @@ import UIKit
 final class RMCharacterInfoCollectionViewCell: UICollectionViewCell {
     static let cellIdentifier = "RMCharacterInfoCollectionViewCell"
     
+    // MARK: - View Properties
+    
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        setupView()
         
     }
     
@@ -27,6 +31,8 @@ final class RMCharacterInfoCollectionViewCell: UICollectionViewCell {
         
     // MARK: - SetupView
     private func setupView() {
+        contentView.backgroundColor = .tertiarySystemBackground
+        contentView.layer.cornerRadius = 8
         addConstraints()
     }
 
