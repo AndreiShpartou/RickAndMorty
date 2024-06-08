@@ -105,15 +105,15 @@ extension RMCharacterListView: RMCharacterListViewViewModelDelegate {
 private extension RMCharacterListView {
     private func addConstraints() {
         NSLayoutConstraint.activate([
-            spinner.widthAnchor.constraint(equalToConstant: 100),
-            spinner.heightAnchor.constraint(equalToConstant: 100),
             spinner.centerXAnchor.constraint(equalTo: centerXAnchor),
             spinner.centerYAnchor.constraint(equalTo: centerYAnchor),
+            spinner.widthAnchor.constraint(equalToConstant: 100),
+            spinner.heightAnchor.constraint(equalToConstant: 100),
             
-            collectionView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor)
+            collectionView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            collectionView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
         ])
     }
 }

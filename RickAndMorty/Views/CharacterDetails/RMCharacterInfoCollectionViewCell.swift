@@ -13,14 +13,13 @@ final class RMCharacterInfoCollectionViewCell: UICollectionViewCell {
     // MARK: - View Properties
     private let valueLabel: UILabel = {
         let label = UILabel()
-        label.text = "Earth"
+        label.numberOfLines = 0
         label.font = .systemFont(ofSize: 22, weight: .light)
         return label
     }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Location"
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 20, weight: .medium)
         return label
@@ -29,7 +28,6 @@ final class RMCharacterInfoCollectionViewCell: UICollectionViewCell {
     private let iconImageView: UIImageView = {
         let icon = UIImageView()
         icon.contentMode = .scaleAspectFit
-        icon.image = UIImage(systemName: "globe")
         return icon
     }()
     
@@ -54,9 +52,11 @@ final class RMCharacterInfoCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-//        valueLabel.text = nil
-//        titleLabel.text = nil
-//        iconImageView.image = nil
+        valueLabel.text = nil
+        titleLabel.text = nil
+        iconImageView.image = nil
+        iconImageView.tintColor = .label
+        titleLabel.textColor = .label
     }
         
     // MARK: - SetupView
@@ -74,8 +74,12 @@ final class RMCharacterInfoCollectionViewCell: UICollectionViewCell {
 
 // MARK: - Public Methods
 extension RMCharacterInfoCollectionViewCell {
-    public func configure(with: RMCharacterInfoCollectionViewCellViewModel) {
-        
+    public func configure(with viewModel: RMCharacterInfoCollectionViewCellViewModel) {
+        titleLabel.text = viewModel.title
+        valueLabel.text = viewModel.displayValue
+        iconImageView.image = viewModel.iconImage
+        iconImageView.tintColor = viewModel.tintColor
+        titleLabel.textColor = viewModel.tintColor
     }
 }
 
@@ -83,36 +87,30 @@ extension RMCharacterInfoCollectionViewCell {
 private extension RMCharacterInfoCollectionViewCell {
     private func addConstraints() {
         NSLayoutConstraint.activate([
+            titleContainerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            titleContainerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             titleContainerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             titleContainerView.heightAnchor.constraint(
                 equalTo: contentView.heightAnchor,
                 multiplier: 0.33
             ),
-            titleContainerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            titleContainerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
-            titleLabel.topAnchor.constraint(equalTo: titleContainerView.topAnchor),
-            titleLabel.bottomAnchor.constraint(equalTo: titleContainerView.bottomAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: titleContainerView.leadingAnchor),
             titleLabel.trailingAnchor.constraint(equalTo: titleContainerView.trailingAnchor),
+            titleLabel.topAnchor.constraint(equalTo: titleContainerView.topAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: titleContainerView.bottomAnchor),
             
-            iconImageView.topAnchor.constraint(
-                equalTo: contentView.topAnchor,
-                constant: 35
-            ),
-            iconImageView.heightAnchor.constraint(equalToConstant: 30),
             iconImageView.leadingAnchor.constraint(
                 equalTo: contentView.leadingAnchor,
                 constant: 20
             ),
             iconImageView.widthAnchor.constraint(equalToConstant: 30),
-            
-            
-            valueLabel.topAnchor.constraint(
+            iconImageView.topAnchor.constraint(
                 equalTo: contentView.topAnchor,
                 constant: 35
             ),
-            valueLabel.heightAnchor.constraint(equalToConstant: 30),
+            iconImageView.heightAnchor.constraint(equalToConstant: 30),
+            
             valueLabel.leadingAnchor.constraint(
                 equalTo: iconImageView.trailingAnchor,
                 constant: 10
@@ -120,6 +118,12 @@ private extension RMCharacterInfoCollectionViewCell {
             valueLabel.trailingAnchor.constraint(
                 equalTo: contentView.trailingAnchor,
                 constant: -10
+            ),
+            valueLabel.topAnchor.constraint(
+                equalTo: contentView.topAnchor
+            ),
+            valueLabel.bottomAnchor.constraint(
+                equalTo: titleContainerView.topAnchor
             )
         ])
     }
