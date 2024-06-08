@@ -77,8 +77,10 @@ final class RMCharacterCollectionViewCell: UICollectionViewCell {
         contentView.layer.shadowOffset = CGSize(width: -4, height: 4)
         contentView.layer.shadowOpacity = 0.3
     }
+}
 
-    // MARK: - Public Methods
+// MARK: - PublicMethods
+extension RMCharacterCollectionViewCell {
     public func configure(with viewModel: RMCharacterCollectionViewCellViewModel) {
         nameLabel.text = viewModel.characterName
         statusLabel.text = viewModel.characterStatusText
@@ -101,20 +103,20 @@ final class RMCharacterCollectionViewCell: UICollectionViewCell {
 private extension RMCharacterCollectionViewCell {
     private func addConstraints() {
         NSLayoutConstraint.activate([
-            statusLabel.heightAnchor.constraint(equalToConstant: 30),
-            statusLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -3),
             statusLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 7),
             statusLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -7),
+            statusLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -3),
+            statusLabel.heightAnchor.constraint(equalToConstant: 30),
             
-            nameLabel.heightAnchor.constraint(equalToConstant: 30),
-            nameLabel.bottomAnchor.constraint(equalTo: statusLabel.topAnchor),
             nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 7),
             nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -7),
+            nameLabel.bottomAnchor.constraint(equalTo: statusLabel.topAnchor),
+            nameLabel.heightAnchor.constraint(equalToConstant: 30),
             
-            imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            imageView.bottomAnchor.constraint(equalTo: nameLabel.topAnchor, constant: -3),
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            imageView.bottomAnchor.constraint(equalTo: nameLabel.topAnchor, constant: -3)
         ])
     }
 }
