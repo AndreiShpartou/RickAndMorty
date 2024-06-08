@@ -20,11 +20,10 @@ final class RMCharacterViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupView()
+        setup()
     }
-    // MARK: - SetupView
-    private func setupView() {
-        view.backgroundColor = .systemBackground
+    // MARK: - Setup
+    private func setup() {
         title = "Characters"
     }
 }
