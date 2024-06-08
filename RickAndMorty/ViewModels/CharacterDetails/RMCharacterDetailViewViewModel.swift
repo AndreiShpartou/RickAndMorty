@@ -20,6 +20,10 @@ final class RMCharacterDetailViewViewModel {
         character.name.uppercased()
     }
     
+    public var episodes: [String] {
+        character.episode
+    }
+    
     private let character: RMCharacter
     
     private var requestUrl: URL? {
