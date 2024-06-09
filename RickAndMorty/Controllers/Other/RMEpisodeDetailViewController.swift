@@ -15,8 +15,9 @@ final class RMEpisodeDetailViewController: UIViewController {
     
     // MARK: - Init
     init(url: URL?) {
-        self.viewModel = .init(endpointURL: url)
+        self.viewModel = RMEpisodeDetailViewViewModel(endpointURL: url)
         super.init(nibName: nil, bundle: nil)
+        self.viewModel.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -32,11 +33,11 @@ final class RMEpisodeDetailViewController: UIViewController {
         super.viewDidLoad()
 
         setupView()
+        viewModel.fetchEpisodeData()
     }
     
     // MARK: - SetupView
     private func setupView() {
-        view.backgroundColor = .systemBackground
         title = "Episode"
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(
@@ -49,5 +50,12 @@ final class RMEpisodeDetailViewController: UIViewController {
     @objc
     private func didTapShare() {
         
+    }
+}
+
+// MARK: - RMEpisodeDetailViewViewModelDelegate
+extension RMEpisodeDetailViewController: RMEpisodeDetailViewViewModelDelegate {
+    func didFetchEpisodeDetail() {
+        episodeDetailView.configure(with: viewModel)
     }
 }

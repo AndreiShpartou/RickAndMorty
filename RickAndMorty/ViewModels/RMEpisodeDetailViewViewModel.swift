@@ -7,16 +7,68 @@
 
 import Foundation
 
-class RMEpisodeDetailViewViewModel {
+protocol RMEpisodeDetailViewViewModelDelegate: AnyObject {
+    func didFetchEpisodeDetail()
+}
+
+final class RMEpisodeDetailViewViewModel {
+    public weak var delegate: RMEpisodeDetailViewViewModelDelegate?
+    
     private let endpointURL: URL?
+    
+    private var dataTuple: (RMEpisode, [RMCharacter])? {
+        didSet {
+            delegate?.didFetchEpisodeDetail()
+        }
+    }
     
     // MARK: - Init
     init(endpointURL: URL?) {
         self.endpointURL = endpointURL
-        fetchEpisodeData()
     }
     
-    private func fetchEpisodeData() {
+    private func fetchRelatedCharacters(episode: RMEpisode) {
+        let characterUrls = episode.characters.compactMap {
+            return URL(string: $0)
+        }
+        
+        let requests = characterUrls.compactMap {
+            return RMRequest(url: $0)
+        }
+        
+        // n numbers of parallel requests
+        // Notified when all done
+        let group  = DispatchGroup()
+        var characters: [RMCharacter] = []
+        
+        requests.forEach { request in
+            group.enter()
+            RMService.shared.execute(
+                request,
+                expecting: RMCharacter.self) { result in
+                    defer {
+                        group.leave()
+                    }
+                    
+                    switch result {
+                    case .success(let model):
+                        characters.append(model)
+                    case .failure:
+                        break
+                    }
+                }
+        }
+        
+        group.notify(queue: .main) {
+            self.dataTuple = (
+                episode,
+                characters
+            )
+        }
+    }
+    
+    // MARK: - Fetch episode model
+    public func fetchEpisodeData() {
         guard let url = endpointURL,
               let request = RMRequest(url: url) else {
             return
@@ -24,11 +76,11 @@ class RMEpisodeDetailViewViewModel {
         
         RMService.shared.execute(
             request,
-            expecting: RMEpisode.self) { result in
+            expecting: RMEpisode.self) { [weak self] result in
                 switch result {
-                case .success(let success):
-                        print(String(describing: success))
-                case .failure(let failure):
+                case .success(let model):
+                    self?.fetchRelatedCharacters(episode: model)
+                case .failure:
                     break
                 }
             }
