@@ -37,6 +37,4 @@ extension RMCharacterViewController: RMCharacterListViewDelegate {
         
         navigationController?.pushViewController(detailVC, animated: true)
     }
-    
-    
 }
