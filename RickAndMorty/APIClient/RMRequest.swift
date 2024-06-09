@@ -14,7 +14,7 @@ final class RMRequest {
         static let baseURL = "https://rickandmortyapi.com/api"
     }
     /// Desired endpoint
-    private let endpoint: RMEndpoint
+    let endpoint: RMEndpoint
     /// Path components for API, if any
     private let pathComponents: [String]
     /// Query arguments for API, if any
