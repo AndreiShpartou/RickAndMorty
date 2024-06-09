@@ -7,8 +7,9 @@
 
 import UIKit
 
-final class RMEpisodeDetail: UIView {
+final class RMEpisodeDetailView: UIView {
     
+    // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
     }

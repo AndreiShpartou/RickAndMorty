@@ -11,6 +11,8 @@ import UIKit
 final class RMEpisodeDetailViewController: UIViewController {
     private let viewModel: RMEpisodeDetailViewViewModel
     
+    private let episodeDetailView = RMEpisodeDetailView()
+    
     // MARK: - Init
     init(url: URL?) {
         self.viewModel = .init(endpointURL: url)
@@ -22,10 +24,30 @@ final class RMEpisodeDetailViewController: UIViewController {
     }
     
     // MARK: - LifeCycle
+    override func loadView() {
+        view = episodeDetailView
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        setupView()
+    }
+    
+    // MARK: - SetupView
+    private func setupView() {
         view.backgroundColor = .systemBackground
         title = "Episode"
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .action,
+            target: self,
+            action: #selector(didTapShare)
+        )
+    }
+    
+    @objc
+    private func didTapShare() {
+        
     }
 }

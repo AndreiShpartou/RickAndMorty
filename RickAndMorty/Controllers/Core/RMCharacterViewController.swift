@@ -25,6 +25,21 @@ final class RMCharacterViewController: UIViewController {
     // MARK: - Setup
     private func setup() {
         title = "Characters"
+        addSearchButton()
+    }
+    
+    private func addSearchButton() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .search,
+            target: self,
+            action: #selector(didTapSearch)
+        )
+    }
+    
+    @objc private func didTapSearch() {
+        let viewController = RMSearchViewController(config: .init(type: .character))
+        viewController.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(viewController, animated: true)
     }
 }
 // MARK: - RMCharacterListViewDelegate

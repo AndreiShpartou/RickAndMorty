@@ -52,12 +52,14 @@ final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
     // MARK: - SetupView
     private func setupView() {
         contentView.backgroundColor = .tertiarySystemBackground
-        contentView.layer.cornerRadius = 8
-        contentView.layer.borderWidth = 2
-        contentView.layer.borderColor = UIColor.systemBlue.cgColor
-        
+        setupLayer()
         addSubviews(seasonLabel, nameLabel, airDateLabel)
         addConstraints()
+    }
+    
+    private func setupLayer() {
+        contentView.layer.cornerRadius = 8
+        contentView.layer.borderWidth = 2
     }
 
 }
@@ -71,6 +73,7 @@ extension RMCharacterEpisodeCollectionViewCell {
             self?.seasonLabel.text = "Aired on " + data.episode
         }
         viewModel.fetchEpisode()
+        contentView.layer.borderColor = viewModel.borderColor.cgColor
     }
 }
 

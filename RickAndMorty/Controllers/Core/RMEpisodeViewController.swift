@@ -24,6 +24,19 @@ final class RMEpisodeViewController: UIViewController {
     // MARK: - Setup
     private func setup() {
         title = "Episodes"
+        addSearchButton()
+    }
+    
+    private func addSearchButton() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .search,
+            target: self,
+            action: #selector(didTapSearch)
+        )
+    }
+    
+    @objc private func didTapSearch() {
+        
     }
 }
 
