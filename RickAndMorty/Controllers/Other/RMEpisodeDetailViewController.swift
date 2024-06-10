@@ -11,9 +11,11 @@ import UIKit
 final class RMEpisodeDetailViewController: UIViewController {
     private let viewModel: RMEpisodeDetailViewViewModel
     
+    private let episodeDetailView = RMEpisodeDetailView()
+    
     // MARK: - Init
     init(url: URL?) {
-        self.viewModel = .init(endpointURL: url)
+        self.viewModel = RMEpisodeDetailViewViewModel(endpointURL: url)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -22,10 +24,53 @@ final class RMEpisodeDetailViewController: UIViewController {
     }
     
     // MARK: - LifeCycle
+    override func loadView() {
+        view = episodeDetailView
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        episodeDetailView.delegate = self
+        viewModel.delegate = self
 
-        view.backgroundColor = .systemBackground
-        title = "Episode"
+        setupView()
+        viewModel.fetchEpisodeData()
     }
+    
+    // MARK: - SetupView
+    private func setupView() {
+        title = "Episode"
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .action,
+            target: self,
+            action: #selector(didTapShare)
+        )
+    }
+    
+    @objc
+    private func didTapShare() {
+        
+    }
+}
+
+// MARK: - RMEpisodeDetailViewViewModelDelegate
+extension RMEpisodeDetailViewController: RMEpisodeDetailViewViewModelDelegate {
+    func didFetchEpisodeDetail() {
+        episodeDetailView.configure(with: viewModel)
+    }
+}
+
+// MARK: - RMEpisodeDetailViewDelegate
+extension RMEpisodeDetailViewController: RMEpisodeDetailViewDelegate {
+    func rmEpisodeDetailView(_ detailView: RMEpisodeDetailView, didSelect character: RMCharacter) {
+        let viewController = RMCharacterDetailViewController(
+            viewModel: .init(character: character)
+        )
+        viewController.title = character.name
+        viewController.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+    
 }
