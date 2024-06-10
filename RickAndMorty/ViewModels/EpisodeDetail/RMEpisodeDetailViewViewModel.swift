@@ -19,12 +19,13 @@ final class RMEpisodeDetailViewViewModel {
         case characters(viewModels: [RMCharacterCollectionViewCellViewModel])
     }
     
-    public private(set) var sections: [SectionType] = []
+    public private(set) var cellViewModels: [SectionType] = []
     
     private let endpointURL: URL?
     
-    private var dataTuple: (RMEpisode, [RMCharacter])? {
+    private var dataTuple: (episode: RMEpisode, characters: [RMCharacter])? {
         didSet {
+            createCellViewModels()
             delegate?.didFetchEpisodeDetail()
         }
     }
@@ -33,7 +34,33 @@ final class RMEpisodeDetailViewViewModel {
     init(endpointURL: URL?) {
         self.endpointURL = endpointURL
     }
+}
+
+// MARK: - Public
+extension RMEpisodeDetailViewViewModel {
     
+    // MARK: - Fetch episode model
+    public func fetchEpisodeData() {
+        guard let url = endpointURL,
+              let request = RMRequest(url: url) else {
+            return
+        }
+        
+        RMService.shared.execute(
+            request,
+            expecting: RMEpisode.self) { [weak self] result in
+                switch result {
+                case .success(let model):
+                    self?.fetchRelatedCharacters(episode: model)
+                case .failure:
+                    break
+                }
+            }
+    }
+}
+
+// MARK: - Private
+extension RMEpisodeDetailViewViewModel {
     private func fetchRelatedCharacters(episode: RMEpisode) {
         let characterUrls = episode.characters.compactMap {
             return URL(string: $0)
@@ -68,28 +95,33 @@ final class RMEpisodeDetailViewViewModel {
         
         group.notify(queue: .main) {
             self.dataTuple = (
-                episode,
-                characters
+                episode: episode,
+                characters: characters
             )
         }
     }
     
-    // MARK: - Fetch episode model
-    public func fetchEpisodeData() {
-        guard let url = endpointURL,
-              let request = RMRequest(url: url) else {
+    private func createCellViewModels() {
+        guard let dataTuple = dataTuple else {
             return
         }
         
-        RMService.shared.execute(
-            request,
-            expecting: RMEpisode.self) { [weak self] result in
-                switch result {
-                case .success(let model):
-                    self?.fetchRelatedCharacters(episode: model)
-                case .failure:
-                    break
-                }
-            }
+        let episode = dataTuple.episode
+        let characters = dataTuple.characters
+        cellViewModels  = [
+            .information(viewModels: [
+                .init(title: "Episode Name", value: episode.name),
+                .init(title: "Air Date", value: episode.air_date),
+                .init(title: "Episode", value: episode.episode),
+                .init(title: "Created", value: episode.created)
+            ]),
+            .characters(viewModels: characters.compactMap({
+                RMCharacterCollectionViewCellViewModel(
+                    characterName: $0.name,
+                    characterStatus: $0.status,
+                    characterImageUrl: URL(string: $0.image)
+                )
+            }))
+        ]
     }
 }
