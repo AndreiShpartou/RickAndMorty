@@ -23,15 +23,15 @@ enum RMSettingsOption: CaseIterable {
         case .contactUs:
             return URL(string: "https://github.com/AndreiShpartou")
         case .terms:
-            return URL(string: "https://github.com/AndreiShpartou")
+            return URL(string: "https://rickandmortyapi.com")
         case .privacy:
-            return URL(string: "https://github.com/AndreiShpartou")
+            return URL(string: "https://rickandmortyapi.com")
         case .apiReference:
             return URL(string: "https://rickandmortyapi.com")
         case .viewSeries:
-            return URL(string: "https://github.com/AndreiShpartou")
+            return URL(string: "https://rickandmortyapi.com")
         case .viewCode:
-            return URL(string: "https://github.com/AndreiShpartou")
+            return URL(string: "https://rickandmortyapi.com")
         }
     }
     
