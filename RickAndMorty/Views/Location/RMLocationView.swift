@@ -26,8 +26,8 @@ final class RMLocationView: UIView {
         table.alpha = 0
         table.isHidden = true
         table.register(
-            UITableViewCell.self,
-            forCellReuseIdentifier: "cell"
+            RMLocationTableViewCell.self,
+            forCellReuseIdentifier: "RMLocationTableViewCell"
         )
         
         return table
@@ -57,8 +57,14 @@ final class RMLocationView: UIView {
         
         addSubviews(tableView, spinner)
         spinner.startAnimating()
-
+        
+        configureTable()
         addConstraints()
+    }
+    
+    private func configureTable() {
+        tableView.dataSource = self
+        tableView.delegate = self
     }
 
 }
@@ -70,6 +76,42 @@ extension RMLocationView {
     }
 }
 
+// MARK: - UITableViewDataSource
+extension RMLocationView: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        viewModel?.cellViewModels.count ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cellViewModels = viewModel?.cellViewModels else {
+            fatalError()
+        }
+        
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: "RMLocationTableViewCell",
+            for: indexPath
+        ) as? RMLocationTableViewCell else {
+            fatalError()
+        }
+        
+        let cellViewModel = cellViewModels[indexPath.row]
+        
+        cell.textLabel?.text = cellViewModel.name
+        //cell.configure(with: cellViewModel)
+        
+        return cell
+    }
+    
+    
+}
+
+// MARK: - UITableViewDelegate
+extension RMLocationView: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        // Notify controller of selection
+    }
+}
 
 // MARK: - Constraints
 private extension RMLocationView {

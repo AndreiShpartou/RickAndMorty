@@ -24,6 +24,9 @@ final class RMLocationViewController: UIViewController {
 
         title = "Locations"
         addSearchButton()
+        
+        viewModel.delegate = self
+        viewModel.fetchLocations()
     }
     
     // MARK: - Private Methods
@@ -37,5 +40,12 @@ final class RMLocationViewController: UIViewController {
     
     @objc private func didTapSearch() {
         
+    }
+}
+
+// MARK: - RMLocationViewViewModelDelegate
+extension RMLocationViewController: RMLocationViewViewModelDelegate {
+    func didFetchInitialLocations() {
+        locationView.configure(with: viewModel)
     }
 }
