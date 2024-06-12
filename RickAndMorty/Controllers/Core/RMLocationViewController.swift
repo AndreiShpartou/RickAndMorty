@@ -25,6 +25,7 @@ final class RMLocationViewController: UIViewController {
         title = "Locations"
         addSearchButton()
         
+        locationView.delegate = self
         viewModel.delegate = self
         viewModel.fetchLocations()
     }
@@ -43,9 +44,20 @@ final class RMLocationViewController: UIViewController {
     }
 }
 
+// MARK: - RMLocationViewDelegate
+extension RMLocationViewController: RMLocationViewDelegate {
+    func rmLocationView(_ locationView: RMLocationView, didSelect location: RMLocation) {
+        let viewController = RMLocationDetailViewController(location: location)
+        viewController.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+}
+
 // MARK: - RMLocationViewViewModelDelegate
 extension RMLocationViewController: RMLocationViewViewModelDelegate {
     func didFetchInitialLocations() {
         locationView.configure(with: viewModel)
     }
 }
+
+
