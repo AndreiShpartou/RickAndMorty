@@ -8,11 +8,13 @@
 import UIKit
 
 final class RMSearchView: UIView {
+    
     let viewModel: RMSearchViewViewModel
     
     // MARK: - Subviews
     
     // SearchInputView(bar, selection buttons)
+    private let searchInputView = RMSearchInputView()
     
     // No results view
     private let noResultsView = RMNoSearchResultsView()
@@ -35,7 +37,11 @@ final class RMSearchView: UIView {
     private func setupView() {
         backgroundColor = .systemBackground
         
-        addSubviews(noResultsView)
+        addSubviews(noResultsView, searchInputView)
+        searchInputView.configure(
+            with: RMSearchInputViewViewModel(type: viewModel.config.type)
+        )
+        
         addConstraints()
     }
 }
@@ -65,6 +71,13 @@ extension RMSearchView: UICollectionViewDelegate {
 private extension RMSearchView {
     private func addConstraints() {
         NSLayoutConstraint.activate([
+            // Search input view
+            searchInputView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            searchInputView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            searchInputView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            searchInputView.heightAnchor.constraint(equalToConstant: 150),
+            
+            // No results
             noResultsView.centerXAnchor.constraint(equalTo: centerXAnchor),
             noResultsView.centerYAnchor.constraint(equalTo: centerYAnchor),
             noResultsView.widthAnchor.constraint(equalToConstant: 150),
