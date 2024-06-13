@@ -7,7 +7,15 @@
 
 import UIKit
 
+protocol RMSearchViewDelegate: AnyObject {
+    func rmSearchView(_ searchView: RMSearchView,
+                      didSelectOption option: RMSearchInputViewViewModel.DynamicOption
+    )
+}
+
 final class RMSearchView: UIView {
+    
+    weak var delegate: RMSearchViewDelegate?
     
     let viewModel: RMSearchViewViewModel
     
@@ -41,8 +49,23 @@ final class RMSearchView: UIView {
         searchInputView.configure(
             with: RMSearchInputViewViewModel(type: viewModel.config.type)
         )
+        searchInputView.delegate = self
         
         addConstraints()
+    }
+}
+
+// MARK: - PublicMethods
+extension RMSearchView {
+    public func presentKeyboard() {
+        searchInputView.presentKeyboard()
+    }
+}
+
+// MARK: - RMSearchInputViewDelegate
+extension RMSearchView: RMSearchInputViewDelegate {
+    func rmSearchInputView(_ inputView: RMSearchInputView, didSelectOption option: RMSearchInputViewViewModel.DynamicOption) {
+        delegate?.rmSearchView(self, didSelectOption: option)
     }
 }
 
@@ -67,6 +90,7 @@ extension RMSearchView: UICollectionViewDelegate {
     }
 }
 
+
 // MARK: - Constraints
 private extension RMSearchView {
     private func addConstraints() {
@@ -75,7 +99,9 @@ private extension RMSearchView {
             searchInputView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             searchInputView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             searchInputView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            searchInputView.heightAnchor.constraint(equalToConstant: 150),
+            searchInputView.heightAnchor.constraint(
+                equalToConstant: viewModel.config.type == .episode ? 55 : 110
+            ),
             
             // No results
             noResultsView.centerXAnchor.constraint(equalTo: centerXAnchor),

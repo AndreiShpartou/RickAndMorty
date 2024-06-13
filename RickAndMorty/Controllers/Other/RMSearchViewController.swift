@@ -66,8 +66,16 @@ final class RMSearchViewController: UIViewController {
         configureController()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        searchView.presentKeyboard()
+    }
+    
     private func configureController() {
         title = viewModel.config.type.title
+        
+        searchView.delegate = self
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             title: "Search",
@@ -82,4 +90,11 @@ final class RMSearchViewController: UIViewController {
 //        viewModel.executeSearch()
     }
 
+}
+
+// MARK: - RMSearchViewDelegate
+extension RMSearchViewController: RMSearchViewDelegate {
+    func rmSearchView(_ searchView: RMSearchView, didSelectOption option: RMSearchInputViewViewModel.DynamicOption) {
+        // Should present option picker
+    }
 }
