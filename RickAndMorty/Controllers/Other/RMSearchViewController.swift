@@ -15,6 +15,9 @@ import UIKit
 /// Configurable controller to search
 final class RMSearchViewController: UIViewController {
 
+    private let searchView: RMSearchView
+    private let viewModel: RMSearchViewViewModel
+    
     // MARK: - ConfigProperties
     struct Config {
         enum ConfigType {
@@ -37,11 +40,14 @@ final class RMSearchViewController: UIViewController {
         let type: ConfigType
     }
     
-    private let config: Config
-    
     // MARK: - Init
     init(config: Config) {
-        self.config = config
+        let viewModel = RMSearchViewViewModel(config: config)
+        self.viewModel = viewModel
+        self.searchView = RMSearchView(
+            frame: .zero,
+            viewModel: viewModel
+        )
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -50,11 +56,30 @@ final class RMSearchViewController: UIViewController {
     }
 
     // MARK: - LifeCycle
+    override func loadView() {
+        view = searchView
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        title = config.type.title
-        view.backgroundColor = .systemBackground
+            
+        configureController()
+    }
+    
+    private func configureController() {
+        title = viewModel.config.type.title
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: "Search",
+            style: .done,
+            target: self,
+            action: #selector(didTapExecuteSearch))
+    }
+    
+    // MARK: - ActionMethods
+    @objc
+    private func didTapExecuteSearch() {
+//        viewModel.executeSearch()
     }
 
 }
