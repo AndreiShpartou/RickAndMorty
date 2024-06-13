@@ -95,6 +95,11 @@ final class RMSearchViewController: UIViewController {
 // MARK: - RMSearchViewDelegate
 extension RMSearchViewController: RMSearchViewDelegate {
     func rmSearchView(_ searchView: RMSearchView, didSelectOption option: RMSearchInputViewViewModel.DynamicOption) {
-        // Should present option picker
+        let viewController = RMSearchOptionPickerViewController(option: option) { selection in
+            print(selection)
+        }
+        viewController.sheetPresentationController?.detents = [.medium()]
+        viewController.sheetPresentationController?.prefersGrabberVisible = true
+        present(viewController, animated: true)
     }
 }
