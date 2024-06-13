@@ -68,7 +68,7 @@ extension RMLocationViewViewModel {
                     self?.delegate?.didFetchInitialLocations()
                 }
                 
-            case .failure(let failure):
+            case .failure(_):
                 break
             }
         }
