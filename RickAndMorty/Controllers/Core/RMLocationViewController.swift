@@ -9,15 +9,28 @@ import UIKit
 
 /// Controller to show and search for Locations
 final class RMLocationViewController: UIViewController {
+    
+    private let locationView = RMLocationView()
+    
+    private let viewModel = RMLocationViewViewModel()
 
+    // MARK: - LifeCycle
+    override func loadView() {
+        view = locationView
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .systemBackground
         title = "Locations"
         addSearchButton()
+        
+        locationView.delegate = self
+        viewModel.delegate = self
+        viewModel.fetchLocations()
     }
     
+    // MARK: - Private Methods
     private func addSearchButton() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .search,
@@ -30,3 +43,21 @@ final class RMLocationViewController: UIViewController {
         
     }
 }
+
+// MARK: - RMLocationViewDelegate
+extension RMLocationViewController: RMLocationViewDelegate {
+    func rmLocationView(_ locationView: RMLocationView, didSelect location: RMLocation) {
+        let viewController = RMLocationDetailViewController(location: location)
+        viewController.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+}
+
+// MARK: - RMLocationViewViewModelDelegate
+extension RMLocationViewController: RMLocationViewViewModelDelegate {
+    func didFetchInitialLocations() {
+        locationView.configure(with: viewModel)
+    }
+}
+
+

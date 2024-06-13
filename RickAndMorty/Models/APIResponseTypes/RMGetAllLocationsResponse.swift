@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RMGetAllLocationsResponse {
+struct RMGetAllLocationsResponse: Codable {
     struct Info: Codable {
         let count: Int
         let pages: Int
@@ -16,6 +16,6 @@ struct RMGetAllLocationsResponse {
     }
 
     let info: Info
-    let results: [RMEpisode]
+    let results: [RMLocation]
 }
 
