@@ -48,12 +48,9 @@ final class RMSearchViewViewModel {
     }
     
     public func executeSearch() {
-        // Test search text
-        searchText = "Rick"
-
         // Build arguments
         var queryParams: [URLQueryItem] = [
-            URLQueryItem(name: "name", value: searchText)
+            URLQueryItem(name: "name", value: searchText.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed))
         ]
         
         // Add options
@@ -69,6 +66,8 @@ final class RMSearchViewViewModel {
             queryParameters: queryParams
         )
         
+        print(request.url?.absoluteString ?? "")
+        
         RMService.shared.execute(
             request,
             expecting: RMGetAllCharactersResponse.self) { result in
@@ -76,8 +75,8 @@ final class RMSearchViewViewModel {
                 switch result {
                 case .success(let model):
                     print(String(describing: model.results.count))
-                case .failure:
-                    break
+                case .failure(let failure):
+                    print(String(describing: failure))
                 }
             }
     }
