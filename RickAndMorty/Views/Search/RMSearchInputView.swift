@@ -62,7 +62,6 @@ final class RMSearchInputView: UIView {
         stackView.spacing = 5
         stackView.distribution = .fillEqually
         stackView.alignment = .center
-        stackView.backgroundColor = .blue
         addSubviews(stackView)
         addStackViewConstraints(to: stackView)
         

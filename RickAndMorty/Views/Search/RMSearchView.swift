@@ -104,7 +104,7 @@ private extension RMSearchView {
             searchInputView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             searchInputView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             searchInputView.heightAnchor.constraint(
-                equalToConstant: viewModel.config.type == .episode ? 55 : 110
+                equalToConstant: viewModel.config.type == .episode ? 55 : 100
             ),
             
             // No results
