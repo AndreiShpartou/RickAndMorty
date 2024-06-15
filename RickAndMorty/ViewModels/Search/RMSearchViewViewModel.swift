@@ -21,6 +21,7 @@ final class RMSearchViewViewModel {
     
     private var optionMap: [RMSearchInputViewViewModel.DynamicOption: String] = [:]
     private var searchText: String = ""
+    private var searchResultsModel: Codable?
     
     // MARK: - Init
     init(config: RMSearchViewController.Config) {
@@ -81,6 +82,14 @@ final class RMSearchViewViewModel {
         }
     }
     
+    public func locationSearchResult(at index: Int) -> RMLocation? {
+        guard let searchModel = searchResultsModel as? RMGetAllLocationsResponse else {
+            return nil
+        }
+        
+        return searchModel.results[index]
+    }
+    
     // MARK: - Private
     private func makeSearchAPICall<T: Codable>(_ type: T.Type, request: RMRequest) {
         RMService.shared.execute(
@@ -122,6 +131,7 @@ final class RMSearchViewViewModel {
         }
         
         if let results = resultsVM {
+            self.searchResultsModel = model
             self.searResultHandler?(results)
         } else {
             handleNoResults()

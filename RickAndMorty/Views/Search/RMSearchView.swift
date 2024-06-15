@@ -8,8 +8,14 @@
 import UIKit
 
 protocol RMSearchViewDelegate: AnyObject {
-    func rmSearchView(_ searchView: RMSearchView,
-                      didSelectOption option: RMSearchInputViewViewModel.DynamicOption
+    func rmSearchView(
+        _ searchView: RMSearchView,
+        didSelectOption option: RMSearchInputViewViewModel.DynamicOption
+    )
+    
+    func rmSearchView(
+        _ searchView: RMSearchView,
+        didSelectLocation location: RMLocation
     )
 }
 
@@ -53,6 +59,8 @@ final class RMSearchView: UIView {
             with: RMSearchInputViewViewModel(type: viewModel.config.type)
         )
         searchInputView.delegate = self
+        
+        resultsView.delegate = self
         
         
         setupHandlers()
@@ -125,6 +133,15 @@ extension RMSearchView: UICollectionViewDelegate {
     }
 }
 
+// MARK: - RMSearchResultsViewDelegate
+extension RMSearchView: RMSearchResultsViewDelegate {
+    func rmSearchResultsView(_ resultsView: RMSearchResultsView, didTapLocationAt index: Int) {
+        guard let locationModel = viewModel.locationSearchResult(at: index) else {
+            return
+        }
+        delegate?.rmSearchView(self, didSelectLocation: locationModel)
+    }
+}
 
 // MARK: - Constraints
 private extension RMSearchView {
