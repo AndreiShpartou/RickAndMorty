@@ -25,7 +25,7 @@
                             </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <color key="backgroundColor" systemColor="systemMintColor"/>
+                        <color key="backgroundColor" red="0.06924977022058823" green="0.69077818631176469" blue="0.74509803919999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="Vn0-V7-I6R" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="jbO-Zj-Yqi"/>
                             <constraint firstItem="Vn0-V7-I6R" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="yWC-Fd-x8q"/>
@@ -40,9 +40,6 @@
     <resources>
         <systemColor name="systemGray5Color">
             <color red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemMintColor">
-            <color red="0.0" green="0.78039215689999997" blue="0.74509803919999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

@@ -16,10 +16,12 @@ final class RMSearchViewViewModel {
     let config: RMSearchViewController.Config
     
     private var optionMapUpdateBlock: (((RMSearchInputViewViewModel.DynamicOption, String)) -> Void)?
-    private var searResultHandler: (() -> Void)?
+    private var searResultHandler: ((RMSearchResultViewModel) -> Void)?
+    private var noResultsHandler: (() -> Void)?
     
     private var optionMap: [RMSearchInputViewViewModel.DynamicOption: String] = [:]
     private var searchText: String = ""
+    private var searchResultsModel: Codable?
     
     // MARK: - Init
     init(config: RMSearchViewController.Config) {
@@ -43,8 +45,12 @@ final class RMSearchViewViewModel {
         self.optionMapUpdateBlock = block
     }
     
-    public func registerSearchResultHandler(_ block: @escaping () -> Void) {
+    public func registerSearchResultHandler(_ block: @escaping (RMSearchResultViewModel) -> Void) {
         self.searResultHandler = block
+    }
+    
+    public func registerNoResultsHandler(_ block: @escaping () -> Void) {
+        self.noResultsHandler = block
     }
     
     public func executeSearch() {
@@ -66,18 +72,74 @@ final class RMSearchViewViewModel {
             queryParameters: queryParams
         )
         
-        print(request.url?.absoluteString ?? "")
+        switch config.type.endpoint {
+        case .character:
+            makeSearchAPICall(RMGetAllCharactersResponse.self, request: request)
+        case .episode:
+            makeSearchAPICall(RMGetAllEpisodesResponse.self, request: request)
+        case .location:
+            makeSearchAPICall(RMGetAllLocationsResponse.self, request: request)
+        }
+    }
+    
+    public func locationSearchResult(at index: Int) -> RMLocation? {
+        guard let searchModel = searchResultsModel as? RMGetAllLocationsResponse else {
+            return nil
+        }
         
+        return searchModel.results[index]
+    }
+    
+    // MARK: - Private
+    private func makeSearchAPICall<T: Codable>(_ type: T.Type, request: RMRequest) {
         RMService.shared.execute(
             request,
-            expecting: RMGetAllCharactersResponse.self) { result in
+            expecting: type) { result in
                 // Notify view of results, no results, or error
                 switch result {
                 case .success(let model):
-                    print(String(describing: model.results.count))
+                    // Episodes and characters: CollectionView; Location: TableView
+                    self.processSearchResults(model: model)
                 case .failure(let failure):
                     print(String(describing: failure))
+                    self.handleNoResults()
                 }
             }
+        
     }
+    
+    private func processSearchResults(model: Codable) {
+        var resultsVM: RMSearchResultViewModel?
+        if let characterResults = model as? RMGetAllCharactersResponse {
+            resultsVM = .characters(characterResults.results.map({
+                return RMCharacterCollectionViewCellViewModel(
+                    characterName: $0.name,
+                    characterStatus: $0.status,
+                    characterImageUrl: URL(string: $0.image)
+                )
+            }))
+        } else if let episodesResults = model as? RMGetAllEpisodesResponse {
+            resultsVM = .episodes(episodesResults.results.map({
+                return RMCharacterEpisodeCollectionViewCellViewModel(
+                    episodeDataUrl: URL(string: $0.url)
+                )
+            }))
+        } else if let locationsResults = model as? RMGetAllLocationsResponse {
+            resultsVM = .locations(locationsResults.results.map({
+                return RMLocationTableViewCellViewModel(location: $0)
+            }))
+        }
+        
+        if let results = resultsVM {
+            self.searchResultsModel = model
+            self.searResultHandler?(results)
+        } else {
+            handleNoResults()
+        }
+    }
+    
+    private func handleNoResults() {
+        noResultsHandler?()
+    }
+    
 }
