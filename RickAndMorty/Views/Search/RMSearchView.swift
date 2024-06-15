@@ -27,6 +27,9 @@ final class RMSearchView: UIView {
     // No results view
     private let noResultsView = RMNoSearchResultsView()
     
+    
+    private let resultsView = RMSearchResultsView()
+    
     // Results collectionView
     
     // MARK: - Init
@@ -45,21 +48,37 @@ final class RMSearchView: UIView {
     private func setupView() {
         backgroundColor = .systemBackground
         
-        addSubviews(noResultsView, searchInputView)
+        addSubviews(noResultsView, searchInputView, resultsView)
         searchInputView.configure(
             with: RMSearchInputViewViewModel(type: viewModel.config.type)
         )
         searchInputView.delegate = self
         
+        
+        setupHandlers()
+        addConstraints()
+    }
+    
+    private func setupHandlers() {
+        
         viewModel.registerOptionChangeBlock { tuple in
             self.searchInputView.update(option: tuple.0, value: tuple.1)
         }
         
-        viewModel.registerSearchResultHandler { results in
-            print(results)
+        viewModel.registerSearchResultHandler { [weak self] results in
+            DispatchQueue.main.async {
+                self?.resultsView.configure(with: results)
+                self?.noResultsView.isHidden = true
+                self?.resultsView.isHidden = false
+            }
         }
         
-        addConstraints()
+        viewModel.registerNoResultsHandler { [weak self] in
+            DispatchQueue.main.async {
+                self?.noResultsView.isHidden = false
+                self?.resultsView.isHidden = true
+            }
+        }
     }
 }
 
@@ -123,7 +142,14 @@ private extension RMSearchView {
             noResultsView.centerXAnchor.constraint(equalTo: centerXAnchor),
             noResultsView.centerYAnchor.constraint(equalTo: centerYAnchor),
             noResultsView.widthAnchor.constraint(equalToConstant: 150),
-            noResultsView.heightAnchor.constraint(equalToConstant: 150)
+            noResultsView.heightAnchor.constraint(equalToConstant: 150),
+            
+            // Results View
+            resultsView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            resultsView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            resultsView.topAnchor.constraint(equalTo: searchInputView.bottomAnchor),
+            resultsView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            
         ])
     }
 }
