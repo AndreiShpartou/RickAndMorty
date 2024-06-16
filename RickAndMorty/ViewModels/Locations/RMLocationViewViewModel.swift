@@ -106,18 +106,12 @@ extension RMLocationViewViewModel {
                 case .success(let responseModel):
                     let moreResults = responseModel.results
                     self?.apiInfo = responseModel.info
-                    
-//                    self?.cellViewModels.append(
-//                        contentsOf: moreResults.compactMap({
-//                            return RMLocationTableViewCellViewModel(location: $0)
-//                        })
-//                    )
-                    
+
                     self?.locations.append(contentsOf: responseModel.results)
-                    
 
                     DispatchQueue.main.async {
                         self?.isLoadingMoreLocations = false
+                        // Notify via callback
                         self?.didLoadMoreLocationHandler?()
                     }
 
