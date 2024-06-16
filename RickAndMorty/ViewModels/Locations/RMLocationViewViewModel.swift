@@ -15,7 +15,13 @@ final class RMLocationViewViewModel {
     // MARK: - Properties
     public weak var delegate: RMLocationViewViewModelDelegate?
     
+    public var shouldShowLoadMoreIndicator: Bool {
+        return apiInfo?.next != nil
+    }
+    
     public private(set) var cellViewModels: [RMLocationTableViewCellViewModel] = []
+    
+    public var isLoadingMoreLocations = false
     
     private var locations: [RMLocation] = [] {
         didSet {
@@ -38,6 +44,8 @@ final class RMLocationViewViewModel {
         return false
     }
     
+    private var didLoadMoreLocationHandler: (() -> Void)?
+    
     // MARK: - Init
     init() {}
     
@@ -47,6 +55,11 @@ final class RMLocationViewViewModel {
 
 // MARK: - PublicMethods
 extension RMLocationViewViewModel {
+    
+    public func registerDidLoadMoreLocation(with block: @escaping () -> Void) {
+        didLoadMoreLocationHandler = block
+    }
+    
     public func location(at index: Int) -> RMLocation? {
         guard index < locations.count, index >= 0 else {
             return nil
@@ -72,5 +85,42 @@ extension RMLocationViewViewModel {
                 break
             }
         }
+    }
+    
+    /// Paginate if additional locations are needed
+    public func fetchAdditionalLocations() {
+        isLoadingMoreLocations = true
+        guard let urlString = apiInfo?.next,
+              let url = URL(string: urlString),
+              let request = RMRequest(url: url) else {
+            print("Failed to create request")
+            isLoadingMoreLocations = false
+            return
+        }
+        
+        RMService.shared.execute(
+            request,
+            expecting: RMGetAllLocationsResponse.self,
+            completion: { [weak self] result in
+                switch result {
+                case .success(let responseModel):
+                    let moreResults = responseModel.results
+                    self?.apiInfo = responseModel.info
+
+                    self?.locations.append(contentsOf: responseModel.results)
+
+                    DispatchQueue.main.async {
+                        self?.isLoadingMoreLocations = false
+                        // Notify via callback
+                        self?.didLoadMoreLocationHandler?()
+                    }
+
+                    print("More locations: \(moreResults.count)")
+                case .failure(let failure):
+                    print(String(describing: failure))
+                    self?.isLoadingMoreLocations = false
+                }
+            }
+        )
     }
 }

@@ -74,6 +74,7 @@ final class RMCharacterListViewViewModel: NSObject {
         isLoadingMoreCharacters = true
         guard let request = RMRequest(url: url) else {
             print("Failed to create request")
+            isLoadingMoreCharacters = false
             return
         }
         
@@ -160,8 +161,19 @@ extension RMCharacterListViewViewModel: UICollectionViewDataSource {
 // MARK: - CollectionView Delegation
 extension RMCharacterListViewViewModel: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let bounds = UIScreen.main.bounds
-        let width = (bounds.width - 30) / 2
+
+        // TODO: Abstract to extensions
+        let isIphone = UIDevice.current.userInterfaceIdiom == .phone
+        
+        let bounds = collectionView.bounds
+        let width: CGFloat
+        if isIphone {
+            width = (bounds.width - 30) / 2
+        } else {
+            // mac or Ipad
+            width = (bounds.width - 50) / 4
+        }
+
         return CGSize(
             width: width,
             height: width * 1.5)
@@ -188,6 +200,11 @@ extension RMCharacterListViewViewModel: UIScrollViewDelegate {
         let offset = scrollView.contentOffset.y
         let totalContentHeight = scrollView.contentSize.height
         let totalScrollViewFixedHeight = scrollView.frame.size.height
+        
+//        print("offset: \(offset)")
+//        print("totalContentHeight: \(totalContentHeight)")
+//        print("totalScrollViewFixedHeight: \(totalScrollViewFixedHeight)")
+        
         
         if totalContentHeight != 0, offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
             fetchAdditionalCharacters(url: url)
