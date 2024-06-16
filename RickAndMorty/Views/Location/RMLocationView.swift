@@ -78,6 +78,10 @@ final class RMLocationView: UIView {
 extension RMLocationView {
     public func configure(with viewModel: RMLocationViewViewModel) {
         self.viewModel = viewModel
+        self.viewModel?.registerDidLoadMoreLocation {
+            self.tableView.reloadData()
+            self.tableView.tableFooterView = nil
+        }
     }
 }
 
@@ -121,6 +125,40 @@ extension RMLocationView: UITableViewDelegate {
             self,
             didSelect: locationModel
         )
+    }
+}
+
+// MARK: - UIScrollViewDelegate
+extension RMLocationView: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard let viewModel = viewModel,
+              viewModel.shouldShowLoadMoreIndicator,
+              !viewModel.isLoadingMoreLocations,
+              !viewModel.cellViewModels.isEmpty
+        else {
+            return
+        }
+        
+        let offset = scrollView.contentOffset.y
+        let totalContentHeight = scrollView.contentSize.height
+        let totalScrollViewFixedHeight = scrollView.frame.size.height
+        
+//        print("offset: \(offset)")
+//        print("totalContentHeight: \(totalContentHeight)")
+//        print("totalScrollViewFixedHeight: \(totalScrollViewFixedHeight)")
+        if offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
+            showLoadingIndicator()
+            viewModel.fetchAdditionalLocations()
+        }
+    }
+
+    private func showLoadingIndicator() {
+//        guard tableView.tableFooterView == nil else {
+//            tableView.tableFooterView?.isHidden = false
+//            return
+//        }
+        let footerView = RMTableLoadingFooterView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        tableView.tableFooterView = footerView
     }
 }
 

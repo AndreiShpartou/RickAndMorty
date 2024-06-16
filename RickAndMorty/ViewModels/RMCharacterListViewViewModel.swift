@@ -74,6 +74,7 @@ final class RMCharacterListViewViewModel: NSObject {
         isLoadingMoreCharacters = true
         guard let request = RMRequest(url: url) else {
             print("Failed to create request")
+            isLoadingMoreCharacters = false
             return
         }
         
@@ -188,6 +189,11 @@ extension RMCharacterListViewViewModel: UIScrollViewDelegate {
         let offset = scrollView.contentOffset.y
         let totalContentHeight = scrollView.contentSize.height
         let totalScrollViewFixedHeight = scrollView.frame.size.height
+        
+//        print("offset: \(offset)")
+//        print("totalContentHeight: \(totalContentHeight)")
+//        print("totalScrollViewFixedHeight: \(totalScrollViewFixedHeight)")
+        
         
         if totalContentHeight != 0, offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
             fetchAdditionalCharacters(url: url)
