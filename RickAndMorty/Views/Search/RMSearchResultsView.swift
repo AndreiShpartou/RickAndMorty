@@ -237,12 +237,12 @@ extension RMSearchResultsView: UICollectionViewDelegateFlowLayout {
         let viewModel = collectionViewCellViewModels[indexPath.row]
         let bounds = collectionView.bounds
         if viewModel is RMCharacterCollectionViewCellViewModel {
-            let width = (bounds.width - 30) / 2
+            let width = UIDevice.isiPhone ? (bounds.width - 30) / 2 : (bounds.width - 30) / 4
             return CGSize(
                 width: width,
                 height: width * 1.5)
         } else if viewModel is RMCharacterEpisodeCollectionViewCellViewModel {
-            let width = bounds.width - 20
+            let width = UIDevice.isiPhone ? bounds.width - 20 : (bounds.width - 30) / 4
             return CGSize(
                 width: width,
                 height: 100)
