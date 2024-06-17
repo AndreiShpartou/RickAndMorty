@@ -22,7 +22,9 @@ final class RMSearchResultsView: UIView {
         }
     }
     
+    /// TableView ViewModels
     private var locationTableViewCellViewModels: [RMLocationTableViewCellViewModel] = []
+    /// CollectionView ViewModels
     private var collectionViewCellViewModels: [any Hashable] = []
     
     private var tableView: UITableView = {
@@ -83,7 +85,7 @@ final class RMSearchResultsView: UIView {
             return
         }
         
-        switch viewModel {
+        switch viewModel.results {
         case .characters(let viewModels):
             collectionViewCellViewModels = viewModels
             setupCollectionView()
@@ -147,6 +149,7 @@ extension RMSearchResultsView: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         delegate?.rmSearchResultsView(self, didTapLocationAt: indexPath.row)
     }
+    
 }
 
 // MARK: - UICollectionViewDataSource
@@ -216,6 +219,48 @@ extension RMSearchResultsView: UICollectionViewDelegateFlowLayout {
         } else {
             return .zero
         }
+    }
+}
+
+// MARK: - UIScrollViewDelegate
+extension RMSearchResultsView: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if !locationTableViewCellViewModels.isEmpty {
+            handleLocationPagination(scrollView)
+        } else {
+            handleCharacterOrEpisodePagination(scrollView)
+        }
+    }
+
+    private func handleCharacterOrEpisodePagination(_ scrollView: UIScrollView) {
+    }
+
+    
+    private func handleLocationPagination(_ scrollView: UIScrollView) {
+        guard let viewModel = viewModel,
+              viewModel.shouldShowLoadMoreIndicator,
+              !viewModel.isLoadingMoreResults
+        else {
+            return
+        }
+        
+        let offset = scrollView.contentOffset.y
+        let totalContentHeight = scrollView.contentSize.height
+        let totalScrollViewFixedHeight = scrollView.frame.size.height
+        
+        if totalContentHeight != 0, offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
+            showLoadingIndicator()
+            viewModel.fetchAdditionalLocations { [weak self] newResults in
+                self?.tableView.tableFooterView = nil
+                self?.locationTableViewCellViewModels = newResults
+                self?.tableView.reloadData()
+            }
+        }
+    }
+    
+    private func showLoadingIndicator() {
+        let footerView = RMTableLoadingFooterView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        tableView.tableFooterView = footerView
     }
 }
 
