@@ -105,7 +105,7 @@ final class RMSearchViewController: UIViewController {
 
 // MARK: - RMSearchViewDelegate
 extension RMSearchViewController: RMSearchViewDelegate {
-    
+
     func rmSearchView(_ searchView: RMSearchView, didSelectOption option: RMSearchInputViewViewModel.DynamicOption) {
         let viewController = RMSearchOptionPickerViewController(option: option) { [weak self] selection in
             DispatchQueue.main.async {
@@ -119,6 +119,19 @@ extension RMSearchViewController: RMSearchViewDelegate {
     
     func rmSearchView(_ searchView: RMSearchView, didSelectLocation location: RMLocation) {
         let viewController = RMLocationDetailViewController(location: location)
+        navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+    func rmSearchView(_ searchView: RMSearchView, didSelectCharacter character: RMCharacter) {
+        let viewController = RMCharacterDetailViewController(viewModel: .init(character: character))
+        navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+    func rmSearchView(_ searchView: RMSearchView, didSelectEpisode episode: RMEpisode) {
+        let episodeURL = URL(string: episode.url)
+        let viewController = RMEpisodeDetailViewController(url: episodeURL)
         navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(viewController, animated: true)
     }
