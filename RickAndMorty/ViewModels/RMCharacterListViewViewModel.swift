@@ -100,8 +100,9 @@ final class RMCharacterListViewViewModel: NSObject {
                     
                     DispatchQueue.main.async {
                         self?.delegate?.didLoadMoreCharacters(with: indexPathsToAdd)
+                        self?.isLoadingMoreCharacters = false
                     }
-                    self?.isLoadingMoreCharacters = false
+                    print("Fetch additional characters \(moreResults.count)")
                 case .failure(let failure):
                     print(String(describing: failure))
                     self?.isLoadingMoreCharacters = false
@@ -205,6 +206,7 @@ extension RMCharacterListViewViewModel: UIScrollViewDelegate {
         
         if totalContentHeight != 0, offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
             fetchAdditionalCharacters(url: url)
+            
         }
     }
 }
