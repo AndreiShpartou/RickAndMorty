@@ -110,9 +110,7 @@ final class RMSearchResultViewModel {
                     }
                 }
             )
-        case .locations(let array):
-            break
-        case nil:
+        case .locations:
             break
         }
     }
@@ -153,9 +151,9 @@ final class RMSearchResultViewModel {
                     }
                     
                     DispatchQueue.main.async {
-                        self?.isLoadingMoreResults = false
                         // Notify via callback
                         completion(newResults)
+                        self?.isLoadingMoreResults = false
                     }
 
                     print("More locations: \(moreResults.count)")

@@ -149,7 +149,7 @@ extension RMLocationView: UIScrollViewDelegate {
         
         if offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
             showLoadingIndicator()
-            viewModel.fetchAdditionalLocations()
+            viewModel.fetchAdditionalLocationsWithDelay(0.1)
         }
     }
 

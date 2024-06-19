@@ -110,8 +110,8 @@ final class RMEpisodeListViewViewModel: NSObject {
                     
                     DispatchQueue.main.async {
                         self?.delegate?.didLoadMoreEpisodes(with: indexPathsToAdd)
+                        self?.isLoadingMoreEpisodes = false
                     }
-                    self?.isLoadingMoreEpisodes = false
                 case .failure(let failure):
                     print(String(describing: failure))
                     self?.isLoadingMoreEpisodes = false
