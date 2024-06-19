@@ -45,7 +45,7 @@ final class RMLocationViewViewModel {
     }
     
     private var didLoadMoreLocationHandler: (() -> Void)?
-    
+
     // MARK: - Init
     init() {}
     
@@ -110,11 +110,10 @@ extension RMLocationViewViewModel {
                     self?.locations.append(contentsOf: responseModel.results)
 
                     DispatchQueue.main.async {
-                        self?.isLoadingMoreLocations = false
                         // Notify via callback
                         self?.didLoadMoreLocationHandler?()
+                        self?.isLoadingMoreLocations = false
                     }
-
                     print("More locations: \(moreResults.count)")
                 case .failure(let failure):
                     print(String(describing: failure))
@@ -122,5 +121,12 @@ extension RMLocationViewViewModel {
                 }
             }
         )
+    }
+    
+    public func fetchAdditionalLocationsWithDelay(_ delay: TimeInterval) {
+        isLoadingMoreLocations = true
+        Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in
+            self?.fetchAdditionalLocations()
+        }
     }
 }
