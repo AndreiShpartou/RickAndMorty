@@ -104,7 +104,6 @@ extension RMLocationViewViewModel {
             completion: { [weak self] result in
                 switch result {
                 case .success(let responseModel):
-                    let moreResults = responseModel.results
                     self?.apiInfo = responseModel.info
 
                     self?.locations.append(contentsOf: responseModel.results)
@@ -114,7 +113,6 @@ extension RMLocationViewViewModel {
                         self?.didLoadMoreLocationHandler?()
                         self?.isLoadingMoreLocations = false
                     }
-                    print("More locations: \(moreResults.count)")
                 case .failure(let failure):
                     print(String(describing: failure))
                     self?.isLoadingMoreLocations = false

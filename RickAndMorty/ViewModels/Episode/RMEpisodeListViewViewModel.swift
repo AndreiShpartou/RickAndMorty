@@ -119,6 +119,13 @@ final class RMEpisodeListViewViewModel: NSObject {
             }
         )
     }
+    
+    public func fetchAdditionalEpisodesWithDelay(_ delay: TimeInterval, url: URL) {
+        isLoadingMoreEpisodes = true
+        Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in
+            self?.fetchAdditionalEpisodes(url: url)
+        }
+    }
 
 }
 
@@ -201,7 +208,7 @@ extension RMEpisodeListViewViewModel: UIScrollViewDelegate {
         let totalScrollViewFixedHeight = scrollView.frame.size.height
         
         if totalContentHeight != 0, offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
-            fetchAdditionalEpisodes(url: url)
+            fetchAdditionalEpisodesWithDelay(0.1, url: url)
         }
     }
 }
