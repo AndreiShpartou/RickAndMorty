@@ -1,23 +1,23 @@
 //
-//  RMEpisodeDetail.swift
+//  RMLocationDetailsView.swift
 //  RickAndMorty
 //
-//  Created by Andrei Shpartou on 09/06/2024.
+//  Created by Andrei Shpartou on 12/06/2024.
 //
 
 import UIKit
 
-protocol RMEpisodeDetailViewDelegate: AnyObject {
-    func rmEpisodeDetailView(
-        _ detailView: RMEpisodeDetailView,
+protocol RMLocationDetailsViewDelegate: AnyObject {
+    func rmLocationDetailView(
+        _ detailView: RMLocationDetailsView,
         didSelect character: RMCharacter
     )
 }
 
-final class RMEpisodeDetailView: UIView {
-    public weak var delegate: RMEpisodeDetailViewDelegate?
+final class RMLocationDetailsView: UIView {
+    public weak var delegate: RMLocationDetailsViewDelegate?
     
-    private var viewModel: RMEpisodeDetailViewViewModel? {
+    private var viewModel: RMLocationDetailViewViewModel? {
         didSet {
             spinner.stopAnimating()
             self.collectionView.reloadData()
@@ -56,14 +56,14 @@ final class RMEpisodeDetailView: UIView {
 }
 
 // MARK: - PublicMethods
-extension RMEpisodeDetailView {
-    public func configure(with viewModel: RMEpisodeDetailViewViewModel) {
+extension RMLocationDetailsView {
+    public func configure(with viewModel: RMLocationDetailViewViewModel) {
         self.viewModel = viewModel
     }
 }
 
 // MARK: - ViewElements
-private extension RMEpisodeDetailView {
+private extension RMLocationDetailsView {
     
     private func createActivityIndicator() -> UIActivityIndicatorView {
         let spinner = UIActivityIndicatorView()
@@ -152,7 +152,7 @@ private extension RMEpisodeDetailView {
 }
 
 // MARK: - UICollectionViewDataSource
-extension RMEpisodeDetailView: UICollectionViewDataSource {
+extension RMLocationDetailsView: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return viewModel?.cellViewModels.count ?? 0
@@ -206,7 +206,7 @@ extension RMEpisodeDetailView: UICollectionViewDataSource {
 }
 
 // MARK: - UICollectionViewDelegate
-extension RMEpisodeDetailView: UICollectionViewDelegate {
+extension RMLocationDetailsView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         
@@ -223,14 +223,14 @@ extension RMEpisodeDetailView: UICollectionViewDelegate {
             guard let character = viewModel.character(at: indexPath.row) else {
                 return
             }
-            delegate?.rmEpisodeDetailView(self, didSelect: character)
+            delegate?.rmLocationDetailView(self, didSelect: character)
             
         }
     }
 }
 
 // MARK: - Constraints
-private extension RMEpisodeDetailView {
+private extension RMLocationDetailsView {
     private func addConstraints() {
         NSLayoutConstraint.activate([
             spinner.centerXAnchor.constraint(equalTo: centerXAnchor),

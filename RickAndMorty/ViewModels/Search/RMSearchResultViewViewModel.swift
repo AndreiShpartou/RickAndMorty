@@ -1,5 +1,5 @@
 //
-//  RMSearchResultViewModel.swift
+//  RMSearchResultViewViewModel.swift
 //  RickAndMorty
 //
 //  Created by Andrei Shpartou on 15/06/2024.
@@ -13,7 +13,7 @@ enum RMSearchResultType {
     case locations([RMLocationTableViewCellViewModel])
 }
 
-final class RMSearchResultViewModel {
+final class RMSearchResultViewViewModel {
     
     public var shouldShowLoadMoreIndicator: Bool {
         return next != nil
@@ -31,6 +31,7 @@ final class RMSearchResultViewModel {
         self.next = next
     }
     
+    // MARK: - Fetch Results
     public func fetchAdditionalResults(completion: @escaping ([any Hashable]) -> Void) {
         isLoadingMoreResults = true
         guard let urlString = next,
@@ -69,8 +70,6 @@ final class RMSearchResultViewModel {
                             // Notify via callback
                             completion(newResults)
                         }
-
-                        print("More characters: \(moreResults.count)")
                     case .failure(let failure):
                         print(String(describing: failure))
                         self?.isLoadingMoreResults = false
@@ -102,8 +101,6 @@ final class RMSearchResultViewModel {
                             // Notify via callback
                             completion(newResults)
                         }
-
-                        print("More episodes: \(moreResults.count)")
                     case .failure(let failure):
                         print(String(describing: failure))
                         self?.isLoadingMoreResults = false
@@ -115,7 +112,7 @@ final class RMSearchResultViewModel {
         }
     }
     
-    
+    // MARK: - Fetch Locations
     public func fetchAdditionalLocations(completion: @escaping ([RMLocationTableViewCellViewModel]) -> Void) {
         isLoadingMoreResults = true
         guard let urlString = next,
@@ -155,14 +152,27 @@ final class RMSearchResultViewModel {
                         completion(newResults)
                         self?.isLoadingMoreResults = false
                     }
-
-                    print("More locations: \(moreResults.count)")
                 case .failure(let failure):
                     print(String(describing: failure))
                     self?.isLoadingMoreResults = false
                 }
             }
         )
+    }
+    
+    public func fetchAdditionalResultsWithDelay(_ delay: TimeInterval, completion: @escaping ([any Hashable]) -> Void) {
+        isLoadingMoreResults = true
+        Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in
+            self?.fetchAdditionalResults(completion: completion)
+        }
+    }
+    
+    public func fetchAdditionalLocationsWithDelay(_ delay: TimeInterval,
+                                                  completion: @escaping ([RMLocationTableViewCellViewModel]) -> Void) {
+        isLoadingMoreResults = true
+        Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in
+            self?.fetchAdditionalLocations(completion: completion)
+        }
     }
 }
 

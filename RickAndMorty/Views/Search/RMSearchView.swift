@@ -189,7 +189,7 @@ private extension RMSearchView {
             resultsView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             resultsView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             resultsView.topAnchor.constraint(equalTo: searchInputView.bottomAnchor),
-            resultsView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            resultsView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
             
         ])
     }
