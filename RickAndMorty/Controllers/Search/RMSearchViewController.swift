@@ -118,20 +118,20 @@ extension RMSearchViewController: RMSearchViewDelegate {
     }
     
     func rmSearchView(_ searchView: RMSearchView, didSelectLocation location: RMLocation) {
-        let viewController = RMLocationDetailViewController(location: location)
+        let viewController = RMLocationDetailsViewController(location: location)
         navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(viewController, animated: true)
     }
     
     func rmSearchView(_ searchView: RMSearchView, didSelectCharacter character: RMCharacter) {
-        let viewController = RMCharacterDetailViewController(viewModel: .init(character: character))
+        let viewController = RMCharacterDetailsViewController(viewModel: .init(character: character))
         navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(viewController, animated: true)
     }
     
     func rmSearchView(_ searchView: RMSearchView, didSelectEpisode episode: RMEpisode) {
         let episodeURL = URL(string: episode.url)
-        let viewController = RMEpisodeDetailViewController(url: episodeURL)
+        let viewController = RMEpisodeDetailsViewController(url: episodeURL)
         navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(viewController, animated: true)
     }

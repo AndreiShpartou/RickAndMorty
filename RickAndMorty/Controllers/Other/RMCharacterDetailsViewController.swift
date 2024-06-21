@@ -1,5 +1,5 @@
 //
-//  RMCharacterDetailViewController.swift
+//  RMCharacterDetailsViewController.swift
 //  RickAndMorty
 //
 //  Created by Andrei Shpartou on 06/06/2024.
@@ -7,15 +7,15 @@
 
 import UIKit
 
-class RMCharacterDetailViewController: UIViewController {
+class RMCharacterDetailsViewController: UIViewController {
     
     private let viewModel: RMCharacterDetailViewViewModel
-    private let detailView: RMCharacterDetailView
+    private let detailView: RMCharacterDetailsView
 
     // MARK: - Init
     init(viewModel: RMCharacterDetailViewViewModel) {
         self.viewModel = viewModel
-        self.detailView = RMCharacterDetailView(
+        self.detailView = RMCharacterDetailsView(
             frame: .zero,
             viewModel: viewModel
         )
@@ -54,7 +54,7 @@ class RMCharacterDetailViewController: UIViewController {
 }
 
 // MARK: - Actions
-extension RMCharacterDetailViewController {
+extension RMCharacterDetailsViewController {
     
     @objc
     private func didTapShare() {
@@ -63,7 +63,7 @@ extension RMCharacterDetailViewController {
 }
 
 // MARK: - UICollectionViewDataSource
-extension RMCharacterDetailViewController: UICollectionViewDataSource {
+extension RMCharacterDetailsViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return viewModel.sections.count
@@ -118,14 +118,14 @@ extension RMCharacterDetailViewController: UICollectionViewDataSource {
 }
 
 // MARK: - UICollectionViewDelegate
-extension RMCharacterDetailViewController: UICollectionViewDelegate {
+extension RMCharacterDetailsViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let sectionType = viewModel.sections[indexPath.section]
         switch sectionType {
         case .episodes:
             let episodes = self.viewModel.episodes
             let selection = episodes[indexPath.row]
-            let viewController = RMEpisodeDetailViewController(url: URL(string: selection))
+            let viewController = RMEpisodeDetailsViewController(url: URL(string: selection))
             navigationController?.pushViewController(viewController, animated: true)
         default:
             break
