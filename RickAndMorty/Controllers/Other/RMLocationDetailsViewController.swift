@@ -1,5 +1,5 @@
 //
-//  RMLocationDetailViewController.swift
+//  RMLocationDetailsViewController.swift
 //  RickAndMorty
 //
 //  Created by Andrei Shpartou on 12/06/2024.
@@ -8,10 +8,10 @@
 import UIKit
 
 /// View controller to show details about a single location
-final class RMLocationDetailViewController: UIViewController {
+final class RMLocationDetailsViewController: UIViewController {
     private let viewModel: RMLocationDetailViewViewModel
     
-    private let locationDetailView = RMLocationDetailView()
+    private let locationDetailView = RMLocationDetailsView()
     
     // MARK: - Init
     init(location: RMLocation) {
@@ -56,16 +56,16 @@ final class RMLocationDetailViewController: UIViewController {
 }
 
 // MARK: - RMLocationDetailViewViewModelDelegate
-extension RMLocationDetailViewController: RMLocationDetailViewViewModelDelegate {
+extension RMLocationDetailsViewController: RMLocationDetailViewViewModelDelegate {
     func didFetchLocationDetail() {
         locationDetailView.configure(with: viewModel)
     }
 }
 
 // MARK: - RMLocationDetailViewDelegate
-extension RMLocationDetailViewController: RMLocationDetailViewDelegate {
-    func rmLocationDetailView(_ detailView: RMLocationDetailView, didSelect character: RMCharacter) {
-        let viewController = RMCharacterDetailViewController(
+extension RMLocationDetailsViewController: RMLocationDetailsViewDelegate {
+    func rmLocationDetailView(_ detailView: RMLocationDetailsView, didSelect character: RMCharacter) {
+        let viewController = RMCharacterDetailsViewController(
             viewModel: .init(character: character)
         )
         viewController.title = character.name

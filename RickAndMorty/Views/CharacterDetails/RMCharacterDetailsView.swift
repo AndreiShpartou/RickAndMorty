@@ -1,5 +1,5 @@
 //
-//  RMCharacterDetailView.swift
+//  RMCharacterDetailsView.swift
 //  RickAndMorty
 //
 //  Created by Andrei Shpartou on 06/06/2024.
@@ -8,7 +8,7 @@
 import UIKit
 
 /// View for single character info
-class RMCharacterDetailView: UIView {
+class RMCharacterDetailsView: UIView {
     
     public lazy var collectionView: UICollectionView = createCollectionView()
     
@@ -73,11 +73,11 @@ class RMCharacterDetailView: UIView {
 }
 
 // MARK: - Public Methods
-extension RMCharacterDetailView {
+extension RMCharacterDetailsView {
 }
 
 // MARK: - Constraints
-private extension RMCharacterDetailView {
+private extension RMCharacterDetailsView {
     private func addConstraints() {
         NSLayoutConstraint.activate([
             spinner.centerXAnchor.constraint(equalTo: centerXAnchor),

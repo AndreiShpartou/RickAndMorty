@@ -18,7 +18,7 @@ final class RMSearchResultsView: UIView {
     
     weak var delegate: RMSearchResultsViewDelegate?
     
-    private var viewModel: RMSearchResultViewModel? {
+    private var viewModel: RMSearchResultViewViewModel? {
         didSet {
             self.processViewModel()
         }
@@ -122,7 +122,7 @@ final class RMSearchResultsView: UIView {
 
 // MARK: - Public
 extension RMSearchResultsView {
-    public func configure(with viewModel: RMSearchResultViewModel) {
+    public func configure(with viewModel: RMSearchResultViewViewModel) {
         self.viewModel = viewModel
     }
 }
@@ -289,7 +289,7 @@ extension RMSearchResultsView: UIScrollViewDelegate {
         
         if totalContentHeight != 0, offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
             
-            viewModel.fetchAdditionalResults { [weak self] newResults in
+            viewModel.fetchAdditionalResultsWithDelay(0.1) { [weak self] newResults in
                 guard let strongSelf = self else {
                     return
                 }
@@ -321,7 +321,7 @@ extension RMSearchResultsView: UIScrollViewDelegate {
         
         if totalContentHeight != 0, offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
             showTableLoadingIndicator()
-            viewModel.fetchAdditionalLocations { [weak self] newResults in
+            viewModel.fetchAdditionalLocationsWithDelay(0.1) { [weak self] newResults in
                 self?.tableView.tableFooterView = nil
                 self?.locationTableViewCellViewModels = newResults
                 self?.tableView.reloadData()

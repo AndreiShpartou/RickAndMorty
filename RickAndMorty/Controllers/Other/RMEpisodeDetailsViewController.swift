@@ -1,5 +1,5 @@
 //
-//  RMEpisodeDetailViewController.swift
+//  RMEpisodeDetailsViewController.swift
 //  RickAndMorty
 //
 //  Created by Andrei Shpartou on 08/06/2024.
@@ -8,10 +8,10 @@
 import UIKit
 
 /// View controller to show details about a single episode
-final class RMEpisodeDetailViewController: UIViewController {
+final class RMEpisodeDetailsViewController: UIViewController {
     private let viewModel: RMEpisodeDetailViewViewModel
     
-    private let episodeDetailView = RMEpisodeDetailView()
+    private let episodeDetailView = RMEpisodeDetailsView()
     
     // MARK: - Init
     init(url: URL?) {
@@ -55,16 +55,16 @@ final class RMEpisodeDetailViewController: UIViewController {
 }
 
 // MARK: - RMEpisodeDetailViewViewModelDelegate
-extension RMEpisodeDetailViewController: RMEpisodeDetailViewViewModelDelegate {
+extension RMEpisodeDetailsViewController: RMEpisodeDetailViewViewModelDelegate {
     func didFetchEpisodeDetail() {
         episodeDetailView.configure(with: viewModel)
     }
 }
 
 // MARK: - RMEpisodeDetailViewDelegate
-extension RMEpisodeDetailViewController: RMEpisodeDetailViewDelegate {
-    func rmEpisodeDetailView(_ detailView: RMEpisodeDetailView, didSelect character: RMCharacter) {
-        let viewController = RMCharacterDetailViewController(
+extension RMEpisodeDetailsViewController: RMEpisodeDetailsViewDelegate {
+    func rmEpisodeDetailView(_ detailView: RMEpisodeDetailsView, didSelect character: RMCharacter) {
+        let viewController = RMCharacterDetailsViewController(
             viewModel: .init(character: character)
         )
         viewController.title = character.name
