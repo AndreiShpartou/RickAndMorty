@@ -25,10 +25,16 @@ final class RMSearchResultViewViewModel {
     
     private var next: String?
     
+    private var loadPageHandler: (([Codable]) -> Void)?
+    
     // MARK: - Init
     init(results: RMSearchResultType, next: String? = nil) {
         self.results = results
         self.next = next
+    }
+    
+    public func registerLoadPageHandler(handler: @escaping (([Codable]) -> Void)) {
+        self.loadPageHandler = handler
     }
     
     // MARK: - Fetch Results
@@ -52,6 +58,7 @@ final class RMSearchResultViewViewModel {
                     case .success(let responseModel):
                         let moreResults = responseModel.results
                         self?.next = responseModel.info.next
+                        self?.loadPageHandler?(moreResults)
 
                         let additionalResults = moreResults.compactMap {
                             return RMCharacterCollectionViewCellViewModel(
@@ -85,6 +92,7 @@ final class RMSearchResultViewViewModel {
                     case .success(let responseModel):
                         let moreResults = responseModel.results
                         self?.next = responseModel.info.next
+                        self?.loadPageHandler?(moreResults)
 
                         let additionalResults = moreResults.compactMap {
                             return RMCharacterEpisodeCollectionViewCellViewModel(
@@ -131,6 +139,7 @@ final class RMSearchResultViewViewModel {
                 case .success(let responseModel):
                     let moreResults = responseModel.results
                     self?.next = responseModel.info.next
+                    self?.loadPageHandler?(moreResults)
 
                     let additionalLocations = moreResults.compactMap {
                         return RMLocationTableViewCellViewModel(location: $0)
