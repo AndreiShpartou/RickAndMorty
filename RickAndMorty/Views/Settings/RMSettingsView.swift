@@ -9,13 +9,10 @@ import SwiftUI
 
 struct RMSettingsView: View {
     let viewModel: RMSettingsViewViewModel
-    
-    let strings = ["A", "B", "C"]
-    
+
     var body: some View {
-        
         List(viewModel.cellViewModels) { viewModel in
-            HStack {
+            HStack() {
                 if let image = viewModel.image {
                     Image(uiImage: image)
                         .resizable()
@@ -23,7 +20,6 @@ struct RMSettingsView: View {
                         .foregroundColor(Color.white)
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 20, height: 20)
-                        .foregroundColor(Color.red)
                         .padding(8)
                         .background(Color(viewModel.iconContainerColor))
                         .cornerRadius(6)
@@ -36,8 +32,8 @@ struct RMSettingsView: View {
             .onTapGesture {
                 viewModel.onTapHandler(viewModel.type)
             }
-            
         }
+        .background()
     }
     
     init(viewModel: RMSettingsViewViewModel) {
