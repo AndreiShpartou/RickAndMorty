@@ -39,7 +39,7 @@ final class RMCharacterCollectionViewCellViewModel {
 }
 
 // MARK: - Hashable
-extension RMCharacterCollectionViewCellViewModel: Hashable, Equatable {
+extension RMCharacterCollectionViewCellViewModel: Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(characterName)
         hasher.combine(characterStatus)

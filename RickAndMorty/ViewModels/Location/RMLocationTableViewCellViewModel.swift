@@ -31,7 +31,7 @@ struct RMLocationTableViewCellViewModel {
     }
 }
 
-extension RMLocationTableViewCellViewModel: Hashable, Equatable {
+extension RMLocationTableViewCellViewModel: Hashable {
     static func == (lhs: RMLocationTableViewCellViewModel, rhs: RMLocationTableViewCellViewModel) -> Bool {
         return lhs.hashValue == rhs.hashValue
     }
