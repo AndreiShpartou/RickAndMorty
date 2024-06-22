@@ -42,12 +42,10 @@ final class RMSearchView: UIView {
     
     // No results view
     private let noResultsView = RMNoSearchResultsView()
-    
-    
+
+    // Results collectionView / TableView
     private let resultsView = RMSearchResultsView()
-    
-    // Results collectionView
-    
+
     // MARK: - Init
     init(frame: CGRect, viewModel: RMSearchViewViewModel) {
         self.viewModel = viewModel

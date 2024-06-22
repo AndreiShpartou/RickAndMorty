@@ -14,14 +14,15 @@ import Foundation
 
 final class RMSearchViewViewModel {
     let config: RMSearchViewController.Config
-    
+
     private var optionMapUpdateBlock: (((RMSearchInputViewViewModel.DynamicOption, String)) -> Void)?
-    private var searResultHandler: ((RMSearchResultViewViewModel) -> Void)?
+    private var searchResultHandler: ((RMSearchResultViewViewModel) -> Void)?
     private var noResultsHandler: (() -> Void)?
     
     private var optionMap: [RMSearchInputViewViewModel.DynamicOption: String] = [:]
     private var searchText: String = ""
-    private var searchResultsModel: Codable?
+    private var searchResultModels: [Codable] = []
+    
     
     // MARK: - Init
     init(config: RMSearchViewController.Config) {
@@ -46,13 +47,14 @@ final class RMSearchViewViewModel {
     }
     
     public func registerSearchResultHandler(_ block: @escaping (RMSearchResultViewViewModel) -> Void) {
-        self.searResultHandler = block
+        self.searchResultHandler = block
     }
     
     public func registerNoResultsHandler(_ block: @escaping () -> Void) {
         self.noResultsHandler = block
     }
     
+    // MARK: - Search
     public func executeSearch() {
         guard !searchText.trimmingCharacters(in: .whitespaces).isEmpty else {
             return
@@ -85,29 +87,29 @@ final class RMSearchViewViewModel {
             makeSearchAPICall(RMGetAllLocationsResponse.self, request: request)
         }
     }
-    
+    // MARK: - Seeking for models
     public func locationSearchResult(at index: Int) -> RMLocation? {
-        guard let searchModel = searchResultsModel as? RMGetAllLocationsResponse else {
+        guard let searchModels = searchResultModels as? [RMLocation] else {
             return nil
         }
         
-        return searchModel.results[index]
+        return searchModels[index]
     }
     
     public func characterSearchResult(at index: Int) -> RMCharacter? {
-        guard let searchModel = searchResultsModel as? RMGetAllCharactersResponse else {
+        guard let searchModels = searchResultModels as? [RMCharacter] else {
             return nil
         }
         
-        return searchModel.results[index]
+        return searchModels[index]
     }
     
     public func episodeSearchResult(at index: Int) -> RMEpisode? {
-        guard let searchModel = searchResultsModel as? RMGetAllEpisodesResponse else {
+        guard let searchModels = searchResultModels as? [RMEpisode] else {
             return nil
         }
         
-        return searchModel.results[index]
+        return searchModels[index]
     }
     
     // MARK: - Private
@@ -140,6 +142,7 @@ final class RMSearchViewViewModel {
                 )
             }))
             nextUrl = characterResults.info.next
+            self.searchResultModels = characterResults.results
         } else if let episodesResults = model as? RMGetAllEpisodesResponse {
             resultsVM = .episodes(episodesResults.results.map({
                 return RMCharacterEpisodeCollectionViewCellViewModel(
@@ -147,17 +150,23 @@ final class RMSearchViewViewModel {
                 )
             }))
             nextUrl = episodesResults.info.next
+            self.searchResultModels = episodesResults.results
         } else if let locationsResults = model as? RMGetAllLocationsResponse {
             resultsVM = .locations(locationsResults.results.map({
                 return RMLocationTableViewCellViewModel(location: $0)
             }))
             nextUrl = locationsResults.info.next
+            self.searchResultModels = locationsResults.results
         }
         
         if let results = resultsVM {
-            self.searchResultsModel = model
             let viewModel = RMSearchResultViewViewModel(results: results, next: nextUrl)
-            self.searResultHandler?(viewModel)
+            self.searchResultHandler?(viewModel)
+            viewModel.registerLoadPageHandler { [weak self] moreResults in
+
+                self?.searchResultModels.append(contentsOf: moreResults)
+            }
+            
         } else {
             handleNoResults()
         }
