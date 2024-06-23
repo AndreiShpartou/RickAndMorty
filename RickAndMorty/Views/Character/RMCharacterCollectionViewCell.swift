@@ -26,6 +26,7 @@ final class RMCharacterCollectionViewCell: UICollectionViewCell {
             ofSize: 18,
             weight: .medium
         )
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
@@ -36,6 +37,7 @@ final class RMCharacterCollectionViewCell: UICollectionViewCell {
             ofSize: 16,
             weight: .regular
         )
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     

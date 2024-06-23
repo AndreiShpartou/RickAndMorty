@@ -13,6 +13,7 @@ final class RMEpisodeInfoCollectionViewCell: UICollectionViewCell {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 20, weight: .medium)
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
@@ -21,6 +22,7 @@ final class RMEpisodeInfoCollectionViewCell: UICollectionViewCell {
         label.textAlignment = .right
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 20, weight: .regular)
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
