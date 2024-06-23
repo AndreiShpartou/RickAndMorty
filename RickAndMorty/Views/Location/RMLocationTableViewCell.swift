@@ -14,7 +14,7 @@ class RMLocationTableViewCell: UITableViewCell {
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 20, weight: .medium)
-        
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
@@ -22,7 +22,7 @@ class RMLocationTableViewCell: UITableViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 15, weight: .regular)
         label.textColor = .secondaryLabel
-        
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
@@ -30,7 +30,7 @@ class RMLocationTableViewCell: UITableViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 15, weight: .light)
         label.textColor = .secondaryLabel
-        
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
@@ -89,5 +89,8 @@ private extension RMLocationTableViewCell {
             dimensionLabel.topAnchor.constraint(equalTo: typeLabel.bottomAnchor, constant: 10),
             dimensionLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
         ])
+        nameLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
+        typeLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        dimensionLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
 }

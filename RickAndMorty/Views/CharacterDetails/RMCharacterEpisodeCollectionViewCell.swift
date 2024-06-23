@@ -14,18 +14,23 @@ final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
     private let seasonLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 20, weight: .semibold)
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 22, weight: .regular)
+        label.numberOfLines = 0
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
     private let airDateLabel: UILabel = {
         let label = UILabel()
+        label.textAlignment = .left
         label.font = .systemFont(ofSize: 18, weight: .light)
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
 
@@ -53,7 +58,7 @@ final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
     private func setupView() {
         contentView.backgroundColor = .tertiarySystemBackground
         setupLayer()
-        addSubviews(seasonLabel, nameLabel, airDateLabel)
+        contentView.addSubviews(seasonLabel, nameLabel, airDateLabel)
         addConstraints()
     }
     
@@ -68,9 +73,9 @@ final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
 extension RMCharacterEpisodeCollectionViewCell {
     public func configure(with viewModel: RMCharacterEpisodeCollectionViewCellViewModel) {
         viewModel.registerForData { [weak self] data in
+            self?.seasonLabel.text = "Episode " + data.episode
             self?.nameLabel.text = data.name
-            self?.airDateLabel.text = "Episode " + data.air_date
-            self?.seasonLabel.text = "Aired on " + data.episode
+            self?.airDateLabel.text = "Aired on " + data.air_date
         }
         viewModel.fetchEpisode()
         contentView.layer.borderColor = viewModel.borderColor.cgColor

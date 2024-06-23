@@ -23,6 +23,7 @@ final class RMNoSearchResultsView: UIView {
         let label = UILabel()
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 20, weight: .medium)
+        label.adjustsFontSizeToFitWidth = true
         
         return label
     }()

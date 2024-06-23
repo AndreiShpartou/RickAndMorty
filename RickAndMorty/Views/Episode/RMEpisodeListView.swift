@@ -61,15 +61,15 @@ final class RMEpisodeListView: UIView {
     private func setupView() {
         backgroundColor = .systemBackground
         addSubviews(collectionView, spinner)
-        addConstraints()
         setupSubviews()
+        addConstraints()
     }
 
     private func setupSubviews() {
+        SetupCollectionView()
         spinner.startAnimating()
         viewModel.delegate = self
         viewModel.fetchEpisodes()
-        SetupCollectionView()
     }
     
     private func SetupCollectionView() {
