@@ -15,6 +15,7 @@ final class RMCharacterInfoCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 22, weight: .light)
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
@@ -22,6 +23,7 @@ final class RMCharacterInfoCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 20, weight: .medium)
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
