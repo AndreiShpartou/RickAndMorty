@@ -79,17 +79,18 @@ private extension RMLocationTableViewCell {
             nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            nameLabel.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.3),
             
             typeLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             typeLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             typeLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
-            nameLabel.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.3),
             
             dimensionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             dimensionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             dimensionLabel.topAnchor.constraint(equalTo: typeLabel.bottomAnchor, constant: 10),
             dimensionLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
         ])
+        nameLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
+        typeLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        dimensionLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
 }
