@@ -68,12 +68,24 @@ final class RMSearchResultsView: UIView {
         super.init(frame: frame)
         
         setupView()
+        setupObservers()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    // MARK: - LifeCycle
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        collectionView.collectionViewLayout.invalidateLayout()
+    }
+
     // MARK: - SetupView
     private func setupView() {
         isHidden = true
@@ -118,12 +130,27 @@ final class RMSearchResultsView: UIView {
         locationTableViewCellViewModels = viewModels
         tableView.reloadData()
     }
+    
+    // MARK: - SetupObservers
+    private func setupObservers() {
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(orientationDidChange),
+            name: UIDevice.orientationDidChangeNotification,
+            object: nil)
+    }
+   
 }
 
 // MARK: - Public
 extension RMSearchResultsView {
     public func configure(with viewModel: RMSearchResultViewViewModel) {
         self.viewModel = viewModel
+    }
+    
+    @objc func orientationDidChange(_ notification: Notification) {
+        collectionView.collectionViewLayout.invalidateLayout()
     }
 }
 

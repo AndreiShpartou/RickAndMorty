@@ -83,6 +83,7 @@ final class RMSearchViewController: UIViewController {
         searchView.presentKeyboard()
     }
     
+    // MARK: - Setup
     private func configureController() {
         title = viewModel.config.type.title
         

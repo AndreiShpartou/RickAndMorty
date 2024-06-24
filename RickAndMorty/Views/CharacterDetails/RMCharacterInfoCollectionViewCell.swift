@@ -35,7 +35,7 @@ final class RMCharacterInfoCollectionViewCell: UICollectionViewCell {
     
     private let titleContainerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .secondarySystemBackground
+        view.backgroundColor = .quaternarySystemFill
         return view
     }()
     
@@ -63,7 +63,7 @@ final class RMCharacterInfoCollectionViewCell: UICollectionViewCell {
         
     // MARK: - SetupView
     private func setupView() {
-        contentView.backgroundColor = .tertiarySystemBackground
+        contentView.backgroundColor = .secondarySystemBackground
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
         
