@@ -22,6 +22,7 @@ final class RMCharacterViewController: UIViewController {
         super.viewDidLoad()
         setup()
     }
+    
     // MARK: - Setup
     private func setup() {
         title = "Characters"
