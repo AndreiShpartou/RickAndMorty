@@ -171,7 +171,7 @@ extension RMCharacterListViewViewModel: UICollectionViewDelegate, UICollectionVi
 
         let bounds = collectionView.bounds
         let width: CGFloat
-        if UIDevice.isiPhone {
+        if UIDevice.isPhone {
             width = (bounds.width - 30) / 2
         } else {
             // Mac or iPad
