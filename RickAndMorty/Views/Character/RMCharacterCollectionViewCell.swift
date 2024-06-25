@@ -11,6 +11,8 @@ import UIKit
 final class RMCharacterCollectionViewCell: UICollectionViewCell {
     static let cellIdentifier = "RMCharacterCollectionViewCell"
     
+    private var characterImageUrl: URL?
+    
     // MARK: - Subview Properties
     private let commonView = UIView(frame: .zero)
     
@@ -92,9 +94,18 @@ extension RMCharacterCollectionViewCell {
     public func configure(with viewModel: RMCharacterCollectionViewCellViewModel) {
         nameLabel.text = viewModel.characterName
         statusLabel.text = viewModel.characterStatusText
-        viewModel.fetchImage { [weak self] result in
+        characterImageUrl = viewModel.characterImageUrl
+        
+        viewModel.fetchImage { [weak self] result, url in
             switch result {
             case .success(let data):
+                
+                guard let currentURL = self?.characterImageUrl,
+                      let responseURL = url,
+                      currentURL == responseURL else {
+                    return
+                }
+                
                 DispatchQueue.main.async {
                     let image = UIImage(data: data)
                     self?.imageView.image = image

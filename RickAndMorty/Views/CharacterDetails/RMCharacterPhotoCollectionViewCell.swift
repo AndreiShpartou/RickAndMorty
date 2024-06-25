@@ -48,7 +48,7 @@ final class RMCharacterPhotoCollectionViewCell: UICollectionViewCell {
 // MARK: - Public Methods
 extension RMCharacterPhotoCollectionViewCell {
     public func configure(with viewModel: RMCharacterPhotoCollectionViewCellViewModel) {
-        viewModel.fetchImage { [weak self] result in
+        viewModel.fetchImage { [weak self] result, _ in
             switch result {
             case .success(let data):
                 DispatchQueue.main.async {
