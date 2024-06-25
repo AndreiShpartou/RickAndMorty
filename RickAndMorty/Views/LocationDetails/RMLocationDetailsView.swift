@@ -132,7 +132,7 @@ private extension RMLocationDetailsView {
     private func createCharacterLayout() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(
             layoutSize: .init(
-                widthDimension: .fractionalWidth(UIDevice.isiPhone ? 0.5 : 0.25),
+                widthDimension: .fractionalWidth(UIDevice.isPhone && !UIDevice.isLandscape ? 0.5 : 0.25),
                 heightDimension: .fractionalHeight(1)
             ))
         
@@ -141,8 +141,8 @@ private extension RMLocationDetailsView {
         let group = NSCollectionLayoutGroup.horizontal(
             layoutSize: .init(
                 widthDimension: .fractionalWidth(1),
-                heightDimension: .absolute(UIDevice.isiPhone ? 260 : 320)),
-            subitems: UIDevice.isiPhone ? [item, item] : [item, item, item, item]
+                heightDimension: .absolute(UIDevice.isPhone ? 260 : 320)),
+            subitems: UIDevice.isPhone ? [item, item] : [item, item, item, item]
         )
         
         let section = NSCollectionLayoutSection(group: group)

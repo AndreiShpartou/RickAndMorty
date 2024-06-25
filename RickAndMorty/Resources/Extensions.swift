@@ -17,5 +17,8 @@ extension UIView {
 }
 
 extension UIDevice {
-    static let isiPhone = UIDevice.current.userInterfaceIdiom == .phone
+    static let isPhone = UIDevice.current.userInterfaceIdiom == .phone
+    static var isLandscape: Bool {
+        UIDevice.current.orientation.isLandscape
+    }
 }
