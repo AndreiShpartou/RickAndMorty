@@ -132,7 +132,7 @@ private extension RMEpisodeDetailsView {
     private func createCharacterLayout() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(
             layoutSize: .init(
-                widthDimension: .fractionalWidth(UIDevice.isPhone ? 0.5 : 0.25),
+                widthDimension: .fractionalWidth(UIDevice.isPhone && !UIDevice.isLandscape ? 0.5 : 0.25),
                 heightDimension: .fractionalHeight(1)
             ))
         
