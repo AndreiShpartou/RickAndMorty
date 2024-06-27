@@ -13,6 +13,11 @@ final class RMLocationViewController: UIViewController {
     private let locationView = RMLocationView()
     
     private let viewModel = RMLocationViewViewModel()
+    
+    // MARK: - DeInit
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 
     // MARK: - LifeCycle
     override func loadView() {
@@ -28,6 +33,13 @@ final class RMLocationViewController: UIViewController {
         locationView.delegate = self
         viewModel.delegate = self
         viewModel.fetchLocations()
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(tabBarItemDoubleTapped),
+            name: .tabBarItemDoubleTapped,
+            object: nil
+        )
     }
     
     // MARK: - Private Methods
@@ -37,6 +49,18 @@ final class RMLocationViewController: UIViewController {
             target: self,
             action: #selector(didTapSearch)
         )
+    }
+    
+    @objc
+    private func tabBarItemDoubleTapped(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let viewController = userInfo["viewController"] as? UIViewController else {
+            return
+        }
+        
+        if viewController == self {
+            locationView.setNilValueForScrollOffset()
+        }
     }
     
     @objc private func didTapSearch() {
