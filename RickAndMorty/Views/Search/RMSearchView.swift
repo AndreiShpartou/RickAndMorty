@@ -37,6 +37,12 @@ final class RMSearchView: UIView {
     
     // MARK: - Subviews
     
+    private let spinner: UIActivityIndicatorView = {
+        let spinner = UIActivityIndicatorView(style: .large)
+        spinner.hidesWhenStopped = true
+        return spinner
+    }()
+    
     // SearchInputView(bar, selection buttons)
     private let searchInputView = RMSearchInputView()
     
@@ -62,12 +68,11 @@ final class RMSearchView: UIView {
     private func setupView() {
         backgroundColor = .systemBackground
         
-        addSubviews(noResultsView, searchInputView, resultsView)
+        addSubviews(noResultsView, searchInputView, resultsView, spinner)
         searchInputView.configure(
             with: RMSearchInputViewViewModel(type: viewModel.config.type)
         )
         searchInputView.delegate = self
-        
         resultsView.delegate = self
         
         
@@ -77,8 +82,12 @@ final class RMSearchView: UIView {
     
     private func setupHandlers() {
         
-        viewModel.registerOptionChangeBlock { tuple in
-            self.searchInputView.update(option: tuple.0, value: tuple.1)
+        viewModel.registerProcessSearchHandler { [weak self] in
+            self?.spinner.startAnimating()
+        }
+        
+        viewModel.registerOptionChangeBlock { [weak self] tuple in
+            self?.searchInputView.update(option: tuple.0, value: tuple.1)
         }
         
         viewModel.registerSearchResultHandler { [weak self] result in
@@ -86,6 +95,7 @@ final class RMSearchView: UIView {
                 self?.resultsView.configure(with: result)
                 self?.noResultsView.isHidden = true
                 self?.resultsView.isHidden = false
+                self?.spinner.stopAnimating()
             }
         }
         
@@ -93,6 +103,7 @@ final class RMSearchView: UIView {
             DispatchQueue.main.async {
                 self?.noResultsView.isHidden = false
                 self?.resultsView.isHidden = true
+                self?.spinner.stopAnimating()
             }
         }
     }
@@ -102,6 +113,10 @@ final class RMSearchView: UIView {
 extension RMSearchView {
     public func presentKeyboard() {
         searchInputView.presentKeyboard()
+    }
+    
+    public func hideKeyboard() {
+        searchInputView.hideKeyboard()
     }
 }
 
@@ -187,7 +202,13 @@ private extension RMSearchView {
             resultsView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             resultsView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             resultsView.topAnchor.constraint(equalTo: searchInputView.bottomAnchor),
-            resultsView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+            resultsView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            
+            // Spinner
+            spinner.centerXAnchor.constraint(equalTo: centerXAnchor),
+            spinner.centerYAnchor.constraint(equalTo: centerYAnchor),
+            spinner.heightAnchor.constraint(equalToConstant: 100),
+            spinner.widthAnchor.constraint(equalToConstant: 100)
             
         ])
     }

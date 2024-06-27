@@ -18,6 +18,7 @@ final class RMSearchViewViewModel {
     private var optionMapUpdateBlock: (((RMSearchInputViewViewModel.DynamicOption, String)) -> Void)?
     private var searchResultHandler: ((RMSearchResultViewViewModel) -> Void)?
     private var noResultsHandler: (() -> Void)?
+    private var processSearchHandler: (() -> Void)?
     
     private var optionMap: [RMSearchInputViewViewModel.DynamicOption: String] = [:]
     private var searchText: String = ""
@@ -54,8 +55,14 @@ final class RMSearchViewViewModel {
         self.noResultsHandler = block
     }
     
+    public func registerProcessSearchHandler(_ block: @escaping () -> Void) {
+        self.processSearchHandler = block
+    }
+    
+    
     // MARK: - Search
     public func executeSearch() {
+        
         guard !searchText.trimmingCharacters(in: .whitespaces).isEmpty else {
             return
         }
@@ -114,6 +121,7 @@ final class RMSearchViewViewModel {
     
     // MARK: - Private
     private func makeSearchAPICall<T: Codable>(_ type: T.Type, request: RMRequest) {
+        processSearchHandler?()
         RMService.shared.execute(
             request,
             expecting: type) { result in
