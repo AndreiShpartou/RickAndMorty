@@ -136,9 +136,19 @@ extension RMSearchInputView {
     }
     
     public func presentKeyboard() {
-        searchBar.becomeFirstResponder()
+        if let inputText = searchBar.text,
+           inputText.isEmpty {
+            searchBar.becomeFirstResponder()
+        }
     }
     
+    public func hideKeyboard() {
+        if let inputText = searchBar.text,
+           !inputText.isEmpty {
+            searchBar.resignFirstResponder()
+        }
+    }
+
     public func update(option: RMSearchInputViewViewModel.DynamicOption, value: String) {
         // Update options
         guard let buttons = stackView?.arrangedSubviews as? [UIButton],

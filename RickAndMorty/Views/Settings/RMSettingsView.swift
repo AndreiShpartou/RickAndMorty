@@ -12,25 +12,26 @@ struct RMSettingsView: View {
 
     var body: some View {
         List(viewModel.cellViewModels) { viewModel in
+            
             Button(action: {
                 viewModel.onTapHandler(viewModel.type)
             }, label: {
                 HStack() {
-                    if let image = viewModel.image {
-                        Image(uiImage: image)
-                            .resizable()
-                            .renderingMode(.template)
-                            .foregroundColor(Color.white)
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 20, height: 20)
-                            .padding(8)
-                            .background(Color(viewModel.iconContainerColor))
-                            .cornerRadius(6)
-                    }
-                    Text(viewModel.title)
-                        .foregroundColor(Color(.label))
-                        .padding(.leading, 10)
-                    Spacer()
+                        if let image = viewModel.image {
+                            Image(uiImage: image)
+                                .resizable()
+                                .renderingMode(.template)
+                                .foregroundColor(Color.white)
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 20, height: 20)
+                                .padding(8)
+                                .background(Color(viewModel.iconContainerColor))
+                                .cornerRadius(6)
+                        }
+                        Text(viewModel.title)
+                            .foregroundColor(Color(.label))
+                            .padding(.leading, 10)
+                        Spacer()
                 }
                 .padding(.bottom, 5)
             })
