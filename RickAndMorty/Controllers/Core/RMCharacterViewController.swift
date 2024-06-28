@@ -22,11 +22,22 @@ final class RMCharacterViewController: UIViewController {
         super.viewDidLoad()
         setup()
     }
+    // MARK: - DeInit
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
     
     // MARK: - Setup
     private func setup() {
         title = "Characters"
         addSearchButton()
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(tabBarItemDoubleTapped),
+            name: .tabBarItemDoubleTapped,
+            object: nil
+        )
     }
     
     private func addSearchButton() {
@@ -37,12 +48,27 @@ final class RMCharacterViewController: UIViewController {
         )
     }
     
-    @objc private func didTapSearch() {
+    @objc
+    private func tabBarItemDoubleTapped(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let viewController = userInfo["viewController"] as? UIViewController else {
+            return
+        }
+        
+        if viewController == self {
+            characterListView.setNilValueForScrollOffset()
+        }
+    }
+    
+    @objc
+    private func didTapSearch() {
         let viewController = RMSearchViewController(config: .init(type: .character))
         viewController.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(viewController, animated: true)
     }
 }
+
+
 // MARK: - RMCharacterListViewDelegate
 extension RMCharacterViewController: RMCharacterListViewDelegate {
     func rmCharacterListView(_ characterListView: RMCharacterListView, didSelectCharacter character: RMCharacter) {

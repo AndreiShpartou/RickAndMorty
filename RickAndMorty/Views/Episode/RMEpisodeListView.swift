@@ -104,6 +104,11 @@ extension RMEpisodeListView {
     @objc func orientationDidChange(_ notification: Notification) {
         collectionView.collectionViewLayout.invalidateLayout()
     }
+    
+    func setNilValueForScrollOffset() {
+        collectionView.setContentOffset(.zero, animated: true)
+    }
+    
 }
 
 // MARK: - RMEpisodeListViewViewModelDelegate

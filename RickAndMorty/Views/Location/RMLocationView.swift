@@ -83,6 +83,10 @@ extension RMLocationView {
             self?.tableView.reloadData()
         }
     }
+    
+    func setNilValueForScrollOffset() {
+        tableView.setContentOffset(.zero, animated: true)
+    }
 }
 
 // MARK: - UITableViewDataSource

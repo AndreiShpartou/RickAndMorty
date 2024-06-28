@@ -22,3 +22,7 @@ extension UIDevice {
         UIDevice.current.orientation.isLandscape
     }
 }
+
+extension Notification.Name {
+    static let tabBarItemDoubleTapped = Notification.Name("tabBarItemDoubleTapped")
+}
