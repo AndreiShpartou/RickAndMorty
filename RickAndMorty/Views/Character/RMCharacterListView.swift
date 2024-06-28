@@ -61,7 +61,7 @@ final class RMCharacterListView: UIView {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-    
+
     // MARK: - Setup View
     private func setupView() {
         backgroundColor = .systemBackground
