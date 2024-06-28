@@ -24,7 +24,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.makeKeyAndVisible()
         
         self.window = window
+        RMThemeManager.shared.applyCurrentTheme()
     }
+    
 }
 
 // MARK: - UITabBarControllerDelegate

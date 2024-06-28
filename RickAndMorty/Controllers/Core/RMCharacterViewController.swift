@@ -30,6 +30,7 @@ final class RMCharacterViewController: UIViewController {
     // MARK: - Setup
     private func setup() {
         title = "Characters"
+        addChangeThemeButton()
         addSearchButton()
         
         NotificationCenter.default.addObserver(
@@ -37,6 +38,16 @@ final class RMCharacterViewController: UIViewController {
             selector: #selector(tabBarItemDoubleTapped),
             name: .tabBarItemDoubleTapped,
             object: nil
+        )
+    }
+    
+    private func addChangeThemeButton() {
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "lightbulb.fill"),
+            style: .plain,
+            target: self,
+            action: #selector(didTapChangeTheme)
         )
     }
     
@@ -60,12 +71,19 @@ final class RMCharacterViewController: UIViewController {
         }
     }
     
+    // MARK: - ActionMethods
+    @objc
+    private func didTapChangeTheme() {
+        
+    }
+    
     @objc
     private func didTapSearch() {
         let viewController = RMSearchViewController(config: .init(type: .character))
         viewController.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(viewController, animated: true)
     }
+
 }
 
 

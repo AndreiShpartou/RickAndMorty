@@ -25,4 +25,5 @@ extension UIDevice {
 
 extension Notification.Name {
     static let tabBarItemDoubleTapped = Notification.Name("tabBarItemDoubleTapped")
+    static let didChangeTheme = Notification.Name("didChangeTheme")
 }
