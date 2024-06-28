@@ -96,7 +96,12 @@ final class RMCharacterListView: UIView {
 // MARK: - Public
 extension RMCharacterListView {
 
-    @objc func orientationDidChange(_ notification: Notification) {
+    func setNilValueForScrollOffset() {
+        collectionView.setContentOffset(.zero, animated: true)
+    }
+    
+    @objc
+    func orientationDidChange(_ notification: Notification) {
         collectionView.collectionViewLayout.invalidateLayout()
     }
 }

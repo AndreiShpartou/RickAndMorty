@@ -11,6 +11,11 @@ import UIKit
 final class RMEpisodeViewController: UIViewController {
     private let episodeListView = RMEpisodeListView()
 
+    // MARK: - DeInit
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     // MARK: - LifeCycle
     override func loadView() {
         episodeListView.delegate = self
@@ -26,6 +31,13 @@ final class RMEpisodeViewController: UIViewController {
     private func setup() {
         title = "Episodes"
         addSearchButton()
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(tabBarItemDoubleTapped),
+            name: .tabBarItemDoubleTapped,
+            object: nil
+        )
     }
 
     private func addSearchButton() {
@@ -34,6 +46,18 @@ final class RMEpisodeViewController: UIViewController {
             target: self,
             action: #selector(didTapSearch)
         )
+    }
+    
+    @objc
+    private func tabBarItemDoubleTapped(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let viewController = userInfo["viewController"] as? UIViewController else {
+            return
+        }
+        
+        if viewController == self {
+            episodeListView.setNilValueForScrollOffset()
+        }
     }
     
     @objc private func didTapSearch() {

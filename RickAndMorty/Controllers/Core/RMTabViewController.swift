@@ -9,7 +9,8 @@ import UIKit
 
 /// Controller to house tabs and root tab controllers
 final class RMTabViewController: UITabBarController {
-
+    
+    // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -64,4 +65,3 @@ final class RMTabViewController: UITabBarController {
         )
     }
 }
-
