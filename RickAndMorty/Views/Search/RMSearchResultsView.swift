@@ -78,13 +78,6 @@ final class RMSearchResultsView: UIView {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-    
-    // MARK: - LifeCycle
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        
-        collectionView.collectionViewLayout.invalidateLayout()
-    }
 
     // MARK: - SetupView
     private func setupView() {

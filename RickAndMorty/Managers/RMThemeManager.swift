@@ -23,7 +23,7 @@ class RMThemeManager {
             return theme
         }
         set {
-            UserDefaults.standard.setValue(currentTheme.rawValue, forKey: themeKey)
+            UserDefaults.standard.setValue(newValue.rawValue, forKey: themeKey)
             applyTheme(newValue)
         }
         

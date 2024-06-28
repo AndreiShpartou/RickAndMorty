@@ -22,6 +22,15 @@ final class RMCharacterViewController: UIViewController {
         super.viewDidLoad()
         setup()
     }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        if self.traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            updateNavigationBar()
+        }
+    }
+    
     // MARK: - DeInit
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -44,11 +53,17 @@ final class RMCharacterViewController: UIViewController {
     private func addChangeThemeButton() {
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "lightbulb.fill"),
+            image: UIImage(systemName: "lightbulb"),
             style: .plain,
             target: self,
             action: #selector(didTapChangeTheme)
         )
+    }
+    
+    private func updateNavigationBar() {
+        let isDarkMode = (self.traitCollection.userInterfaceStyle == .dark)
+        let iconName = isDarkMode ? "lightbulb" : "lightbulb.fill"
+        navigationItem.leftBarButtonItem?.image = UIImage(systemName: iconName)
     }
     
     private func addSearchButton() {
@@ -74,7 +89,7 @@ final class RMCharacterViewController: UIViewController {
     // MARK: - ActionMethods
     @objc
     private func didTapChangeTheme() {
-        
+        RMThemeManager.shared.toggleTheme()
     }
     
     @objc
