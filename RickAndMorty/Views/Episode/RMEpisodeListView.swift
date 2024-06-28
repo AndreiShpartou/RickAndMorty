@@ -62,12 +62,6 @@ final class RMEpisodeListView: UIView {
         NotificationCenter.default.removeObserver(self)
     }
     
-    // MARK: - LifeCycle
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        collectionView.collectionViewLayout.invalidateLayout()
-    }
-    
     // MARK: - Setup View
     private func setupView() {
         backgroundColor = .systemBackground

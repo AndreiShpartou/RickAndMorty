@@ -27,10 +27,19 @@ final class RMEpisodeViewController: UIViewController {
         setup()
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        if self.traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            updateNavigationBar()
+        }
+    }
+    
     // MARK: - Setup
     private func setup() {
         title = "Episodes"
         addSearchButton()
+        addChangeThemeButton()
         
         NotificationCenter.default.addObserver(
             self,
@@ -38,6 +47,22 @@ final class RMEpisodeViewController: UIViewController {
             name: .tabBarItemDoubleTapped,
             object: nil
         )
+    }
+    
+    private func addChangeThemeButton() {
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "lightbulb"),
+            style: .plain,
+            target: self,
+            action: #selector(didTapChangeTheme)
+        )
+    }
+    
+    private func updateNavigationBar() {
+        let isDarkMode = (self.traitCollection.userInterfaceStyle == .dark)
+        let iconName = isDarkMode ? "lightbulb" : "lightbulb.fill"
+        navigationItem.leftBarButtonItem?.image = UIImage(systemName: iconName)
     }
 
     private func addSearchButton() {
@@ -58,6 +83,11 @@ final class RMEpisodeViewController: UIViewController {
         if viewController == self {
             episodeListView.setNilValueForScrollOffset()
         }
+    }
+    
+    @objc
+    private func didTapChangeTheme() {
+        RMThemeManager.shared.toggleTheme()
     }
     
     @objc private func didTapSearch() {

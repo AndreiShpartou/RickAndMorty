@@ -29,6 +29,7 @@ final class RMLocationViewController: UIViewController {
 
         title = "Locations"
         addSearchButton()
+        addChangeThemeButton()
         
         locationView.delegate = self
         viewModel.delegate = self
@@ -42,7 +43,32 @@ final class RMLocationViewController: UIViewController {
         )
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        if self.traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            updateNavigationBar()
+        }
+    }
+    
     // MARK: - Private Methods
+    
+    private func addChangeThemeButton() {
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "lightbulb"),
+            style: .plain,
+            target: self,
+            action: #selector(didTapChangeTheme)
+        )
+    }
+    
+    private func updateNavigationBar() {
+        let isDarkMode = (self.traitCollection.userInterfaceStyle == .dark)
+        let iconName = isDarkMode ? "lightbulb" : "lightbulb.fill"
+        navigationItem.leftBarButtonItem?.image = UIImage(systemName: iconName)
+    }
+    
     private func addSearchButton() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .search,
@@ -61,6 +87,11 @@ final class RMLocationViewController: UIViewController {
         if viewController == self {
             locationView.setNilValueForScrollOffset()
         }
+    }
+    
+    @objc
+    private func didTapChangeTheme() {
+        RMThemeManager.shared.toggleTheme()
     }
     
     @objc private func didTapSearch() {
