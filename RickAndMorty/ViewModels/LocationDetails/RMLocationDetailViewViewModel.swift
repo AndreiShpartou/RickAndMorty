@@ -65,6 +65,10 @@ extension RMLocationDetailViewViewModel {
         
         return dataTuple.characters[index]
     }
+    
+    func getDataToShare() -> [Any] {
+        return [getLocationDescription()]
+    }
 }
 
 // MARK: - Private
@@ -140,5 +144,32 @@ extension RMLocationDetailViewViewModel {
                 )
             }))
         ]
+    }
+    
+    private func getLocationDescription() -> RMShareItem {
+        guard let dataTuple = dataTuple else {
+            let text = "No description"
+            return RMShareItem(subject: text, details: text)
+        }
+        
+        let location = dataTuple.location
+        var createdString = location.created
+        if let date = RMCharacterInfoCollectionViewCellViewModel.dateFormatter.date(
+            from: location.created
+        ) {
+            createdString = RMCharacterInfoCollectionViewCellViewModel.shortDateFormatter.string(
+                from: date
+            )
+        }
+        
+        let subject = "Location: \(location.name)"
+        let details = """
+            Location Name: "\(location.name)"
+            Type: "\(location.type)"
+            Dimension: "\(location.dimension)"
+            Created: "\(createdString)"
+        """
+        
+        return RMShareItem(subject: subject, details: details)
     }
 }

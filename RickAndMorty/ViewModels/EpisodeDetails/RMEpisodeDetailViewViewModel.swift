@@ -65,6 +65,10 @@ extension RMEpisodeDetailViewViewModel {
         
         return dataTuple.characters[index]
     }
+    
+    func getDataToShare() -> [Any] {
+        return [getEpisodeDescription()]
+    }
 }
 
 // MARK: - Private
@@ -140,5 +144,32 @@ extension RMEpisodeDetailViewViewModel {
                 )
             }))
         ]
+    }
+    
+    private func getEpisodeDescription() -> RMShareItem {
+        guard let dataTuple = dataTuple else {
+            let text = "No description"
+            return RMShareItem(subject: text, details: text)
+        }
+        
+        let episode = dataTuple.episode
+        var createdString = episode.created
+        if let date = RMCharacterInfoCollectionViewCellViewModel.dateFormatter.date(
+            from: episode.created
+        ) {
+            createdString = RMCharacterInfoCollectionViewCellViewModel.shortDateFormatter.string(
+                from: date
+            )
+        }
+        
+        let subject = "Episode: \(episode.name)"
+        let details = """
+            Episode Name: "\(episode.name)"
+            Air Date: "\(episode.air_date)"
+            Episode: "\(episode.episode)"
+            Created: "\(createdString)"
+        """
+        
+        return RMShareItem(subject: subject, details: details)
     }
 }
