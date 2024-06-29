@@ -36,6 +36,24 @@ final class RMCharacterDetailViewViewModel {
         setupSections()
     }
     
+    func getDataToShare() -> [Any] {
+        return [getCharacterDescription()]
+    }
+    
+    private func getCharacterDescription() -> RMShareItem {
+        let subject = "Character: \(character.name)"
+        // Add character details
+        let details = """
+            Name: "\(character.name)"
+            Status: "\(character.status.rawValue)"
+            Species: "\(character.species)"
+            Gender: "\(character.gender.rawValue)"
+            Origin: "\(character.origin.name)"
+            Location: "\(character.location.name)"
+        """
+        return RMShareItem(subject: subject, details: details)
+    }
+    
     // MARK: - SetupSections
     private func setupSections() {
         /*

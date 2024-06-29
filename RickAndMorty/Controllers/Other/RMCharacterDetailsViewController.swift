@@ -58,7 +58,19 @@ extension RMCharacterDetailsViewController {
     
     @objc
     private func didTapShare() {
-        // Share character info
+        let itemsToShare = viewModel.getDataToShare()
+            
+        let activityViewController = UIActivityViewController(
+            activityItems: itemsToShare,
+            applicationActivities: nil
+        )
+        
+        // For iPad: Specify the location where the popover should appear
+        if let popoverController = activityViewController.popoverPresentationController {
+            popoverController.barButtonItem = self.navigationItem.rightBarButtonItem
+        }
+        
+        self.present(activityViewController, animated: true)
     }
 }
 
