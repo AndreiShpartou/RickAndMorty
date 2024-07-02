@@ -9,36 +9,35 @@ import UIKit
 
 final class RMFooterLoadingCollectionReusableView: UICollectionReusableView {
     static let identifier = "RMFooterLoadingCollectionReusableView"
-    
+
     private let spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
         spinner.hidesWhenStopped = true
         return spinner
     }()
-    
+
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - SetupView
     private func setupView() {
         backgroundColor = .systemBackground
-        
+
         addSubviews(spinner)
         addConstraints()
     }
-    
 }
 
 // MARK: - PublicMethods
 extension RMFooterLoadingCollectionReusableView {
-    public func startAnimating() {
+    func startAnimating() {
         spinner.startAnimating()
     }
 }

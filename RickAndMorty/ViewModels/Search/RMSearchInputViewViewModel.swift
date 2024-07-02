@@ -8,12 +8,12 @@
 import Foundation
 
 final class RMSearchInputViewViewModel {
-    
+
     enum DynamicOption: String {
         case status = "Status"
         case gender = "Gender"
         case locationType = "Location Type"
-        
+
         var queryArgument: String {
             switch self {
             case .status:
@@ -24,7 +24,7 @@ final class RMSearchInputViewViewModel {
                 return "type"
             }
         }
-        
+
         var choices: [String] {
             switch self {
             case .status:
@@ -36,9 +36,9 @@ final class RMSearchInputViewViewModel {
             }
         }
     }
-    
+
     // MARK: - PublicProperties
-    public var hasDynamicOptions: Bool {
+    var hasDynamicOptions: Bool {
         switch type {
         case .character, .location:
             return true
@@ -46,8 +46,8 @@ final class RMSearchInputViewViewModel {
             return false
         }
     }
-    
-    public var options: [DynamicOption] {
+
+    var options: [DynamicOption] {
         switch type {
         case .character:
             return [.status, .gender]
@@ -57,8 +57,8 @@ final class RMSearchInputViewViewModel {
             return []
         }
     }
-    
-    public var searchPlaceHolderText: String {
+
+    var searchPlaceHolderText: String {
         switch type {
         case .character:
             return "Character Name"
@@ -68,14 +68,12 @@ final class RMSearchInputViewViewModel {
             return "Episode Title"
         }
     }
-    
+
     // MARK: - PrivateProperties
     private let type: RMSearchViewController.Config.ConfigType
-    
+
     // MARK: - Init
     init(type: RMSearchViewController.Config.ConfigType) {
         self.type = type
     }
-    
-    
 }

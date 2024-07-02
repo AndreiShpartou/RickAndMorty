@@ -14,7 +14,7 @@ final class RMCharacterInfoCollectionViewCellViewModel {
         formatter.timeZone = .current
         return formatter
     }()
-    
+
     static let shortDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -22,35 +22,35 @@ final class RMCharacterInfoCollectionViewCellViewModel {
         formatter.timeZone = .current
         return formatter
     }()
-    
-    public var title: String {
+
+    var title: String {
         return type.displayTitle
     }
-    
-    public var displayValue: String {
+
+    var displayValue: String {
         if value.isEmpty {
             return "None"
         }
-        
+
         if type == .created,
            let date = Self.dateFormatter.date(from: value) {
             return Self.shortDateFormatter.string(from: date)
         }
-        
+
         return value
     }
-    
-    public var iconImage: UIImage? {
+
+    var iconImage: UIImage? {
         return type.iconImage
     }
-    
-    public var tintColor: UIColor {
+
+    var tintColor: UIColor {
         return type.tintColor
     }
-    
+
     private var type: InfoType
     private let value: String
-    
+
     enum InfoType: String {
         case status
         case gender
@@ -60,7 +60,7 @@ final class RMCharacterInfoCollectionViewCellViewModel {
         case created
         case location
         case episodeCount
-        
+
         var tintColor: UIColor {
             switch self {
             case .status:
@@ -81,7 +81,7 @@ final class RMCharacterInfoCollectionViewCellViewModel {
                 return .systemMint
             }
         }
-        
+
         var iconImage: UIImage? {
             switch self {
             case .status:
@@ -102,7 +102,7 @@ final class RMCharacterInfoCollectionViewCellViewModel {
                 return UIImage(systemName: "bell")
             }
         }
-        
+
         var displayTitle: String {
             switch self {
             case .episodeCount:
@@ -112,7 +112,7 @@ final class RMCharacterInfoCollectionViewCellViewModel {
             }
         }
     }
-    
+
     init(type: InfoType, value: String) {
         self.type = type
         self.value = value

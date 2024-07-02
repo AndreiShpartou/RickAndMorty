@@ -9,7 +9,7 @@ import UIKit
 
 final class RMCharacterInfoCollectionViewCell: UICollectionViewCell {
     static let cellIdentifier = "RMCharacterInfoCollectionViewCell"
-    
+
     // MARK: - View Properties
     private let valueLabel: UILabel = {
         let label = UILabel()
@@ -18,7 +18,7 @@ final class RMCharacterInfoCollectionViewCell: UICollectionViewCell {
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
-    
+
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -26,57 +26,56 @@ final class RMCharacterInfoCollectionViewCell: UICollectionViewCell {
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
-    
+
     private let iconImageView: UIImageView = {
         let icon = UIImageView()
         icon.contentMode = .scaleAspectFit
         return icon
     }()
-    
+
     private let titleContainerView: UIView = {
         let view = UIView()
         view.backgroundColor = .quaternarySystemFill
         return view
     }()
-    
+
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         setupView()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - LifeCycle
     override func prepareForReuse() {
         super.prepareForReuse()
-        
+
         valueLabel.text = nil
         titleLabel.text = nil
         iconImageView.image = nil
         iconImageView.tintColor = .label
         titleLabel.textColor = .label
     }
-        
+
     // MARK: - SetupView
     private func setupView() {
         contentView.backgroundColor = .secondarySystemBackground
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
-        
+
         contentView.addSubviews(valueLabel, iconImageView, titleContainerView)
         titleContainerView.addSubviews(titleLabel)
         addConstraints()
     }
-
 }
 
 // MARK: - Public Methods
 extension RMCharacterInfoCollectionViewCell {
-    public func configure(with viewModel: RMCharacterInfoCollectionViewCellViewModel) {
+    func configure(with viewModel: RMCharacterInfoCollectionViewCellViewModel) {
         titleLabel.text = viewModel.title
         valueLabel.text = viewModel.displayValue
         iconImageView.image = viewModel.iconImage
@@ -96,12 +95,12 @@ private extension RMCharacterInfoCollectionViewCell {
                 equalTo: contentView.heightAnchor,
                 multiplier: 0.33
             ),
-            
+
             titleLabel.leadingAnchor.constraint(equalTo: titleContainerView.leadingAnchor),
             titleLabel.trailingAnchor.constraint(equalTo: titleContainerView.trailingAnchor),
             titleLabel.topAnchor.constraint(equalTo: titleContainerView.topAnchor),
             titleLabel.bottomAnchor.constraint(equalTo: titleContainerView.bottomAnchor),
-            
+
             iconImageView.leadingAnchor.constraint(
                 equalTo: contentView.leadingAnchor,
                 constant: 20
@@ -112,7 +111,7 @@ private extension RMCharacterInfoCollectionViewCell {
                 constant: 35
             ),
             iconImageView.heightAnchor.constraint(equalToConstant: 30),
-            
+
             valueLabel.leadingAnchor.constraint(
                 equalTo: iconImageView.trailingAnchor,
                 constant: 10

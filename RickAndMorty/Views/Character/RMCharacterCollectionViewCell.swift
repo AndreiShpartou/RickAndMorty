@@ -10,19 +10,19 @@ import UIKit
 /// Single cell for a character
 final class RMCharacterCollectionViewCell: UICollectionViewCell {
     static let cellIdentifier = "RMCharacterCollectionViewCell"
-    
+
     private var characterImageUrl: URL?
-    
+
     // MARK: - Subview Properties
     private let commonView = UIView(frame: .zero)
-    
+
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
     }()
-    
+
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .label
@@ -33,7 +33,7 @@ final class RMCharacterCollectionViewCell: UICollectionViewCell {
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
-    
+
     private let statusLabel: UILabel = {
         let label = UILabel()
         label.textColor = .secondaryLabel
@@ -44,18 +44,18 @@ final class RMCharacterCollectionViewCell: UICollectionViewCell {
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
-    
+
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
 
         setupContentView()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - LifeCycle
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -63,12 +63,12 @@ final class RMCharacterCollectionViewCell: UICollectionViewCell {
         nameLabel.text = nil
         statusLabel.text = nil
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         setupLayer()
     }
-    
+
     // MARK: - Setup ContentView
     private func setupContentView() {
         contentView.backgroundColor = .secondarySystemBackground
@@ -77,7 +77,7 @@ final class RMCharacterCollectionViewCell: UICollectionViewCell {
         setupLayer()
         addConstraints()
     }
-    
+
     private func setupLayer() {
         commonView.layer.masksToBounds = true
         commonView.layer.cornerRadius = 10
@@ -91,21 +91,21 @@ final class RMCharacterCollectionViewCell: UICollectionViewCell {
 
 // MARK: - PublicMethods
 extension RMCharacterCollectionViewCell {
-    public func configure(with viewModel: RMCharacterCollectionViewCellViewModel) {
+    func configure(with viewModel: RMCharacterCollectionViewCellViewModel) {
         nameLabel.text = viewModel.characterName
         statusLabel.text = viewModel.characterStatusText
         characterImageUrl = viewModel.characterImageUrl
-        
+
         viewModel.fetchImage { [weak self] result, url in
             switch result {
             case .success(let data):
-                
+
                 guard let currentURL = self?.characterImageUrl,
                       let responseURL = url,
                       currentURL == responseURL else {
                     return
                 }
-                
+
                 DispatchQueue.main.async {
                     let image = UIImage(data: data)
                     self?.imageView.image = image
@@ -113,7 +113,6 @@ extension RMCharacterCollectionViewCell {
             case .failure:
                 break
             }
-            
         }
     }
 }
@@ -122,22 +121,22 @@ extension RMCharacterCollectionViewCell {
 private extension RMCharacterCollectionViewCell {
     private func addConstraints() {
         NSLayoutConstraint.activate([
-            
+
             commonView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             commonView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             commonView.topAnchor.constraint(equalTo: contentView.topAnchor),
             commonView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            
+
             statusLabel.leadingAnchor.constraint(equalTo: commonView.leadingAnchor, constant: 7),
             statusLabel.trailingAnchor.constraint(equalTo: commonView.trailingAnchor, constant: -7),
             statusLabel.bottomAnchor.constraint(equalTo: commonView.bottomAnchor, constant: -3),
             statusLabel.heightAnchor.constraint(equalToConstant: 30),
-            
+
             nameLabel.leadingAnchor.constraint(equalTo: commonView.leadingAnchor, constant: 7),
             nameLabel.trailingAnchor.constraint(equalTo: commonView.trailingAnchor, constant: -7),
             nameLabel.bottomAnchor.constraint(equalTo: statusLabel.topAnchor),
             nameLabel.heightAnchor.constraint(equalToConstant: 30),
-            
+
             imageView.leadingAnchor.constraint(equalTo: commonView.leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: commonView.trailingAnchor),
             imageView.topAnchor.constraint(equalTo: commonView.topAnchor),

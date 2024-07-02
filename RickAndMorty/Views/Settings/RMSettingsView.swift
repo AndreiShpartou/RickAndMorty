@@ -12,11 +12,11 @@ struct RMSettingsView: View {
 
     var body: some View {
         List(viewModel.cellViewModels) { viewModel in
-            
+
             Button(action: {
                 viewModel.onTapHandler(viewModel.type)
             }, label: {
-                HStack() {
+                HStack {
                         if let image = viewModel.image {
                             Image(uiImage: image)
                                 .resizable()
@@ -39,7 +39,7 @@ struct RMSettingsView: View {
         }
         .background()
     }
-    
+
     init(viewModel: RMSettingsViewViewModel) {
         self.viewModel = viewModel
     }
@@ -47,10 +47,9 @@ struct RMSettingsView: View {
 
 #Preview {
     RMSettingsView(viewModel: .init(
-        cellViewModels: RMSettingsOption.allCases.compactMap({
-            return RMSettingsCellViewViewModel(type: $0) { option in
-                
+        cellViewModels: RMSettingsOption.allCases.compactMap {
+            return RMSettingsCellViewViewModel(type: $0) { _ in
             }
-        })
+        }
     ))
 }

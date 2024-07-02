@@ -13,8 +13,8 @@ protocol RMLocationViewDelegate: AnyObject {
 
 final class RMLocationView: UIView {
     // MARK: - Properties
-    public weak var delegate: RMLocationViewDelegate?
-    
+    weak var delegate: RMLocationViewDelegate?
+
     private var viewModel: RMLocationViewViewModel? {
         didSet {
             spinner.stopAnimating()
@@ -25,7 +25,7 @@ final class RMLocationView: UIView {
             }
         }
     }
-    
+
     private let tableView: UITableView = {
         let table = UITableView(frame: .zero, style: .grouped)
         table.alpha = 0
@@ -34,56 +34,55 @@ final class RMLocationView: UIView {
             RMLocationTableViewCell.self,
             forCellReuseIdentifier: "RMLocationTableViewCell"
         )
-        
+
         return table
     }()
-    
+
     private let spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView()
         spinner.hidesWhenStopped = true
-        
+
         return spinner
     }()
-    
+
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         setupView()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - SetupView
     private func setupView() {
         backgroundColor = .systemBackground
-        
+
         addSubviews(tableView, spinner)
         spinner.startAnimating()
-        
+
         configureTable()
         addConstraints()
     }
-    
+
     private func configureTable() {
         tableView.dataSource = self
         tableView.delegate = self
     }
-
 }
 
 // MARK: - PublicMethods
 extension RMLocationView {
-    public func configure(with viewModel: RMLocationViewViewModel) {
+    func configure(with viewModel: RMLocationViewViewModel) {
         self.viewModel = viewModel
         self.viewModel?.registerDidLoadMoreLocation { [weak self] in
             self?.tableView.tableFooterView = nil
             self?.tableView.reloadData()
         }
     }
-    
+
     func setNilValueForScrollOffset() {
         tableView.setContentOffset(.zero, animated: true)
     }
@@ -94,37 +93,35 @@ extension RMLocationView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         viewModel?.cellViewModels.count ?? 0
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cellViewModels = viewModel?.cellViewModels else {
-            fatalError()
+            fatalError("Unable to define ViewModel")
         }
-        
+
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: "RMLocationTableViewCell",
             for: indexPath
         ) as? RMLocationTableViewCell else {
-            fatalError()
+            fatalError("Unable to define cell for location")
         }
-        
+
         let cellViewModel = cellViewModels[indexPath.row]
         cell.configure(with: cellViewModel)
-        
+
         return cell
     }
-    
-    
 }
 
 // MARK: - UITableViewDelegate
 extension RMLocationView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
+
         guard let locationModel = viewModel?.location(at: indexPath.row) else {
             return
         }
-        
+
         delegate?.rmLocationView(
             self,
             didSelect: locationModel
@@ -142,11 +139,11 @@ extension RMLocationView: UIScrollViewDelegate {
         else {
             return
         }
-        
+
         let offset = scrollView.contentOffset.y
         let totalContentHeight = scrollView.contentSize.height
         let totalScrollViewFixedHeight = scrollView.frame.size.height
-        
+
         if offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
             showLoadingIndicator()
             viewModel.fetchAdditionalLocationsWithDelay(0.1)
@@ -167,7 +164,7 @@ private extension RMLocationView {
             spinner.centerYAnchor.constraint(equalTo: centerYAnchor),
             spinner.widthAnchor.constraint(equalToConstant: 100),
             spinner.heightAnchor.constraint(equalToConstant: 100),
-            
+
             tableView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             tableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),

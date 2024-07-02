@@ -9,11 +9,11 @@ import UIKit
 
 /// Controller to show and search for Locations
 final class RMLocationViewController: UIViewController {
-    
+
     private let locationView = RMLocationView()
-    
+
     private let viewModel = RMLocationViewViewModel()
-    
+
     // MARK: - DeInit
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -23,18 +23,18 @@ final class RMLocationViewController: UIViewController {
     override func loadView() {
         view = locationView
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         title = "Locations"
         addSearchButton()
         addChangeThemeButton()
-        
+
         locationView.delegate = self
         viewModel.delegate = self
         viewModel.fetchLocations()
-        
+
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(tabBarItemDoubleTapped),
@@ -42,19 +42,19 @@ final class RMLocationViewController: UIViewController {
             object: nil
         )
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        
+
         if self.traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
             updateNavigationBar()
         }
     }
-    
+
     // MARK: - Private Methods
-    
+
     private func addChangeThemeButton() {
-        
+
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "lightbulb"),
             style: .plain,
@@ -62,13 +62,13 @@ final class RMLocationViewController: UIViewController {
             action: #selector(didTapChangeTheme)
         )
     }
-    
+
     private func updateNavigationBar() {
         let isDarkMode = (self.traitCollection.userInterfaceStyle == .dark)
         let iconName = isDarkMode ? "lightbulb" : "lightbulb.fill"
         navigationItem.leftBarButtonItem?.image = UIImage(systemName: iconName)
     }
-    
+
     private func addSearchButton() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .search,
@@ -76,24 +76,24 @@ final class RMLocationViewController: UIViewController {
             action: #selector(didTapSearch)
         )
     }
-    
+
     @objc
     private func tabBarItemDoubleTapped(_ notification: Notification) {
         guard let userInfo = notification.userInfo,
               let viewController = userInfo["viewController"] as? UIViewController else {
             return
         }
-        
+
         if viewController == self {
             locationView.setNilValueForScrollOffset()
         }
     }
-    
+
     @objc
     private func didTapChangeTheme() {
         RMThemeManager.shared.toggleTheme()
     }
-    
+
     @objc private func didTapSearch() {
         let viewController = RMSearchViewController(config: .init(type: .location))
         viewController.navigationItem.largeTitleDisplayMode = .never
@@ -116,5 +116,3 @@ extension RMLocationViewController: RMLocationViewViewModelDelegate {
         locationView.configure(with: viewModel)
     }
 }
-
-

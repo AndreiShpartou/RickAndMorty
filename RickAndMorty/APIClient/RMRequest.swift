@@ -10,7 +10,7 @@ import Foundation
 /// Object that represents a single API call
 final class RMRequest {
     /// API Constants
-    private struct Constants {
+    private enum Constants {
         static let baseURL = "https://rickandmortyapi.com/api"
     }
     /// Desired endpoint
@@ -28,32 +28,33 @@ final class RMRequest {
         pathComponents.forEach {
             string += "/\($0)"
         }
-        
+
         if !queryParameters.isEmpty {
             string += "?"
-            let queryString = queryParameters.compactMap({
+            let queryArray: [String] = queryParameters.compactMap {
                 guard let value = $0.value else {
                     return nil
                 }
                 return "\($0.name)=\(value)"
-            }).joined(separator: "&")
-    
+            }
+            let queryString = queryArray.joined(separator: "&")
+
             string += queryString
         }
-        
+
         return string
     }
 
     // MARK: - Public
-    
+
     /// Desired http method
-    public let httpMethod = "GET"
-    
+    let httpMethod = "GET"
+
     /// Computed & constructed API url
-    public var url: URL? {
+    var url: URL? {
         return URL(string: urlString)
     }
-    
+
     // MARK: - Init
     /// Construct request
     /// - Parameters:
@@ -69,7 +70,7 @@ final class RMRequest {
         self.pathComponents = pathComponents
         self.queryParameters = queryParameters
     }
-    
+
     /// Attempt to create request
     /// - Parameter url: URL to parse
     convenience init?(url: URL) {
@@ -77,7 +78,7 @@ final class RMRequest {
         if !string.contains(Constants.baseURL) {
             return nil
         }
-        
+
         let trimmed = string.replacingOccurrences(of: Constants.baseURL + "/", with: "")
         if trimmed.contains("/") {
             let components = trimmed.components(separatedBy: "/")
@@ -105,7 +106,7 @@ final class RMRequest {
                     guard $0.contains("=") else {
                         return nil
                     }
-                    
+
                     let parts = $0.components(separatedBy: "=")
                     return URLQueryItem(
                         name: parts[0],
@@ -118,7 +119,7 @@ final class RMRequest {
                 }
             }
         }
-        
+
         return nil
     }
 }

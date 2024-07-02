@@ -9,7 +9,7 @@ import UIKit
 
 final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
     static let cellIdentifier = "RMCharacterEpisodeCollectionViewCell"
-    
+
     // MARK: - View Properties
     private let seasonLabel: UILabel = {
         let label = UILabel()
@@ -17,7 +17,7 @@ final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
-    
+
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 22, weight: .regular)
@@ -25,7 +25,7 @@ final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
-    
+
     private let airDateLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
@@ -37,23 +37,23 @@ final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         setupView()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - LifeCycle
     override func prepareForReuse() {
         super.prepareForReuse()
-        
+
         nameLabel.text = nil
         airDateLabel.text = nil
         seasonLabel.text = nil
     }
-        
+
     // MARK: - SetupView
     private func setupView() {
         contentView.backgroundColor = .tertiarySystemBackground
@@ -61,21 +61,20 @@ final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
         contentView.addSubviews(seasonLabel, nameLabel, airDateLabel)
         addConstraints()
     }
-    
+
     private func setupLayer() {
         contentView.layer.cornerRadius = 8
         contentView.layer.borderWidth = 2
     }
-
 }
 
 // MARK: - Public Methods
 extension RMCharacterEpisodeCollectionViewCell {
-    public func configure(with viewModel: RMCharacterEpisodeCollectionViewCellViewModel) {
+    func configure(with viewModel: RMCharacterEpisodeCollectionViewCellViewModel) {
         viewModel.registerForData { [weak self] data in
             self?.seasonLabel.text = "Episode " + data.episode
             self?.nameLabel.text = data.name
-            self?.airDateLabel.text = "Aired on " + data.air_date
+            self?.airDateLabel.text = "Aired on " + data.airDate
         }
         viewModel.fetchEpisode()
         contentView.layer.borderColor = viewModel.borderColor.cgColor
@@ -102,7 +101,7 @@ private extension RMCharacterEpisodeCollectionViewCell {
                 equalTo: contentView.heightAnchor,
                 multiplier: 0.3
             ),
-            
+
             nameLabel.leadingAnchor.constraint(
                 equalTo: contentView.leadingAnchor,
                 constant: 10
@@ -116,7 +115,7 @@ private extension RMCharacterEpisodeCollectionViewCell {
                 equalTo: contentView.heightAnchor,
                 multiplier: 0.3
             ),
-            
+
             airDateLabel.leadingAnchor.constraint(
                 equalTo: contentView.leadingAnchor,
                 constant: 10
