@@ -8,6 +8,6 @@
 import Foundation
 
 struct RMEpisodeInfoCollectionViewCellViewModel {
-    public let title: String
-    public let value: String
+    let title: String
+    let value: String
 }

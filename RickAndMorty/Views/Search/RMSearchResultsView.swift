@@ -15,20 +15,20 @@ protocol RMSearchResultsViewDelegate: AnyObject {
 
 /// Show search results UI (table or collection as needed)
 final class RMSearchResultsView: UIView {
-    
+
     weak var delegate: RMSearchResultsViewDelegate?
-    
+
     private var viewModel: RMSearchResultViewViewModel? {
         didSet {
             self.processViewModel()
         }
     }
-    
+
     /// TableView ViewModels
     private var locationTableViewCellViewModels: [RMLocationTableViewCellViewModel] = []
     /// CollectionView ViewModels
     private var collectionViewCellViewModels: [any Hashable] = []
-    
+
     private var tableView: UITableView = {
         let table = UITableView()
         table.register(
@@ -36,10 +36,10 @@ final class RMSearchResultsView: UIView {
             forCellReuseIdentifier: RMLocationTableViewCell.cellIdentifier
         )
         table.isHidden = true
-        
+
         return table
     }()
-    
+
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -62,11 +62,11 @@ final class RMSearchResultsView: UIView {
         )
         return collectionView
     }()
-    
+
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         setupView()
         setupObservers()
     }
@@ -74,7 +74,7 @@ final class RMSearchResultsView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -84,15 +84,15 @@ final class RMSearchResultsView: UIView {
         isHidden = true
         backgroundColor = .systemBackground
         addSubviews(tableView, collectionView)
-        
+
         addConstraints()
     }
-    
+
     private func processViewModel() {
         guard let viewModel = viewModel else {
             return
         }
-        
+
         switch viewModel.results {
         case .characters(let viewModels):
             collectionViewCellViewModels = viewModels
@@ -104,17 +104,17 @@ final class RMSearchResultsView: UIView {
             setupTableView(with: viewModels)
         }
     }
-    
+
     private func setupCollectionView() {
         collectionView.dataSource = self
         collectionView.delegate = self
-        
+
         tableView.isHidden = true
         collectionView.isHidden = false
 
         collectionView.reloadData()
     }
-    
+
     private func setupTableView(with viewModels: [RMLocationTableViewCellViewModel]) {
         tableView.delegate = self
         tableView.dataSource = self
@@ -123,25 +123,25 @@ final class RMSearchResultsView: UIView {
         locationTableViewCellViewModels = viewModels
         tableView.reloadData()
     }
-    
+
     // MARK: - SetupObservers
     private func setupObservers() {
-        
+
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(orientationDidChange),
             name: UIDevice.orientationDidChangeNotification,
-            object: nil)
+            object: nil
+        )
     }
-   
 }
 
 // MARK: - Public
 extension RMSearchResultsView {
-    public func configure(with viewModel: RMSearchResultViewViewModel) {
+    func configure(with viewModel: RMSearchResultViewViewModel) {
         self.viewModel = viewModel
     }
-    
+
     @objc func orientationDidChange(_ notification: Notification) {
         collectionView.collectionViewLayout.invalidateLayout()
     }
@@ -152,7 +152,7 @@ extension RMSearchResultsView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return locationTableViewCellViewModels.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: RMLocationTableViewCell.cellIdentifier,
@@ -161,7 +161,7 @@ extension RMSearchResultsView: UITableViewDataSource {
             fatalError("Failed to dequeue RMLocationTableViewCell")
         }
         cell.configure(with: locationTableViewCellViewModels[indexPath.row])
-        
+
         return cell
     }
 }
@@ -172,16 +172,15 @@ extension RMSearchResultsView: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         delegate?.rmSearchResultsView(self, didTapLocationAt: indexPath.row)
     }
-    
 }
 
 // MARK: - UICollectionViewDataSource
 extension RMSearchResultsView: UICollectionViewDataSource {
-    
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return collectionViewCellViewModels.count
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         // Character | Episode
         let viewModel = collectionViewCellViewModels[indexPath.row]
@@ -192,9 +191,9 @@ extension RMSearchResultsView: UICollectionViewDataSource {
             ) as? RMCharacterCollectionViewCell else {
                 fatalError("Failed to determine cell type")
             }
-            
+
             cell.configure(with: characterViewModel)
-            
+
             return cell
         } else if let episodeViewModel = viewModel as? RMCharacterEpisodeCollectionViewCellViewModel {
             guard let cell = collectionView.dequeueReusableCell(
@@ -203,15 +202,15 @@ extension RMSearchResultsView: UICollectionViewDataSource {
             ) as? RMCharacterEpisodeCollectionViewCell else {
                 fatalError("Failed to determine cell type")
             }
-            
+
             cell.configure(with: episodeViewModel)
-            
+
             return cell
         } else {
             fatalError("Failed to determine cell type")
         }
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard kind == UICollectionView.elementKindSectionFooter,
               let footer = collectionView.dequeueReusableSupplementaryView(
@@ -221,37 +220,36 @@ extension RMSearchResultsView: UICollectionViewDataSource {
               ) as? RMFooterLoadingCollectionReusableView else {
             fatalError("Unsupported")
         }
-        
+
         if let viewModel = viewModel,
               viewModel.shouldShowLoadMoreIndicator {
             footer.startAnimating()
         }
         return footer
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         guard let viewModel = viewModel,
               viewModel.shouldShowLoadMoreIndicator else {
             return .zero
         }
-        
+
         return CGSize(
             width: collectionView.frame.width,
             height: 100
         )
     }
-    
 }
 
 // MARK: - UICollectionViewDelegate
 extension RMSearchResultsView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
-        
+
         guard let viewModel = viewModel else {
             return
         }
-        
+
         switch viewModel.results {
         case .characters:
             delegate?.rmSearchResultsView(self, didTapCharacterAt: indexPath.row)
@@ -274,12 +272,14 @@ extension RMSearchResultsView: UICollectionViewDelegateFlowLayout {
             let width = UIDevice.isPhone ? ((bounds.width - 30) / 2) * isLandscapeMultiplier : (bounds.width - 60) / 4
             return CGSize(
                 width: width,
-                height: width * 1.5)
+                height: width * 1.5
+            )
         } else if viewModel is RMCharacterEpisodeCollectionViewCellViewModel {
             let width = UIDevice.isPhone ? (bounds.width - 20) * isLandscapeMultiplier : (bounds.width - 30) / 2
             return CGSize(
                 width: width,
-                height: 105)
+                height: 105
+            )
         } else {
             return .zero
         }
@@ -303,13 +303,13 @@ extension RMSearchResultsView: UIScrollViewDelegate {
         else {
             return
         }
-        
+
         let offset = scrollView.contentOffset.y
         let totalContentHeight = scrollView.contentSize.height
         let totalScrollViewFixedHeight = scrollView.frame.size.height
-        
+
         if totalContentHeight != 0, offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
-            
+
             viewModel.fetchAdditionalResultsWithDelay(0.1) { [weak self] newResults in
                 guard let strongSelf = self else {
                     return
@@ -327,7 +327,7 @@ extension RMSearchResultsView: UIScrollViewDelegate {
             }
         }
     }
-    
+
     private func handleLocationPagination(_ scrollView: UIScrollView) {
         guard let viewModel = viewModel,
               viewModel.shouldShowLoadMoreIndicator,
@@ -335,11 +335,11 @@ extension RMSearchResultsView: UIScrollViewDelegate {
         else {
             return
         }
-        
+
         let offset = scrollView.contentOffset.y
         let totalContentHeight = scrollView.contentSize.height
         let totalScrollViewFixedHeight = scrollView.frame.size.height
-        
+
         if totalContentHeight != 0, offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
             showTableLoadingIndicator()
             viewModel.fetchAdditionalLocationsWithDelay(0.1) { [weak self] newResults in
@@ -349,7 +349,7 @@ extension RMSearchResultsView: UIScrollViewDelegate {
             }
         }
     }
-    
+
     private func showTableLoadingIndicator() {
         let footerView = RMTableLoadingFooterView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         tableView.tableFooterView = footerView
@@ -364,7 +364,7 @@ private extension RMSearchResultsView {
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
             tableView.topAnchor.constraint(equalTo: topAnchor),
             tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            
+
             collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
             collectionView.topAnchor.constraint(equalTo: topAnchor),

@@ -13,7 +13,7 @@ enum RMSettingsOption: CaseIterable {
     case apiReference
     case viewSeries
     case viewCode
-    
+
     var targetUrl: URL? {
         switch self {
         case .rateApp:
@@ -28,7 +28,7 @@ enum RMSettingsOption: CaseIterable {
             return URL(string: "https://github.com/AndreiShpartou/RickAndMorty")
         }
     }
-    
+
     var displayTitle: String {
         switch self {
         case .rateApp:
@@ -43,7 +43,7 @@ enum RMSettingsOption: CaseIterable {
             return "View App Code"
         }
     }
-    
+
     var iconContainerColor: UIColor {
         switch self {
         case .rateApp:
@@ -58,7 +58,7 @@ enum RMSettingsOption: CaseIterable {
             return .systemPink
         }
     }
-    
+
     var iconImage: UIImage? {
         switch self {
         case .rateApp:
