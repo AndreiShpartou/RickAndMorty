@@ -12,24 +12,24 @@ protocol RMEpisodeDetailViewViewModelDelegate: AnyObject {
 }
 
 final class RMEpisodeDetailViewViewModel {
-    public weak var delegate: RMEpisodeDetailViewViewModelDelegate?
-    
+    weak var delegate: RMEpisodeDetailViewViewModelDelegate?
+
     enum SectionType {
         case information(viewModels: [RMEpisodeInfoCollectionViewCellViewModel])
         case characters(viewModels: [RMCharacterCollectionViewCellViewModel])
     }
-    
-    public private(set) var cellViewModels: [SectionType] = []
-    
+
+    private(set) var cellViewModels: [SectionType] = []
+
     private let endpointURL: URL?
-    
+
     private var dataTuple: (episode: RMEpisode, characters: [RMCharacter])? {
         didSet {
             createCellViewModels()
             delegate?.didFetchEpisodeDetail()
         }
     }
-    
+
     // MARK: - Init
     init(endpointURL: URL?) {
         self.endpointURL = endpointURL
@@ -38,34 +38,35 @@ final class RMEpisodeDetailViewViewModel {
 
 // MARK: - Public
 extension RMEpisodeDetailViewViewModel {
-    
+
     // MARK: - Fetch episode model
-    public func fetchEpisodeData() {
+    func fetchEpisodeData() {
         guard let url = endpointURL,
               let request = RMRequest(url: url) else {
             return
         }
-        
+
         RMService.shared.execute(
             request,
-            expecting: RMEpisode.self) { [weak self] result in
+            expecting: RMEpisode.self
+        ) { [weak self] result in
                 switch result {
                 case .success(let model):
                     self?.fetchRelatedCharacters(episode: model)
                 case .failure:
                     break
                 }
-            }
+        }
     }
-    
-    public func character(at index: Int) -> RMCharacter? {
+
+    func character(at index: Int) -> RMCharacter? {
         guard let dataTuple = dataTuple else {
             return nil
         }
-        
+
         return dataTuple.characters[index]
     }
-    
+
     func getDataToShare() -> [Any] {
         return [getEpisodeDescription()]
     }
@@ -77,34 +78,35 @@ extension RMEpisodeDetailViewViewModel {
         let characterUrls = episode.characters.compactMap {
             return URL(string: $0)
         }
-        
+
         let requests = characterUrls.compactMap {
             return RMRequest(url: $0)
         }
-        
+
         // n numbers of parallel requests
         // Notified when all done
-        let group  = DispatchGroup()
+        let group = DispatchGroup()
         var characters: [RMCharacter] = []
-        
+
         requests.forEach { request in
             group.enter()
             RMService.shared.execute(
                 request,
-                expecting: RMCharacter.self) { result in
+                expecting: RMCharacter.self
+            ) { result in
                     defer {
                         group.leave()
                     }
-                    
+
                     switch result {
                     case .success(let model):
                         characters.append(model)
                     case .failure:
                         break
                     }
-                }
+            }
         }
-        
+
         group.notify(queue: .main) {
             self.dataTuple = (
                 episode: episode,
@@ -112,12 +114,12 @@ extension RMEpisodeDetailViewViewModel {
             )
         }
     }
-    
+
     private func createCellViewModels() {
         guard let dataTuple = dataTuple else {
             return
         }
-        
+
         let episode = dataTuple.episode
         let characters = dataTuple.characters
         var createdString = episode.created
@@ -128,30 +130,30 @@ extension RMEpisodeDetailViewViewModel {
                 from: date
             )
         }
-        
-        cellViewModels  = [
+
+        cellViewModels = [
             .information(viewModels: [
                 .init(title: "Episode Name", value: episode.name),
-                .init(title: "Air Date", value: episode.air_date),
+                .init(title: "Air Date", value: episode.airDate),
                 .init(title: "Episode", value: episode.episode),
                 .init(title: "Created", value: createdString)
             ]),
-            .characters(viewModels: characters.compactMap({
+            .characters(viewModels: characters.compactMap {
                 RMCharacterCollectionViewCellViewModel(
                     characterName: $0.name,
                     characterStatus: $0.status,
                     characterImageUrl: URL(string: $0.image)
                 )
-            }))
+            })
         ]
     }
-    
+
     private func getEpisodeDescription() -> RMShareItem {
         guard let dataTuple = dataTuple else {
             let text = "No description"
             return RMShareItem(subject: text, details: text)
         }
-        
+
         let episode = dataTuple.episode
         var createdString = episode.created
         if let date = RMCharacterInfoCollectionViewCellViewModel.dateFormatter.date(
@@ -161,15 +163,15 @@ extension RMEpisodeDetailViewViewModel {
                 from: date
             )
         }
-        
+
         let subject = "Episode: \(episode.name)"
         let details = """
             Episode Name: "\(episode.name)"
-            Air Date: "\(episode.air_date)"
+            Air Date: "\(episode.airDate)"
             Episode: "\(episode.episode)"
             Created: "\(createdString)"
         """
-        
+
         return RMShareItem(subject: subject, details: details)
     }
 }

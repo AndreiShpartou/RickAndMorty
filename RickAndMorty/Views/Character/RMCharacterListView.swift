@@ -16,18 +16,18 @@ protocol RMCharacterListViewDelegate: AnyObject {
 
 /// View that handles showing list of characters, loader, etc.
 final class RMCharacterListView: UIView {
-    
-    public weak var delegate: RMCharacterListViewDelegate?
-    
+
+    weak var delegate: RMCharacterListViewDelegate?
+
     private let viewModel = RMCharacterListViewViewModel()
-    
+
     // MARK: - Subview properties
     private let spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
         spinner.hidesWhenStopped = true
         return spinner
     }()
-    
+
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -37,7 +37,8 @@ final class RMCharacterListView: UIView {
         collectionView.alpha = 0
         collectionView.register(
             RMCharacterCollectionViewCell.self,
-            forCellWithReuseIdentifier: RMCharacterCollectionViewCell.cellIdentifier)
+            forCellWithReuseIdentifier: RMCharacterCollectionViewCell.cellIdentifier
+        )
         collectionView.register(
             RMFooterLoadingCollectionReusableView.self,
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
@@ -45,19 +46,19 @@ final class RMCharacterListView: UIView {
         )
         return collectionView
     }()
-    
+
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         setupView()
         setupObservers()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -74,23 +75,23 @@ final class RMCharacterListView: UIView {
         spinner.startAnimating()
         viewModel.delegate = self
         viewModel.fetchCharacters()
-        SetupCollectionView()
+        setupCollectionView()
     }
-    
-    private func SetupCollectionView() {
+
+    private func setupCollectionView() {
         collectionView.dataSource = viewModel
         collectionView.delegate = viewModel
     }
-    
+
     // MARK: - SetupObservers
     private func setupObservers() {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(orientationDidChange),
             name: UIDevice.orientationDidChangeNotification,
-            object: nil)
+            object: nil
+        )
     }
-    
 }
 
 // MARK: - Public
@@ -99,7 +100,7 @@ extension RMCharacterListView {
     func setNilValueForScrollOffset() {
         collectionView.setContentOffset(.zero, animated: true)
     }
-    
+
     @objc
     func orientationDidChange(_ notification: Notification) {
         collectionView.collectionViewLayout.invalidateLayout()
@@ -111,7 +112,7 @@ extension RMCharacterListView: RMCharacterListViewViewModelDelegate {
     func didSelectCharacter(_ character: RMCharacter) {
         delegate?.rmCharacterListView(self, didSelectCharacter: character)
     }
-    
+
     func didLoadInitialCharacters() {
         self.spinner.stopAnimating()
         self.collectionView.isHidden = false
@@ -136,7 +137,7 @@ private extension RMCharacterListView {
             spinner.centerYAnchor.constraint(equalTo: centerYAnchor),
             spinner.widthAnchor.constraint(equalToConstant: 100),
             spinner.heightAnchor.constraint(equalToConstant: 100),
-            
+
             collectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             collectionView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),

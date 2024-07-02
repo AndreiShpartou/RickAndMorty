@@ -16,18 +16,18 @@ protocol RMEpisodeListViewDelegate: AnyObject {
 
 /// View that handles showing list of episodes, loader, etc.
 final class RMEpisodeListView: UIView {
-    
-    public weak var delegate: RMEpisodeListViewDelegate?
-    
+
+    weak var delegate: RMEpisodeListViewDelegate?
+
     private let viewModel = RMEpisodeListViewViewModel()
-    
+
     // MARK: - Subview properties
     private let spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
         spinner.hidesWhenStopped = true
         return spinner
     }()
-    
+
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -37,7 +37,8 @@ final class RMEpisodeListView: UIView {
         collectionView.alpha = 0
         collectionView.register(
             RMCharacterEpisodeCollectionViewCell.self,
-            forCellWithReuseIdentifier: RMCharacterEpisodeCollectionViewCell.cellIdentifier)
+            forCellWithReuseIdentifier: RMCharacterEpisodeCollectionViewCell.cellIdentifier
+        )
         collectionView.register(
             RMFooterLoadingCollectionReusableView.self,
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
@@ -45,23 +46,23 @@ final class RMEpisodeListView: UIView {
         )
         return collectionView
     }()
-    
+
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         setupView()
         setupObservers()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-    
+
     // MARK: - Setup View
     private func setupView() {
         backgroundColor = .systemBackground
@@ -71,24 +72,25 @@ final class RMEpisodeListView: UIView {
     }
 
     private func setupSubviews() {
-        SetupCollectionView()
+        setupCollectionView()
         spinner.startAnimating()
         viewModel.delegate = self
         viewModel.fetchEpisodes()
     }
-    
-    private func SetupCollectionView() {
+
+    private func setupCollectionView() {
         collectionView.dataSource = viewModel
         collectionView.delegate = viewModel
     }
-    
+
     // MARK: - SetupObservers
     private func setupObservers() {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(orientationDidChange),
             name: UIDevice.orientationDidChangeNotification,
-            object: nil)
+            object: nil
+        )
     }
 }
 
@@ -98,11 +100,10 @@ extension RMEpisodeListView {
     @objc func orientationDidChange(_ notification: Notification) {
         collectionView.collectionViewLayout.invalidateLayout()
     }
-    
+
     func setNilValueForScrollOffset() {
         collectionView.setContentOffset(.zero, animated: true)
     }
-    
 }
 
 // MARK: - RMEpisodeListViewViewModelDelegate
@@ -110,7 +111,7 @@ extension RMEpisodeListView: RMEpisodeListViewViewModelDelegate {
     func didSelectEpisode(_ episode: RMEpisode) {
         delegate?.rmEpisodeListView(self, didSelectEpisode: episode)
     }
-    
+
     func didLoadInitialEpisodes() {
         self.spinner.stopAnimating()
         self.collectionView.isHidden = false
@@ -135,7 +136,7 @@ private extension RMEpisodeListView {
             spinner.centerYAnchor.constraint(equalTo: centerYAnchor),
             spinner.widthAnchor.constraint(equalToConstant: 100),
             spinner.heightAnchor.constraint(equalToConstant: 100),
-            
+
             collectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             collectionView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),

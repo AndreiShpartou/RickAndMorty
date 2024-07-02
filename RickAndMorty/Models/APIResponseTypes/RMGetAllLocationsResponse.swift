@@ -18,4 +18,3 @@ struct RMGetAllLocationsResponse: Codable {
     let info: Info
     let results: [RMLocation]
 }
-

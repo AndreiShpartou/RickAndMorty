@@ -14,36 +14,36 @@ enum RMSearchResultType {
 }
 
 final class RMSearchResultViewViewModel {
-    
-    public var shouldShowLoadMoreIndicator: Bool {
+
+    var shouldShowLoadMoreIndicator: Bool {
         return next != nil
     }
-    
-    public private(set) var isLoadingMoreResults = false
-    
-    public private(set) var results: RMSearchResultType
-    
+
+    private(set) var isLoadingMoreResults = false
+
+    private(set) var results: RMSearchResultType
+
     private var next: String?
-    
+
     private var loadPageHandler: (([Codable]) -> Void)?
-    
+
     // MARK: - Init
     init(results: RMSearchResultType, next: String? = nil) {
         self.results = results
         self.next = next
     }
-    
-    public func registerLoadPageHandler(handler: @escaping (([Codable]) -> Void)) {
+
+    func registerLoadPageHandler(handler: @escaping (([Codable]) -> Void)) {
         self.loadPageHandler = handler
     }
-    
+
     // MARK: - Fetch Results
-    public func fetchAdditionalResults(completion: @escaping ([any Hashable]) -> Void) {
+    func fetchAdditionalResults(completion: @escaping ([any Hashable]) -> Void) {
         isLoadingMoreResults = true
         guard let urlString = next,
               let url = URL(string: urlString),
               let request = RMRequest(url: url) else {
-            print("Failed to create request")
+//            print("Failed to create request")
             isLoadingMoreResults = false
             return
         }
@@ -77,8 +77,8 @@ final class RMSearchResultViewViewModel {
                             // Notify via callback
                             completion(newResults)
                         }
-                    case .failure(let failure):
-                        print(String(describing: failure))
+                    case .failure:
+//                        print(String(describing: failure))
                         self?.isLoadingMoreResults = false
                     }
                 }
@@ -109,8 +109,8 @@ final class RMSearchResultViewViewModel {
                             // Notify via callback
                             completion(newResults)
                         }
-                    case .failure(let failure):
-                        print(String(describing: failure))
+                    case .failure:
+//                        print(String(describing: failure))
                         self?.isLoadingMoreResults = false
                     }
                 }
@@ -119,18 +119,18 @@ final class RMSearchResultViewViewModel {
             break
         }
     }
-    
+
     // MARK: - Fetch Locations
-    public func fetchAdditionalLocations(completion: @escaping ([RMLocationTableViewCellViewModel]) -> Void) {
+    func fetchAdditionalLocations(completion: @escaping ([RMLocationTableViewCellViewModel]) -> Void) {
         isLoadingMoreResults = true
         guard let urlString = next,
               let url = URL(string: urlString),
               let request = RMRequest(url: url) else {
-            print("Failed to create request")
+//            print("Failed to create request")
             isLoadingMoreResults = false
             return
         }
-        
+
         RMService.shared.execute(
             request,
             expecting: RMGetAllLocationsResponse.self,
@@ -144,7 +144,7 @@ final class RMSearchResultViewViewModel {
                     let additionalLocations = moreResults.compactMap {
                         return RMLocationTableViewCellViewModel(location: $0)
                     }
-                    
+
                     var newResults: [RMLocationTableViewCellViewModel] = []
                     switch self?.results {
                     case .locations(let existingLocations):
@@ -155,33 +155,34 @@ final class RMSearchResultViewViewModel {
                     case .none:
                         break
                     }
-                    
+
                     DispatchQueue.main.async {
                         // Notify via callback
                         completion(newResults)
                         self?.isLoadingMoreResults = false
                     }
-                case .failure(let failure):
-                    print(String(describing: failure))
+                case .failure:
+//                    print(String(describing: failure))
                     self?.isLoadingMoreResults = false
                 }
             }
         )
     }
-    
-    public func fetchAdditionalResultsWithDelay(_ delay: TimeInterval, completion: @escaping ([any Hashable]) -> Void) {
+
+    func fetchAdditionalResultsWithDelay(_ delay: TimeInterval, completion: @escaping ([any Hashable]) -> Void) {
         isLoadingMoreResults = true
         Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in
             self?.fetchAdditionalResults(completion: completion)
         }
     }
-    
-    public func fetchAdditionalLocationsWithDelay(_ delay: TimeInterval,
-                                                  completion: @escaping ([RMLocationTableViewCellViewModel]) -> Void) {
+
+    func fetchAdditionalLocationsWithDelay(
+        _ delay: TimeInterval,
+        completion: @escaping ([RMLocationTableViewCellViewModel]) -> Void
+    ) {
         isLoadingMoreResults = true
         Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in
             self?.fetchAdditionalLocations(completion: completion)
         }
     }
 }
-

@@ -10,7 +10,7 @@ import Foundation
 struct RMEpisode: Codable, RMEpisodeDataRender {
     let id: Int
     let name: String
-    let air_date: String
+    let airDate: String
     let episode: String
     let characters: [String]
     let url: String

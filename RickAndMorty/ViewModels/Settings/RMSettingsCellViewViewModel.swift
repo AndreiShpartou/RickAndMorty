@@ -9,22 +9,21 @@ import UIKit
 
 struct RMSettingsCellViewViewModel: Identifiable {
     let id = UUID()
-    
-    public var image: UIImage? {
+
+    var image: UIImage? {
         return type.iconImage
     }
-    public var title: String {
+    var title: String {
         return type.displayTitle
     }
-    public var iconContainerColor: UIColor {
+    var iconContainerColor: UIColor {
         return type.iconContainerColor
     }
-    
-    public let onTapHandler: (RMSettingsOption) -> Void
-    
-    public let type: RMSettingsOption
-    
-    
+
+    let onTapHandler: (RMSettingsOption) -> Void
+
+    let type: RMSettingsOption
+
     // MARK: - Init
     init(type: RMSettingsOption, onTapHandler: @escaping (RMSettingsOption) -> Void) {
         self.type = type

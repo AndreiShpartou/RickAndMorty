@@ -10,9 +10,9 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    
+
     private var previousNavigationController: UINavigationController?
-    
+
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
@@ -22,39 +22,37 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.rootViewController = mainVC
         previousNavigationController = mainVC.viewControllers?.first as? UINavigationController
         window.makeKeyAndVisible()
-        
+
         self.window = window
         RMThemeManager.shared.applyCurrentTheme()
     }
-    
 }
 
 // MARK: - UITabBarControllerDelegate
 extension SceneDelegate: UITabBarControllerDelegate {
-    
+
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
         guard let currentNavigationController = viewController as? UINavigationController else {
             return true
         }
-        
+
         guard previousNavigationController == currentNavigationController else {
             previousNavigationController = currentNavigationController
             return true
         }
-        
+
         guard let currentViewController = currentNavigationController.topViewController,
               currentViewController == currentNavigationController.viewControllers.first
         else {
             return true
         }
-        
+
         NotificationCenter.default.post(
             name: .tabBarItemDoubleTapped,
             object: nil,
             userInfo: ["viewController": currentViewController]
         )
-        
+
         return true
     }
 }
-

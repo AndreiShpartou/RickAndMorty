@@ -17,14 +17,14 @@ final class RMSearchViewController: UIViewController {
 
     private let searchView: RMSearchView
     private let viewModel: RMSearchViewViewModel
-    
+
     // MARK: - ConfigProperties
     struct Config {
         enum ConfigType {
             case character // name, status, gender
             case episode // name
             case location // name | type
-            
+
             var endpoint: RMEndpoint {
                 switch self {
                 case .character:
@@ -35,7 +35,7 @@ final class RMSearchViewController: UIViewController {
                     return .location
                 }
             }
-            
+
             var title: String {
                 switch self {
                 case .character:
@@ -47,10 +47,10 @@ final class RMSearchViewController: UIViewController {
                 }
             }
         }
-        
+
         let type: ConfigType
     }
-    
+
     // MARK: - Init
     init(config: Config) {
         let viewModel = RMSearchViewViewModel(config: config)
@@ -61,7 +61,7 @@ final class RMSearchViewController: UIViewController {
         )
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -70,39 +70,39 @@ final class RMSearchViewController: UIViewController {
     override func loadView() {
         view = searchView
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-            
+
         configureController()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+
         searchView.presentKeyboard()
     }
-    
+
     // MARK: - Setup
     private func configureController() {
         title = viewModel.config.type.title
-        
+
         searchView.delegate = self
-        
+
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             title: "Search",
             style: .done,
             target: self,
-            action: #selector(didTapExecuteSearch))
+            action: #selector(didTapExecuteSearch)
+        )
     }
-    
+
     // MARK: - ActionMethods
     @objc
     private func didTapExecuteSearch() {
         viewModel.executeSearch()
         searchView.hideKeyboard()
     }
-
 }
 
 // MARK: - RMSearchViewDelegate
@@ -118,19 +118,19 @@ extension RMSearchViewController: RMSearchViewDelegate {
         viewController.sheetPresentationController?.prefersGrabberVisible = true
         present(viewController, animated: true)
     }
-    
+
     func rmSearchView(_ searchView: RMSearchView, didSelectLocation location: RMLocation) {
         let viewController = RMLocationDetailsViewController(location: location)
         navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(viewController, animated: true)
     }
-    
+
     func rmSearchView(_ searchView: RMSearchView, didSelectCharacter character: RMCharacter) {
         let viewController = RMCharacterDetailsViewController(viewModel: .init(character: character))
         navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(viewController, animated: true)
     }
-    
+
     func rmSearchView(_ searchView: RMSearchView, didSelectEpisode episode: RMEpisode) {
         let episodeURL = URL(string: episode.url)
         let viewController = RMEpisodeDetailsViewController(url: episodeURL)
