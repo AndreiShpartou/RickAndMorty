@@ -7,19 +7,28 @@
 
 import Foundation
 
-/// Object that represents a single API call
+// Object that represents a single API call
 final class RMRequest {
-    /// API Constants
+    
+    // Desired endpoint
+    let endpoint: RMEndpoint
+    // Desired http method
+    let httpMethod = "GET"
+    // Computed API url
+    var url: URL? {
+        return URL(string: urlString)
+    }
+    
+    // API Constants
     private enum Constants {
         static let baseURL = "https://rickandmortyapi.com/api"
     }
-    /// Desired endpoint
-    let endpoint: RMEndpoint
-    /// Path components for API, if any
+    // Path components for API, if any
     private let pathComponents: [String]
-    /// Query arguments for API, if any
+    // Query arguments for API, if any
     private let queryParameters: [URLQueryItem]
-    /// Constructed url for the api request in string format
+    // Constructed url for the api request in string format
+    
     private var urlString: String {
         var string = Constants.baseURL
         string += "/"
@@ -43,16 +52,6 @@ final class RMRequest {
         }
 
         return string
-    }
-
-    // MARK: - Public
-
-    /// Desired http method
-    let httpMethod = "GET"
-
-    /// Computed & constructed API url
-    var url: URL? {
-        return URL(string: urlString)
     }
 
     // MARK: - Init
@@ -79,7 +78,9 @@ final class RMRequest {
             return nil
         }
 
+        
         let trimmed = string.replacingOccurrences(of: Constants.baseURL + "/", with: "")
+        // Request with path components
         if trimmed.contains("/") {
             let components = trimmed.components(separatedBy: "/")
             if !components.isEmpty {
@@ -96,7 +97,9 @@ final class RMRequest {
                     return
                 }
             }
-        } else if trimmed.contains("?") {
+        }
+        // Request with query parameters
+        else if trimmed.contains("?") {
             let components = trimmed.components(separatedBy: "?")
             if !components.isEmpty, components.count >= 2 {
                 let endpointString = components[0]

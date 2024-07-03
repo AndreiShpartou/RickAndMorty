@@ -11,7 +11,6 @@ import UIKit
 final class RMEpisodeDetailsViewController: UIViewController {
 
     private let viewModel: RMEpisodeDetailViewViewModel
-
     private let episodeDetailView = RMEpisodeDetailsView()
 
     // MARK: - Init

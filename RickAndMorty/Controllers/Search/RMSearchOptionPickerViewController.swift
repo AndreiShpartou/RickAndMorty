@@ -10,7 +10,6 @@ import UIKit
 final class RMSearchOptionPickerViewController: UIViewController {
 
     private let selectionBlock: ((String) -> Void)
-
     private let option: RMSearchInputViewViewModel.DynamicOption
 
     private let tableView: UITableView = {

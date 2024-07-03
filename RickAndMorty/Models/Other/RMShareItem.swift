@@ -8,6 +8,7 @@
 import UIKit
 
 class RMShareItem: NSObject, UIActivityItemSource {
+
     private let subject: String
     private let details: String
 

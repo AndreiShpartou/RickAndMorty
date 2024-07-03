@@ -11,7 +11,6 @@ import UIKit
 final class RMLocationDetailsViewController: UIViewController {
 
     private let viewModel: RMLocationDetailViewViewModel
-
     private let locationDetailView = RMLocationDetailsView()
 
     // MARK: - Init

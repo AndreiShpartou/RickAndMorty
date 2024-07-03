@@ -11,7 +11,6 @@ import UIKit
 final class RMLocationViewController: UIViewController {
 
     private let locationView = RMLocationView()
-
     private let viewModel = RMLocationViewViewModel()
 
     // MARK: - DeInit

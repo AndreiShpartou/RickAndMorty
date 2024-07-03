@@ -11,7 +11,6 @@ import UIKit
 class RMCharacterDetailsViewController: UIViewController {
 
     private let viewModel: RMCharacterDetailViewViewModel
-
     private let detailView: RMCharacterDetailsView
 
     // MARK: - Init

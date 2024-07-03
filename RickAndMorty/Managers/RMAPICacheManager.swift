@@ -7,25 +7,24 @@
 
 import Foundation
 
-/// Manages in memory sessions scoped API caches
+// Manages in memory API caches
 final class RMAPICacheManager {
-    // API URL: Data
 
     private var cacheDictionary: [RMEndpoint: NSCache<NSString, NSData>] = [:]
-
     private var cache = NSCache<NSString, NSData>()
 
     init() {
         setupCache()
     }
 
-    // MARK: - Public methods
+    // MARK: - InternalMethods
     func cachedResponse(for endpoint: RMEndpoint, url: URL?) -> Data? {
         guard let targetCache = cacheDictionary[endpoint],
               let url = url else {
             return nil
         }
         let key = url.absoluteString as NSString
+
         return targetCache.object(forKey: key) as? Data
     }
 
@@ -38,7 +37,7 @@ final class RMAPICacheManager {
         targetCache.setObject(data as NSData, forKey: key)
     }
 
-    // MARK: - Private methods
+    // MARK: - PrivateMethods
     private func setupCache() {
         RMEndpoint.allCases.forEach { endpoint in
             cacheDictionary[endpoint] = NSCache<NSString, NSData>()

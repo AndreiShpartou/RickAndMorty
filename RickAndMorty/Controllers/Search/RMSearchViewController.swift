@@ -16,7 +16,6 @@ import UIKit
 final class RMSearchViewController: UIViewController {
 
     private let searchView: RMSearchView
-
     private let viewModel: RMSearchViewViewModel
 
     // MARK: - ConfigProperties
