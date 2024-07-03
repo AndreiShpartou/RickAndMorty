@@ -10,7 +10,7 @@ import UIKit
 protocol RMEpisodeDataRender {
     var episode: String { get }
     var name: String { get }
-    var airDate: String { get }
+    var air_date: String { get }
 }
 
 final class RMCharacterEpisodeCollectionViewCellViewModel {

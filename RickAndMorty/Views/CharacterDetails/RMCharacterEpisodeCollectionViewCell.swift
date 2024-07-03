@@ -74,7 +74,7 @@ extension RMCharacterEpisodeCollectionViewCell {
         viewModel.registerForData { [weak self] data in
             self?.seasonLabel.text = "Episode " + data.episode
             self?.nameLabel.text = data.name
-            self?.airDateLabel.text = "Aired on " + data.airDate
+            self?.airDateLabel.text = "Aired on " + data.air_date
         }
         viewModel.fetchEpisode()
         contentView.layer.borderColor = viewModel.borderColor.cgColor
