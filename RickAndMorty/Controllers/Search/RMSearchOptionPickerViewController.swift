@@ -27,6 +27,7 @@ final class RMSearchOptionPickerViewController: UIViewController {
     ) {
         self.option = option
         self.selectionBlock = selection
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -38,11 +39,13 @@ final class RMSearchOptionPickerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setupView()
+        setupController()
     }
+}
 
-    // MARK: - SetupView()
-    private func setupView() {
+// MARK: - Setup
+extension RMSearchOptionPickerViewController {
+    private func setupController() {
         view.backgroundColor = .systemBackground
 
         setupTable()
@@ -66,6 +69,7 @@ extension RMSearchOptionPickerViewController: UITableViewDataSource {
         let choice = option.choices[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.textLabel?.text = choice.uppercased()
+
         return cell
     }
 }
@@ -76,6 +80,7 @@ extension RMSearchOptionPickerViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         let choice = option.choices[indexPath.row]
         self.selectionBlock(choice)
+
         dismiss(animated: true)
     }
 }

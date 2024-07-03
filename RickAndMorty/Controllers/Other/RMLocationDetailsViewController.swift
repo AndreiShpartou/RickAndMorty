@@ -7,8 +7,9 @@
 
 import UIKit
 
-/// View controller to show details about a single location
+// View controller to show details about a single location
 final class RMLocationDetailsViewController: UIViewController {
+
     private let viewModel: RMLocationDetailViewViewModel
 
     private let locationDetailView = RMLocationDetailsView()
@@ -17,6 +18,7 @@ final class RMLocationDetailsViewController: UIViewController {
     init(location: RMLocation) {
         let url = URL(string: location.url)
         self.viewModel = RMLocationDetailViewViewModel(endpointURL: url)
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -31,16 +33,20 @@ final class RMLocationDetailsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        setupController()
+    }
+}
+
+// MARK: - Setup
+extension RMLocationDetailsViewController {
+    private func setupController() {
+        title = "Location"
+
         locationDetailView.delegate = self
         viewModel.delegate = self
 
-        setupView()
         viewModel.fetchLocationData()
-    }
-
-    // MARK: - SetupView
-    private func setupView() {
-        title = "Location"
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .action,
@@ -48,7 +54,10 @@ final class RMLocationDetailsViewController: UIViewController {
             action: #selector(didTapShare)
         )
     }
+}
 
+// MARK: - ActionMethods
+extension RMLocationDetailsViewController {
     @objc
     private func didTapShare() {
         let itemsToShare = viewModel.getDataToShare()
@@ -57,7 +66,6 @@ final class RMLocationDetailsViewController: UIViewController {
             activityItems: itemsToShare,
             applicationActivities: nil
         )
-
         // For iPad: Specify the location where the popover should appear
         if let popoverController = activityViewController.popoverPresentationController {
             popoverController.barButtonItem = self.navigationItem.rightBarButtonItem
@@ -82,6 +90,7 @@ extension RMLocationDetailsViewController: RMLocationDetailsViewDelegate {
         )
         viewController.title = character.name
         viewController.navigationItem.largeTitleDisplayMode = .never
+
         navigationController?.pushViewController(viewController, animated: true)
     }
 }

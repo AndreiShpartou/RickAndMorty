@@ -7,8 +7,9 @@
 
 import UIKit
 
-/// View controller to show details about a single episode
+// View controller to show details about a single episode
 final class RMEpisodeDetailsViewController: UIViewController {
+
     private let viewModel: RMEpisodeDetailViewViewModel
 
     private let episodeDetailView = RMEpisodeDetailsView()
@@ -16,6 +17,7 @@ final class RMEpisodeDetailsViewController: UIViewController {
     // MARK: - Init
     init(url: URL?) {
         self.viewModel = RMEpisodeDetailViewViewModel(endpointURL: url)
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -30,16 +32,20 @@ final class RMEpisodeDetailsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        setupController()
+    }
+}
+
+// MARK: - Setup
+extension RMEpisodeDetailsViewController {
+    private func setupController() {
+        title = "Episode"
+
         episodeDetailView.delegate = self
         viewModel.delegate = self
 
-        setupView()
         viewModel.fetchEpisodeData()
-    }
-
-    // MARK: - SetupView
-    private func setupView() {
-        title = "Episode"
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .action,
@@ -47,7 +53,10 @@ final class RMEpisodeDetailsViewController: UIViewController {
             action: #selector(didTapShare)
         )
     }
+}
 
+// MARK: - ActionMethods
+extension RMEpisodeDetailsViewController {
     @objc
     private func didTapShare() {
         let itemsToShare = viewModel.getDataToShare()
@@ -56,7 +65,6 @@ final class RMEpisodeDetailsViewController: UIViewController {
             activityItems: itemsToShare,
             applicationActivities: nil
         )
-
         // For iPad: Specify the location where the popover should appear
         if let popoverController = activityViewController.popoverPresentationController {
             popoverController.barButtonItem = self.navigationItem.rightBarButtonItem
@@ -81,6 +89,7 @@ extension RMEpisodeDetailsViewController: RMEpisodeDetailsViewDelegate {
         )
         viewController.title = character.name
         viewController.navigationItem.largeTitleDisplayMode = .never
+
         navigationController?.pushViewController(viewController, animated: true)
     }
 }
