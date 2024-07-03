@@ -134,7 +134,7 @@ extension RMEpisodeDetailViewViewModel {
         cellViewModels = [
             .information(viewModels: [
                 .init(title: "Episode Name", value: episode.name),
-                .init(title: "Air Date", value: episode.airDate),
+                .init(title: "Air Date", value: episode.air_date),
                 .init(title: "Episode", value: episode.episode),
                 .init(title: "Created", value: createdString)
             ]),
@@ -167,7 +167,7 @@ extension RMEpisodeDetailViewViewModel {
         let subject = "Episode: \(episode.name)"
         let details = """
             Episode Name: "\(episode.name)"
-            Air Date: "\(episode.airDate)"
+            Air Date: "\(episode.air_date)"
             Episode: "\(episode.episode)"
             Created: "\(createdString)"
         """
