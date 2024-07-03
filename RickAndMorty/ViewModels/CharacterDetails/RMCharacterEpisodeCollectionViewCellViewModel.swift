@@ -14,6 +14,7 @@ protocol RMEpisodeDataRender {
 }
 
 final class RMCharacterEpisodeCollectionViewCellViewModel {
+
     let borderColor: UIColor
 
     private let episodeDataUrl: URL?
@@ -39,11 +40,13 @@ final class RMCharacterEpisodeCollectionViewCellViewModel {
         self.dataBlock = block
     }
 
+    // MARK: - FetchData
     func fetchEpisode() {
         guard !isFetching else {
             if let model = episode {
                 dataBlock?(model)
             }
+
             return
         }
         guard let url = episodeDataUrl,

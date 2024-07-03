@@ -13,9 +13,11 @@ struct RMSettingsCellViewViewModel: Identifiable {
     var image: UIImage? {
         return type.iconImage
     }
+
     var title: String {
         return type.displayTitle
     }
+
     var iconContainerColor: UIColor {
         return type.iconContainerColor
     }

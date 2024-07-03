@@ -8,10 +8,12 @@
 import UIKit
 
 final class RMCharacterInfoCollectionViewCellViewModel {
+
     static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "YYYY-MM-dd'T'HH:mm:ss.SSSSZ"
         formatter.timeZone = .current
+
         return formatter
     }()
 
@@ -20,36 +22,9 @@ final class RMCharacterInfoCollectionViewCellViewModel {
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
         formatter.timeZone = .current
+
         return formatter
     }()
-
-    var title: String {
-        return type.displayTitle
-    }
-
-    var displayValue: String {
-        if value.isEmpty {
-            return "None"
-        }
-
-        if type == .created,
-           let date = Self.dateFormatter.date(from: value) {
-            return Self.shortDateFormatter.string(from: date)
-        }
-
-        return value
-    }
-
-    var iconImage: UIImage? {
-        return type.iconImage
-    }
-
-    var tintColor: UIColor {
-        return type.tintColor
-    }
-
-    private var type: InfoType
-    private let value: String
 
     enum InfoType: String {
         case status
@@ -113,6 +88,35 @@ final class RMCharacterInfoCollectionViewCellViewModel {
         }
     }
 
+    var title: String {
+        return type.displayTitle
+    }
+
+    var displayValue: String {
+        if value.isEmpty {
+            return "None"
+        }
+
+        if type == .created,
+           let date = Self.dateFormatter.date(from: value) {
+            return Self.shortDateFormatter.string(from: date)
+        }
+
+        return value
+    }
+
+    var iconImage: UIImage? {
+        return type.iconImage
+    }
+
+    var tintColor: UIColor {
+        return type.tintColor
+    }
+
+    private var type: InfoType
+    private let value: String
+
+    // MARK: - Init
     init(type: InfoType, value: String) {
         self.type = type
         self.value = value

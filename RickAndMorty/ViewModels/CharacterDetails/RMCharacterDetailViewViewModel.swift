@@ -56,20 +56,6 @@ final class RMCharacterDetailViewViewModel {
 
     // MARK: - SetupSections
     private func setupSections() {
-        /*
-         let id: Int
-         let name: String
-         let status: RMCharacterStatus
-         let species: String
-         let type: String
-         let gender: RMCharacterGender
-         let origin: RMOriginLocation
-         let location: RMLastLocation
-         let image: String
-         let episode: [String]
-         let url: String
-         let created: String
-         */
         sections = [
             .photo(viewModel: .init(imageURL: URL(string: character.image))),
             .information(viewModels: [

@@ -8,7 +8,7 @@
 import Foundation
 
 struct RMLocationTableViewCellViewModel {
-    // MARK: - PublicProperties
+
     var name: String {
         return location.name
     }
@@ -21,7 +21,6 @@ struct RMLocationTableViewCellViewModel {
         return location.dimension
     }
 
-    // MARK: - PrivateProperties
     private let location: RMLocation
 
     // MARK: - Init
