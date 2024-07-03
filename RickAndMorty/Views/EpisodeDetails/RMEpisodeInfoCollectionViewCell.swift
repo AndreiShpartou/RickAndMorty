@@ -8,12 +8,14 @@
 import UIKit
 
 final class RMEpisodeInfoCollectionViewCell: UICollectionViewCell {
+
     static let cellIdentifier = "RMEpisodeInfoCollectionViewCell"
 
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 20, weight: .medium)
         label.adjustsFontSizeToFitWidth = true
+
         return label
     }()
 
@@ -23,6 +25,7 @@ final class RMEpisodeInfoCollectionViewCell: UICollectionViewCell {
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 20, weight: .regular)
         label.adjustsFontSizeToFitWidth = true
+
         return label
     }()
 
@@ -31,7 +34,6 @@ final class RMEpisodeInfoCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
 
         setupView()
-        setupLayer()
     }
 
     required init?(coder: NSCoder) {
@@ -45,12 +47,16 @@ final class RMEpisodeInfoCollectionViewCell: UICollectionViewCell {
         titleLabel.text = nil
         valueLabel.text = nil
     }
+}
 
-    // MARK: - SetupView
+// MARK: - Setup
+extension RMEpisodeInfoCollectionViewCell {
     private func setupView() {
         contentView.backgroundColor = .secondarySystemBackground
-
         contentView.addSubviews(titleLabel, valueLabel)
+
+        setupLayer()
+
         addConstraints()
     }
 
@@ -62,7 +68,7 @@ final class RMEpisodeInfoCollectionViewCell: UICollectionViewCell {
     }
 }
 
-// MARK: - Configure
+// MARK: - Public
 extension RMEpisodeInfoCollectionViewCell {
     func configure(with viewModel: RMEpisodeInfoCollectionViewCellViewModel) {
         titleLabel.text = viewModel.title
@@ -71,7 +77,7 @@ extension RMEpisodeInfoCollectionViewCell {
 }
 
 // MARK: - Constraints
-private extension RMEpisodeInfoCollectionViewCell {
+extension RMEpisodeInfoCollectionViewCell {
     private func addConstraints() {
         NSLayoutConstraint.activate([
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),

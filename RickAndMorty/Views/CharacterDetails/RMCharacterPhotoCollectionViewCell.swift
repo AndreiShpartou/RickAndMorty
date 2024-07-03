@@ -8,14 +8,15 @@
 import UIKit
 
 final class RMCharacterPhotoCollectionViewCell: UICollectionViewCell {
+
     static let cellIdentifier = "RMCharacterPhotoCollectionViewCell"
 
-    // MARK: - View Properties
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 15
+
         return imageView
     }()
 
@@ -36,8 +37,10 @@ final class RMCharacterPhotoCollectionViewCell: UICollectionViewCell {
 
         imageView.image = nil
     }
+}
 
-    // MARK: - SetupView
+// MARK: - Setup
+extension RMCharacterPhotoCollectionViewCell {
     private func setupView() {
         contentView.addSubviews(imageView)
         addConstraints()
@@ -61,7 +64,7 @@ extension RMCharacterPhotoCollectionViewCell {
 }
 
 // MARK: - Constraints
-private extension RMCharacterPhotoCollectionViewCell {
+extension RMCharacterPhotoCollectionViewCell {
     private func addConstraints() {
         NSLayoutConstraint.activate([
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),

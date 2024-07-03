@@ -17,7 +17,7 @@ final class RMAPICacheManager {
         setupCache()
     }
 
-    // MARK: - InternalMethods
+    // MARK: - PublicMethods
     func cachedResponse(for endpoint: RMEndpoint, url: URL?) -> Data? {
         guard let targetCache = cacheDictionary[endpoint],
               let url = url else {

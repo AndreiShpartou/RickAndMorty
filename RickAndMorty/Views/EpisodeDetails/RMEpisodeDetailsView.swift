@@ -15,6 +15,7 @@ protocol RMEpisodeDetailsViewDelegate: AnyObject {
 }
 
 final class RMEpisodeDetailsView: UIView {
+
     weak var delegate: RMEpisodeDetailsViewDelegate?
 
     private var viewModel: RMEpisodeDetailViewViewModel? {
@@ -25,7 +26,7 @@ final class RMEpisodeDetailsView: UIView {
             UIView.animate(
                 withDuration: 0.3
             ) {
-                    self.collectionView.alpha = 1
+                self.collectionView.alpha = 1
             }
         }
     }
@@ -43,27 +44,18 @@ final class RMEpisodeDetailsView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
 
-    // MARK: - SetupView
+// MARK: - Setup
+extension RMEpisodeDetailsView {
     private func setupView() {
         backgroundColor = .systemBackground
 
         addSubviews(collectionView, spinner)
-        addConstraints()
-
         spinner.startAnimating()
-    }
-}
 
-// MARK: - PublicMethods
-extension RMEpisodeDetailsView {
-    func configure(with viewModel: RMEpisodeDetailViewViewModel) {
-        self.viewModel = viewModel
+        addConstraints()
     }
-}
-
-// MARK: - ViewElements
-private extension RMEpisodeDetailsView {
 
     private func createActivityIndicator() -> UIActivityIndicatorView {
         let spinner = UIActivityIndicatorView()
@@ -155,9 +147,15 @@ private extension RMEpisodeDetailsView {
     }
 }
 
+// MARK: - PublicMethods
+extension RMEpisodeDetailsView {
+    func configure(with viewModel: RMEpisodeDetailViewViewModel) {
+        self.viewModel = viewModel
+    }
+}
+
 // MARK: - UICollectionViewDataSource
 extension RMEpisodeDetailsView: UICollectionViewDataSource {
-
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return viewModel?.cellViewModels.count ?? 0
     }
@@ -177,7 +175,6 @@ extension RMEpisodeDetailsView: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
         guard let sections = viewModel?.cellViewModels else {
             fatalError("Unable to define ViewModel")
         }
@@ -193,6 +190,7 @@ extension RMEpisodeDetailsView: UICollectionViewDataSource {
                 fatalError("Unable to define cell for info")
             }
             cell.configure(with: cellViewModel)
+
             return cell
         case .characters(let viewModels):
             let cellViewModel = viewModels[indexPath.row]
@@ -203,6 +201,7 @@ extension RMEpisodeDetailsView: UICollectionViewDataSource {
                 fatalError("Unable to define cell for character")
             }
             cell.configure(with: cellViewModel)
+
             return cell
         }
     }
@@ -232,7 +231,7 @@ extension RMEpisodeDetailsView: UICollectionViewDelegate {
 }
 
 // MARK: - Constraints
-private extension RMEpisodeDetailsView {
+extension RMEpisodeDetailsView {
     private func addConstraints() {
         NSLayoutConstraint.activate([
             spinner.centerXAnchor.constraint(equalTo: centerXAnchor),

@@ -9,7 +9,7 @@ import Foundation
 
 // Object that represents a single API call
 final class RMRequest {
-    
+
     // Desired endpoint
     let endpoint: RMEndpoint
     // Desired http method
@@ -18,7 +18,7 @@ final class RMRequest {
     var url: URL? {
         return URL(string: urlString)
     }
-    
+
     // API Constants
     private enum Constants {
         static let baseURL = "https://rickandmortyapi.com/api"
@@ -28,7 +28,7 @@ final class RMRequest {
     // Query arguments for API, if any
     private let queryParameters: [URLQueryItem]
     // Constructed url for the api request in string format
-    
+
     private var urlString: String {
         var string = Constants.baseURL
         string += "/"
@@ -78,7 +78,6 @@ final class RMRequest {
             return nil
         }
 
-        
         let trimmed = string.replacingOccurrences(of: Constants.baseURL + "/", with: "")
         // Request with path components
         if trimmed.contains("/") {

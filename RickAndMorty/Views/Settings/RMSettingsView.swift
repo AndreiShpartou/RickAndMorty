@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct RMSettingsView: View {
+
     let viewModel: RMSettingsViewViewModel
 
     var body: some View {
@@ -40,16 +41,8 @@ struct RMSettingsView: View {
         .background()
     }
 
+    // MARK: - Init
     init(viewModel: RMSettingsViewViewModel) {
         self.viewModel = viewModel
     }
-}
-
-#Preview {
-    RMSettingsView(viewModel: .init(
-        cellViewModels: RMSettingsOption.allCases.compactMap {
-            return RMSettingsCellViewViewModel(type: $0) { _ in
-            }
-        }
-    ))
 }

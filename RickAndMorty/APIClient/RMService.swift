@@ -11,7 +11,7 @@ import Foundation
 final class RMService {
     // Shared singleton instance
     static let shared = RMService()
-    
+
     // Error types
     enum RMServiceError: Error {
         case failedToCreateRequest
@@ -22,7 +22,6 @@ final class RMService {
 
     // MARK: - Init
     private init() {}
-    
 
     // MARK: - PublicMethods
     /// Send Rick and Morty API Call
