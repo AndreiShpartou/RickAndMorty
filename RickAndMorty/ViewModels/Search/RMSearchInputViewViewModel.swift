@@ -37,7 +37,6 @@ final class RMSearchInputViewViewModel {
         }
     }
 
-    // MARK: - PublicProperties
     var hasDynamicOptions: Bool {
         switch type {
         case .character, .location:

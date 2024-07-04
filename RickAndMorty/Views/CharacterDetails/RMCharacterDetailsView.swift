@@ -7,8 +7,8 @@
 
 import UIKit
 
-/// View for single character info
-class RMCharacterDetailsView: UIView {
+// View for single character info
+final class RMCharacterDetailsView: UIView {
 
     lazy var collectionView: UICollectionView = createCollectionView()
 
@@ -17,6 +17,7 @@ class RMCharacterDetailsView: UIView {
     private let spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
         spinner.hidesWhenStopped = true
+
         return spinner
     }()
 
@@ -26,18 +27,21 @@ class RMCharacterDetailsView: UIView {
         super.init(frame: frame)
 
         setupView()
-        addConstraints()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
 
-    // MARK: - Setup View
+// MARK: - Setup
+extension RMCharacterDetailsView {
     private func setupView() {
         backgroundColor = .systemBackground
 
         addSubviews(collectionView, spinner)
+
+        addConstraints()
     }
 
     private func createCollectionView() -> UICollectionView {
@@ -83,12 +87,8 @@ class RMCharacterDetailsView: UIView {
     }
 }
 
-// MARK: - Public Methods
-extension RMCharacterDetailsView {
-}
-
 // MARK: - Constraints
-private extension RMCharacterDetailsView {
+extension RMCharacterDetailsView {
     private func addConstraints() {
         NSLayoutConstraint.activate([
             spinner.centerXAnchor.constraint(equalTo: centerXAnchor),

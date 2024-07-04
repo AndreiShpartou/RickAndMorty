@@ -13,6 +13,7 @@ import Foundation
 // - Kick off API requests
 
 final class RMSearchViewViewModel {
+
     let config: RMSearchViewController.Config
 
     private var optionMapUpdateBlock: (((RMSearchInputViewViewModel.DynamicOption, String)) -> Void)?
@@ -40,6 +41,7 @@ final class RMSearchViewViewModel {
         self.searchText = text
     }
 
+    // MARK: - HandlerRegister
     func registerOptionChangeBlock(
         _ block: @escaping ((RMSearchInputViewViewModel.DynamicOption, String)) -> Void
     ) {
@@ -60,7 +62,6 @@ final class RMSearchViewViewModel {
 
     // MARK: - Search
     func executeSearch() {
-
         guard !searchText.trimmingCharacters(in: .whitespaces).isEmpty else {
             return
         }

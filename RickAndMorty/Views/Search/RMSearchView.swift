@@ -32,10 +32,7 @@ protocol RMSearchViewDelegate: AnyObject {
 final class RMSearchView: UIView {
 
     weak var delegate: RMSearchViewDelegate?
-
     let viewModel: RMSearchViewViewModel
-
-    // MARK: - Subviews
 
     private let spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
@@ -45,16 +42,15 @@ final class RMSearchView: UIView {
 
     // SearchInputView(bar, selection buttons)
     private let searchInputView = RMSearchInputView()
-
     // No results view
     private let noResultsView = RMNoSearchResultsView()
-
     // Results collectionView / TableView
     private let resultsView = RMSearchResultsView()
 
     // MARK: - Init
     init(frame: CGRect, viewModel: RMSearchViewViewModel) {
         self.viewModel = viewModel
+
         super.init(frame: frame)
 
         setupView()
@@ -63,12 +59,15 @@ final class RMSearchView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
 
-    // MARK: - SetupView
+// MARK: - Setup
+extension RMSearchView {
     private func setupView() {
         backgroundColor = .systemBackground
 
         addSubviews(noResultsView, searchInputView, resultsView, spinner)
+
         searchInputView.configure(
             with: RMSearchInputViewViewModel(type: viewModel.config.type)
         )
@@ -80,7 +79,6 @@ final class RMSearchView: UIView {
     }
 
     private func setupHandlers() {
-
         viewModel.registerProcessSearchHandler { [weak self] in
             self?.spinner.startAnimating()
         }
@@ -142,6 +140,7 @@ extension RMSearchView: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+
         return cell
     }
 }
@@ -159,6 +158,7 @@ extension RMSearchView: RMSearchResultsViewDelegate {
         guard let locationModel = viewModel.locationSearchResult(at: index) else {
             return
         }
+
         delegate?.rmSearchView(self, didSelectLocation: locationModel)
     }
 
@@ -166,6 +166,7 @@ extension RMSearchView: RMSearchResultsViewDelegate {
         guard let characterModel = viewModel.characterSearchResult(at: index) else {
             return
         }
+
         delegate?.rmSearchView(self, didSelectCharacter: characterModel)
     }
 
@@ -173,12 +174,13 @@ extension RMSearchView: RMSearchResultsViewDelegate {
         guard let episodeModel = viewModel.episodeSearchResult(at: index) else {
             return
         }
+
         delegate?.rmSearchView(self, didSelectEpisode: episodeModel)
     }
 }
 
 // MARK: - Constraints
-private extension RMSearchView {
+extension RMSearchView {
     private func addConstraints() {
         NSLayoutConstraint.activate([
             // Search input view

@@ -12,6 +12,7 @@ class RMTableLoadingFooterView: UIView {
     private let spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView()
         spinner.hidesWhenStopped = true
+
         return spinner
     }()
 
@@ -25,8 +26,10 @@ class RMTableLoadingFooterView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
 
-    // MARK: - SetupView
+// MARK: - Setup
+extension RMTableLoadingFooterView {
     private func setupView() {
         addSubviews(spinner)
         spinner.startAnimating()
@@ -35,8 +38,8 @@ class RMTableLoadingFooterView: UIView {
 }
 
 // MARK: - Constraints
-private extension RMTableLoadingFooterView {
-    func addConstraints() {
+extension RMTableLoadingFooterView {
+    private func addConstraints() {
         NSLayoutConstraint.activate([
             spinner.centerXAnchor.constraint(equalTo: centerXAnchor),
             spinner.centerYAnchor.constraint(equalTo: centerYAnchor),

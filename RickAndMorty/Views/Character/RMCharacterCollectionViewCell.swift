@@ -7,19 +7,19 @@
 
 import UIKit
 
-/// Single cell for a character
+// Single cell for a character
 final class RMCharacterCollectionViewCell: UICollectionViewCell {
+
     static let cellIdentifier = "RMCharacterCollectionViewCell"
 
-    private var characterImageUrl: URL?
-
-    // MARK: - Subview Properties
     private let commonView = UIView(frame: .zero)
+    private var characterImageUrl: URL?
 
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
+
         return imageView
     }()
 
@@ -31,6 +31,7 @@ final class RMCharacterCollectionViewCell: UICollectionViewCell {
             weight: .medium
         )
         label.adjustsFontSizeToFitWidth = true
+
         return label
     }()
 
@@ -42,6 +43,7 @@ final class RMCharacterCollectionViewCell: UICollectionViewCell {
             weight: .regular
         )
         label.adjustsFontSizeToFitWidth = true
+
         return label
     }()
 
@@ -68,12 +70,16 @@ final class RMCharacterCollectionViewCell: UICollectionViewCell {
         super.traitCollectionDidChange(previousTraitCollection)
         setupLayer()
     }
+}
 
-    // MARK: - Setup ContentView
+// MARK: - Setup
+extension RMCharacterCollectionViewCell {
     private func setupContentView() {
         contentView.backgroundColor = .secondarySystemBackground
         contentView.addSubviews(commonView)
+
         commonView.addSubviews(imageView, nameLabel, statusLabel)
+
         setupLayer()
         addConstraints()
     }
@@ -81,6 +87,7 @@ final class RMCharacterCollectionViewCell: UICollectionViewCell {
     private func setupLayer() {
         commonView.layer.masksToBounds = true
         commonView.layer.cornerRadius = 10
+
         contentView.layer.shadowPath = UIBezierPath(rect: contentView.bounds).cgPath
         contentView.layer.cornerRadius = 10
         contentView.layer.shadowColor = UIColor.label.cgColor
@@ -99,7 +106,6 @@ extension RMCharacterCollectionViewCell {
         viewModel.fetchImage { [weak self] result, url in
             switch result {
             case .success(let data):
-
                 guard let currentURL = self?.characterImageUrl,
                       let responseURL = url,
                       currentURL == responseURL else {
@@ -118,10 +124,9 @@ extension RMCharacterCollectionViewCell {
 }
 
 // MARK: - Constraints
-private extension RMCharacterCollectionViewCell {
+extension RMCharacterCollectionViewCell {
     private func addConstraints() {
         NSLayoutConstraint.activate([
-
             commonView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             commonView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             commonView.topAnchor.constraint(equalTo: contentView.topAnchor),

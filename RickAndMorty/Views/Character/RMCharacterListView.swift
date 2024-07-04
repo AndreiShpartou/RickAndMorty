@@ -14,14 +14,13 @@ protocol RMCharacterListViewDelegate: AnyObject {
     )
 }
 
-/// View that handles showing list of characters, loader, etc.
+// View that handles showing list of characters, loader, etc.
 final class RMCharacterListView: UIView {
 
     weak var delegate: RMCharacterListViewDelegate?
 
     private let viewModel = RMCharacterListViewViewModel()
 
-    // MARK: - Subview properties
     private let spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
         spinner.hidesWhenStopped = true
@@ -44,6 +43,7 @@ final class RMCharacterListView: UIView {
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
             withReuseIdentifier: RMFooterLoadingCollectionReusableView.identifier
         )
+
         return collectionView
     }()
 
@@ -52,7 +52,6 @@ final class RMCharacterListView: UIView {
         super.init(frame: frame)
 
         setupView()
-        setupObservers()
     }
 
     required init?(coder: NSCoder) {
@@ -62,19 +61,26 @@ final class RMCharacterListView: UIView {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
+}
 
-    // MARK: - Setup View
+// MARK: - Setup
+extension RMCharacterListView {
     private func setupView() {
         backgroundColor = .systemBackground
+
         addSubviews(collectionView, spinner)
-        addConstraints()
         setupSubviews()
+        setupObservers()
+
+        addConstraints()
     }
 
     private func setupSubviews() {
         spinner.startAnimating()
+
         viewModel.delegate = self
         viewModel.fetchCharacters()
+
         setupCollectionView()
     }
 
@@ -96,7 +102,6 @@ final class RMCharacterListView: UIView {
 
 // MARK: - Public
 extension RMCharacterListView {
-
     func setNilValueForScrollOffset() {
         collectionView.setContentOffset(.zero, animated: true)
     }
@@ -130,7 +135,7 @@ extension RMCharacterListView: RMCharacterListViewViewModelDelegate {
 }
 
 // MARK: - Constraints
-private extension RMCharacterListView {
+extension RMCharacterListView {
     private func addConstraints() {
         NSLayoutConstraint.activate([
             spinner.centerXAnchor.constraint(equalTo: centerXAnchor),

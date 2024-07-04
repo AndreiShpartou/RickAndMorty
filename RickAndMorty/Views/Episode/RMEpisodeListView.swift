@@ -14,17 +14,17 @@ protocol RMEpisodeListViewDelegate: AnyObject {
     )
 }
 
-/// View that handles showing list of episodes, loader, etc.
+// View that handles showing list of episodes, loader, etc.
 final class RMEpisodeListView: UIView {
 
     weak var delegate: RMEpisodeListViewDelegate?
 
     private let viewModel = RMEpisodeListViewViewModel()
 
-    // MARK: - Subview properties
     private let spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
         spinner.hidesWhenStopped = true
+
         return spinner
     }()
 
@@ -44,6 +44,7 @@ final class RMEpisodeListView: UIView {
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
             withReuseIdentifier: RMFooterLoadingCollectionReusableView.identifier
         )
+
         return collectionView
     }()
 
@@ -52,22 +53,27 @@ final class RMEpisodeListView: UIView {
         super.init(frame: frame)
 
         setupView()
-        setupObservers()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - DeInit
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
+}
 
-    // MARK: - Setup View
+// MARK: - Setup
+extension RMEpisodeListView {
     private func setupView() {
         backgroundColor = .systemBackground
+
         addSubviews(collectionView, spinner)
         setupSubviews()
+        setupObservers()
+
         addConstraints()
     }
 
@@ -96,8 +102,8 @@ final class RMEpisodeListView: UIView {
 
 // MARK: - Public
 extension RMEpisodeListView {
-
-    @objc func orientationDidChange(_ notification: Notification) {
+    @objc
+    func orientationDidChange(_ notification: Notification) {
         collectionView.collectionViewLayout.invalidateLayout()
     }
 
@@ -129,7 +135,7 @@ extension RMEpisodeListView: RMEpisodeListViewViewModelDelegate {
 }
 
 // MARK: - Constraints
-private extension RMEpisodeListView {
+extension RMEpisodeListView {
     private func addConstraints() {
         NSLayoutConstraint.activate([
             spinner.centerXAnchor.constraint(equalTo: centerXAnchor),

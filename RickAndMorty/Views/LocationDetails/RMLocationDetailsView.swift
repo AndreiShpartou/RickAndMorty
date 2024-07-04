@@ -15,6 +15,7 @@ protocol RMLocationDetailsViewDelegate: AnyObject {
 }
 
 final class RMLocationDetailsView: UIView {
+
     weak var delegate: RMLocationDetailsViewDelegate?
 
     private var viewModel: RMLocationDetailViewViewModel? {
@@ -43,31 +44,23 @@ final class RMLocationDetailsView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
 
-    // MARK: - SetupView
+// MARK: - Setup
+extension RMLocationDetailsView {
     private func setupView() {
         backgroundColor = .systemBackground
 
         addSubviews(collectionView, spinner)
-        addConstraints()
-
         spinner.startAnimating()
-    }
-}
 
-// MARK: - PublicMethods
-extension RMLocationDetailsView {
-    func configure(with viewModel: RMLocationDetailViewViewModel) {
-        self.viewModel = viewModel
+        addConstraints()
     }
-}
-
-// MARK: - ViewElements
-private extension RMLocationDetailsView {
 
     private func createActivityIndicator() -> UIActivityIndicatorView {
         let spinner = UIActivityIndicatorView()
         spinner.hidesWhenStopped = true
+
         return spinner
     }
 
@@ -155,9 +148,15 @@ private extension RMLocationDetailsView {
     }
 }
 
+// MARK: - PublicMethods
+extension RMLocationDetailsView {
+    func configure(with viewModel: RMLocationDetailViewViewModel) {
+        self.viewModel = viewModel
+    }
+}
+
 // MARK: - UICollectionViewDataSource
 extension RMLocationDetailsView: UICollectionViewDataSource {
-
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return viewModel?.cellViewModels.count ?? 0
     }
@@ -193,6 +192,7 @@ extension RMLocationDetailsView: UICollectionViewDataSource {
                 fatalError("Unable to define cell for episode info")
             }
             cell.configure(with: cellViewModel)
+
             return cell
         case .characters(let viewModels):
             let cellViewModel = viewModels[indexPath.row]
@@ -203,6 +203,7 @@ extension RMLocationDetailsView: UICollectionViewDataSource {
                 fatalError("Unable to define cell for character")
             }
             cell.configure(with: cellViewModel)
+
             return cell
         }
     }
@@ -232,7 +233,7 @@ extension RMLocationDetailsView: UICollectionViewDelegate {
 }
 
 // MARK: - Constraints
-private extension RMLocationDetailsView {
+extension RMLocationDetailsView {
     private func addConstraints() {
         NSLayoutConstraint.activate([
             spinner.centerXAnchor.constraint(equalTo: centerXAnchor),

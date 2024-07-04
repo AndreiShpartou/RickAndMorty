@@ -20,11 +20,8 @@ final class RMSearchResultViewViewModel {
     }
 
     private(set) var isLoadingMoreResults = false
-
     private(set) var results: RMSearchResultType
-
     private var next: String?
-
     private var loadPageHandler: (([Codable]) -> Void)?
 
     // MARK: - Init
@@ -43,8 +40,8 @@ final class RMSearchResultViewViewModel {
         guard let urlString = next,
               let url = URL(string: urlString),
               let request = RMRequest(url: url) else {
-//            print("Failed to create request")
             isLoadingMoreResults = false
+
             return
         }
 
@@ -126,8 +123,8 @@ final class RMSearchResultViewViewModel {
         guard let urlString = next,
               let url = URL(string: urlString),
               let request = RMRequest(url: url) else {
-//            print("Failed to create request")
             isLoadingMoreResults = false
+
             return
         }
 
@@ -169,6 +166,7 @@ final class RMSearchResultViewViewModel {
         )
     }
 
+    // MARK: - Delay
     func fetchAdditionalResultsWithDelay(_ delay: TimeInterval, completion: @escaping ([any Hashable]) -> Void) {
         isLoadingMoreResults = true
         Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in

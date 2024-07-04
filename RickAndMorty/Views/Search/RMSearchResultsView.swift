@@ -9,11 +9,13 @@ import UIKit
 
 protocol RMSearchResultsViewDelegate: AnyObject {
     func rmSearchResultsView(_ resultsView: RMSearchResultsView, didTapLocationAt index: Int)
+
     func rmSearchResultsView(_ resultsView: RMSearchResultsView, didTapCharacterAt index: Int)
+
     func rmSearchResultsView(_ resultsView: RMSearchResultsView, didTapEpisodeAt index: Int)
 }
 
-/// Show search results UI (table or collection as needed)
+// Show search results UI (table or collection as needed)
 final class RMSearchResultsView: UIView {
 
     weak var delegate: RMSearchResultsViewDelegate?
@@ -24,9 +26,9 @@ final class RMSearchResultsView: UIView {
         }
     }
 
-    /// TableView ViewModels
+    // TableView ViewModels
     private var locationTableViewCellViewModels: [RMLocationTableViewCellViewModel] = []
-    /// CollectionView ViewModels
+    // CollectionView ViewModels
     private var collectionViewCellViewModels: [any Hashable] = []
 
     private var tableView: UITableView = {
@@ -60,6 +62,7 @@ final class RMSearchResultsView: UIView {
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
             withReuseIdentifier: RMFooterLoadingCollectionReusableView.identifier
         )
+
         return collectionView
     }()
 
@@ -68,22 +71,26 @@ final class RMSearchResultsView: UIView {
         super.init(frame: frame)
 
         setupView()
-        setupObservers()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - DeInit
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
+}
 
-    // MARK: - SetupView
+// MARK: - Setup
+extension RMSearchResultsView {
     private func setupView() {
         isHidden = true
         backgroundColor = .systemBackground
         addSubviews(tableView, collectionView)
+
+        setupObservers()
 
         addConstraints()
     }
@@ -108,10 +115,8 @@ final class RMSearchResultsView: UIView {
     private func setupCollectionView() {
         collectionView.dataSource = self
         collectionView.delegate = self
-
         tableView.isHidden = true
         collectionView.isHidden = false
-
         collectionView.reloadData()
     }
 
@@ -124,9 +129,7 @@ final class RMSearchResultsView: UIView {
         tableView.reloadData()
     }
 
-    // MARK: - SetupObservers
     private func setupObservers() {
-
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(orientationDidChange),
@@ -170,13 +173,13 @@ extension RMSearchResultsView: UITableViewDataSource {
 extension RMSearchResultsView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+
         delegate?.rmSearchResultsView(self, didTapLocationAt: indexPath.row)
     }
 }
 
 // MARK: - UICollectionViewDataSource
 extension RMSearchResultsView: UICollectionViewDataSource {
-
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return collectionViewCellViewModels.count
     }
@@ -225,6 +228,7 @@ extension RMSearchResultsView: UICollectionViewDataSource {
               viewModel.shouldShowLoadMoreIndicator {
             footer.startAnimating()
         }
+
         return footer
     }
 
@@ -296,6 +300,7 @@ extension RMSearchResultsView: UIScrollViewDelegate {
         }
     }
 
+    // MARK: - Pagination
     private func handleCharacterOrEpisodePagination(_ scrollView: UIScrollView) {
         guard let viewModel = viewModel,
               viewModel.shouldShowLoadMoreIndicator,
@@ -309,7 +314,6 @@ extension RMSearchResultsView: UIScrollViewDelegate {
         let totalScrollViewFixedHeight = scrollView.frame.size.height
 
         if totalContentHeight != 0, offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
-
             viewModel.fetchAdditionalResultsWithDelay(0.1) { [weak self] newResults in
                 guard let strongSelf = self else {
                     return
@@ -357,7 +361,7 @@ extension RMSearchResultsView: UIScrollViewDelegate {
 }
 
 // MARK: - Constraints
-private extension RMSearchResultsView {
+extension RMSearchResultsView {
     private func addConstraints() {
         NSLayoutConstraint.activate([
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),

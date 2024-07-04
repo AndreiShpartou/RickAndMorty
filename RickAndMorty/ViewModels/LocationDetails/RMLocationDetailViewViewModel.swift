@@ -12,6 +12,7 @@ protocol RMLocationDetailViewViewModelDelegate: AnyObject {
 }
 
 final class RMLocationDetailViewViewModel {
+
     weak var delegate: RMLocationDetailViewViewModelDelegate?
 
     enum SectionType {
