@@ -7,14 +7,8 @@
 
 import UIKit
 
-protocol RMCharacterListViewViewModelDelegate: AnyObject {
-    func didLoadInitialCharacters()
-    func didLoadMoreCharacters(with newIndexPath: [IndexPath])
-    func didSelectCharacter(_ character: RMCharacter)
-}
-
 // View Model to handle character list view logic
-final class RMCharacterListViewViewModel: NSObject {
+final class RMCharacterListViewViewModel: RMCharacterListViewViewModelProtocol {
 
     weak var delegate: RMCharacterListViewViewModelDelegate?
 
@@ -22,7 +16,13 @@ final class RMCharacterListViewViewModel: NSObject {
         return apiInfo?.next != nil
     }
 
-    private var isLoadingMoreCharacters = false
+    var nextUrlString: String? {
+        return apiInfo?.next
+    }
+
+    private(set) var cellViewModels: [RMCharacterCollectionViewCellViewModel] = []
+
+    private(set) var isLoadingMoreCharacters = false
 
     private var characters: [RMCharacter] = [] {
         didSet {
@@ -40,7 +40,6 @@ final class RMCharacterListViewViewModel: NSObject {
         }
     }
 
-    private var cellViewModels: [RMCharacterCollectionViewCellViewModel] = []
     private var apiInfo: RMGetAllCharactersResponse.Info?
 
     // MARK: - Fetching characters
@@ -109,104 +108,15 @@ final class RMCharacterListViewViewModel: NSObject {
         )
     }
 
+    func getCharacter(at index: Int) -> RMCharacter {
+        return characters[index]
+    }
+
     // MARK: - Delay
     func fetchAdditionalCharactersWithDelay(_ delay: TimeInterval, url: URL) {
         isLoadingMoreCharacters = true
         Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in
             self?.fetchAdditionalCharacters(url: url)
-        }
-    }
-}
-
-// MARK: - CollectionView DataSource
-extension RMCharacterListViewViewModel: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        cellViewModels.count
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: RMCharacterCollectionViewCell.cellIdentifier,
-            for: indexPath
-        ) as? RMCharacterCollectionViewCell else {
-            fatalError("Unsupported cell")
-        }
-
-        cell.configure(with: cellViewModels[indexPath.row])
-
-        return cell
-    }
-
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        guard kind == UICollectionView.elementKindSectionFooter,
-              let footer = collectionView.dequeueReusableSupplementaryView(
-                ofKind: UICollectionView.elementKindSectionFooter,
-                withReuseIdentifier: RMFooterLoadingCollectionReusableView.identifier,
-                for: indexPath
-              ) as? RMFooterLoadingCollectionReusableView else {
-            fatalError("Unsupported")
-        }
-
-        footer.startAnimating()
-
-        return footer
-    }
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        guard shouldShowLoadMoreIndicator else {
-            return .zero
-        }
-
-        return CGSize(
-            width: collectionView.frame.width,
-            height: 100
-        )
-    }
-}
-// MARK: - CollectionView Delegation
-extension RMCharacterListViewViewModel: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-
-        let bounds = collectionView.bounds
-        let width: CGFloat
-        let isLandscapeMultiplier = UIDevice.isLandscape ? 0.45 : 1
-        if UIDevice.isPhone {
-            width = (bounds.width - 30) * isLandscapeMultiplier / 2
-        } else {
-            // Mac or iPad
-            width = (bounds.width - 50) / 4
-        }
-
-        return CGSize(
-            width: width,
-            height: width * 1.5
-        )
-    }
-
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionView.deselectItem(at: indexPath, animated: true)
-        let character = characters[indexPath.row]
-        delegate?.didSelectCharacter(character)
-    }
-}
-
-// MARK: - UIScrollViewDelegate
-extension RMCharacterListViewViewModel: UIScrollViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard shouldShowLoadMoreIndicator,
-              !isLoadingMoreCharacters,
-              !cellViewModels.isEmpty,
-              let nextUrlString = apiInfo?.next,
-              let url = URL(string: nextUrlString) else {
-            return
-        }
-
-        let offset = scrollView.contentOffset.y
-        let totalContentHeight = scrollView.contentSize.height
-        let totalScrollViewFixedHeight = scrollView.frame.size.height
-
-        if totalContentHeight != 0, offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
-            fetchAdditionalCharactersWithDelay(0.1, url: url)
         }
     }
 }
