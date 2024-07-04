@@ -7,20 +7,20 @@
 
 import UIKit
 
-/// Controller to show and search for Characters
+// Controller to show and search for Characters
 final class RMCharacterViewController: UIViewController {
 
     private let characterListView = RMCharacterListView()
 
     // MARK: - LifeCycle
     override func loadView() {
-        characterListView.delegate = self
         view = characterListView
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
+
+        setupController()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -35,12 +35,15 @@ final class RMCharacterViewController: UIViewController {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
+}
 
-    // MARK: - Setup
-    private func setup() {
+// MARK: - Setup
+extension RMCharacterViewController {
+    private func setupController() {
         title = "Characters"
-        addChangeThemeButton()
+        characterListView.delegate = self
         addSearchButton()
+        addChangeThemeButton()
 
         NotificationCenter.default.addObserver(
             self,
@@ -51,7 +54,6 @@ final class RMCharacterViewController: UIViewController {
     }
 
     private func addChangeThemeButton() {
-
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "lightbulb"),
             style: .plain,
@@ -60,18 +62,34 @@ final class RMCharacterViewController: UIViewController {
         )
     }
 
-    private func updateNavigationBar() {
-        let isDarkMode = (self.traitCollection.userInterfaceStyle == .dark)
-        let iconName = isDarkMode ? "lightbulb" : "lightbulb.fill"
-        navigationItem.leftBarButtonItem?.image = UIImage(systemName: iconName)
-    }
-
     private func addSearchButton() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .search,
             target: self,
             action: #selector(didTapSearch)
         )
+    }
+
+    private func updateNavigationBar() {
+        let isDarkMode = (self.traitCollection.userInterfaceStyle == .dark)
+        let iconName = isDarkMode ? "lightbulb" : "lightbulb.fill"
+        navigationItem.leftBarButtonItem?.image = UIImage(systemName: iconName)
+    }
+}
+
+// MARK: - ActionMethods
+extension RMCharacterViewController {
+    @objc
+    private func didTapSearch() {
+        let viewController = RMSearchViewController(config: .init(type: .character))
+        viewController.navigationItem.largeTitleDisplayMode = .never
+
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+
+    @objc
+    private func didTapChangeTheme() {
+        RMThemeManager.shared.toggleTheme()
     }
 
     @objc
@@ -84,19 +102,6 @@ final class RMCharacterViewController: UIViewController {
         if viewController == self {
             characterListView.setNilValueForScrollOffset()
         }
-    }
-
-    // MARK: - ActionMethods
-    @objc
-    private func didTapChangeTheme() {
-        RMThemeManager.shared.toggleTheme()
-    }
-
-    @objc
-    private func didTapSearch() {
-        let viewController = RMSearchViewController(config: .init(type: .character))
-        viewController.navigationItem.largeTitleDisplayMode = .never
-        navigationController?.pushViewController(viewController, animated: true)
     }
 }
 

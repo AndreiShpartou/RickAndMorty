@@ -21,8 +21,9 @@ protocol RMSearchInputViewDelegate: AnyObject {
     func rmSearchInputViewDidTapSearchKeyboardButton(_ inputView: RMSearchInputView)
 }
 
-/// View for top part of screen with search bar
+// View for top part of screen with search bar
 final class RMSearchInputView: UIView {
+
     weak var delegate: RMSearchInputViewDelegate?
 
     private let searchBar: UISearchBar = {
@@ -55,15 +56,17 @@ final class RMSearchInputView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
 
-    // MARK: - SetupView
+// MARK: - Setup
+extension RMSearchInputView {
     private func setupView() {
         backgroundColor = .systemBackground
 
         addSubviews(searchBar)
-        addConstraints()
-
         searchBar.delegate = self
+
+        addConstraints()
     }
 
     private func createOptionStackView() -> UIStackView {
@@ -82,7 +85,6 @@ final class RMSearchInputView: UIView {
         with option: RMSearchInputViewViewModel.DynamicOption,
         tag: Int
     ) -> UIButton {
-
         let button = UIButton()
         button.setAttributedTitle(
             NSAttributedString(
@@ -98,6 +100,7 @@ final class RMSearchInputView: UIView {
         button.layer.cornerRadius = 5
         button.tag = tag
         button.addTarget(self, action: #selector(didTapButton(_:)), for: .touchUpInside)
+
         return button
     }
 
@@ -111,8 +114,10 @@ final class RMSearchInputView: UIView {
             stackView.addArrangedSubview(button)
         }
     }
+}
 
-    // MARK: - ActionMethods
+// MARK: - ActionMethods
+extension RMSearchInputView {
     @objc
     private func didTapButton(_ sender: UIButton) {
         guard let options = viewModel?.options else {
@@ -128,7 +133,6 @@ final class RMSearchInputView: UIView {
 
 // MARK: - PublicMethods
 extension RMSearchInputView {
-
     func configure(with viewModel: RMSearchInputViewViewModel) {
         searchBar.placeholder = viewModel.searchPlaceHolderText
         self.viewModel = viewModel
@@ -179,13 +183,14 @@ extension RMSearchInputView: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         // Notify that search button was tapped
         searchBar.resignFirstResponder()
+
         delegate?.rmSearchInputViewDidTapSearchKeyboardButton(self)
     }
 }
 
 // MARK: - Constraints
-private extension RMSearchInputView {
-    func addConstraints() {
+extension RMSearchInputView {
+    private func addConstraints() {
         NSLayoutConstraint.activate([
             searchBar.leadingAnchor.constraint(equalTo: leadingAnchor),
             searchBar.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -194,7 +199,7 @@ private extension RMSearchInputView {
         ])
     }
 
-    func addStackViewConstraints(to stackView: UIStackView) {
+    private func addStackViewConstraints(to stackView: UIStackView) {
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),

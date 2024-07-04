@@ -8,13 +8,14 @@
 import UIKit
 
 final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
+
     static let cellIdentifier = "RMCharacterEpisodeCollectionViewCell"
 
-    // MARK: - View Properties
     private let seasonLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 20, weight: .semibold)
         label.adjustsFontSizeToFitWidth = true
+
         return label
     }()
 
@@ -23,6 +24,7 @@ final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
         label.font = .systemFont(ofSize: 22, weight: .regular)
         label.numberOfLines = 0
         label.adjustsFontSizeToFitWidth = true
+
         return label
     }()
 
@@ -31,6 +33,7 @@ final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
         label.textAlignment = .left
         label.font = .systemFont(ofSize: 18, weight: .light)
         label.adjustsFontSizeToFitWidth = true
+
         return label
     }()
 
@@ -53,12 +56,15 @@ final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
         airDateLabel.text = nil
         seasonLabel.text = nil
     }
+}
 
-    // MARK: - SetupView
+// MARK: - Setup
+extension RMCharacterEpisodeCollectionViewCell {
     private func setupView() {
         contentView.backgroundColor = .tertiarySystemBackground
-        setupLayer()
         contentView.addSubviews(seasonLabel, nameLabel, airDateLabel)
+
+        setupLayer()
         addConstraints()
     }
 
@@ -82,7 +88,7 @@ extension RMCharacterEpisodeCollectionViewCell {
 }
 
 // MARK: - Constraints
-private extension RMCharacterEpisodeCollectionViewCell {
+extension RMCharacterEpisodeCollectionViewCell {
     private func addConstraints() {
         NSLayoutConstraint.activate([
             seasonLabel.leadingAnchor.constraint(

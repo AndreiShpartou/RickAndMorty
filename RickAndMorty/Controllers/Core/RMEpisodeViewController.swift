@@ -7,8 +7,9 @@
 
 import UIKit
 
-/// Controller to show and search for Episodes
+// Controller to show and search for Episodes
 final class RMEpisodeViewController: UIViewController {
+
     private let episodeListView = RMEpisodeListView()
 
     // MARK: - DeInit
@@ -18,13 +19,13 @@ final class RMEpisodeViewController: UIViewController {
 
     // MARK: - LifeCycle
     override func loadView() {
-        episodeListView.delegate = self
         view = episodeListView
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
+
+        setupController()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -34,12 +35,16 @@ final class RMEpisodeViewController: UIViewController {
             updateNavigationBar()
         }
     }
+}
 
-    // MARK: - Setup
-    private func setup() {
+// MARK: - Setup
+extension RMEpisodeViewController {
+    private func setupController() {
         title = "Episodes"
         addSearchButton()
         addChangeThemeButton()
+
+        episodeListView.delegate = self
 
         NotificationCenter.default.addObserver(
             self,
@@ -49,8 +54,15 @@ final class RMEpisodeViewController: UIViewController {
         )
     }
 
-    private func addChangeThemeButton() {
+    private func addSearchButton() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .search,
+            target: self,
+            action: #selector(didTapSearch)
+        )
+    }
 
+    private func addChangeThemeButton() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "lightbulb"),
             style: .plain,
@@ -64,13 +76,20 @@ final class RMEpisodeViewController: UIViewController {
         let iconName = isDarkMode ? "lightbulb" : "lightbulb.fill"
         navigationItem.leftBarButtonItem?.image = UIImage(systemName: iconName)
     }
+}
 
-    private func addSearchButton() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            barButtonSystemItem: .search,
-            target: self,
-            action: #selector(didTapSearch)
-        )
+// MARK: - ActionMethods
+extension RMEpisodeViewController {
+    @objc private func didTapSearch() {
+        let viewController = RMSearchViewController(config: .init(type: .episode))
+        viewController.navigationItem.largeTitleDisplayMode = .never
+
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+
+    @objc
+    private func didTapChangeTheme() {
+        RMThemeManager.shared.toggleTheme()
     }
 
     @objc
@@ -83,17 +102,6 @@ final class RMEpisodeViewController: UIViewController {
         if viewController == self {
             episodeListView.setNilValueForScrollOffset()
         }
-    }
-
-    @objc
-    private func didTapChangeTheme() {
-        RMThemeManager.shared.toggleTheme()
-    }
-
-    @objc private func didTapSearch() {
-        let viewController = RMSearchViewController(config: .init(type: .episode))
-        viewController.navigationItem.largeTitleDisplayMode = .never
-        navigationController?.pushViewController(viewController, animated: true)
     }
 }
 

@@ -10,7 +10,6 @@ import UIKit
 protocol RMEpisodeListViewViewModelDelegate: AnyObject {
     func didLoadInitialEpisodes()
     func didLoadMoreEpisodes(with newIndexPath: [IndexPath])
-
     func didSelectEpisode(_ episode: RMEpisode)
 }
 
@@ -57,7 +56,7 @@ final class RMEpisodeListViewViewModel: NSObject {
     private var apiInfo: RMGetAllEpisodesResponse.Info?
 
     // MARK: - Fetching episodes
-    /// Fetch initial set of episodes(20)
+    // Fetch initial set of episodes(20)
     func fetchEpisodes() {
         RMService.shared.execute(
             .listEpisodesRequests,
@@ -81,11 +80,10 @@ final class RMEpisodeListViewViewModel: NSObject {
         }
     }
 
-    /// Paginate if additional episodes are needed
+    // Paginate if additional episodes are needed
     func fetchAdditionalEpisodes(url: URL) {
         isLoadingMoreEpisodes = true
         guard let request = RMRequest(url: url) else {
-//            print("Failed to create request")
             return
         }
 

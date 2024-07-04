@@ -7,6 +7,7 @@
 
 import UIKit
 
+// View controller to show details about a single character
 class RMCharacterDetailsViewController: UIViewController {
 
     private let viewModel: RMCharacterDetailViewViewModel
@@ -29,21 +30,23 @@ class RMCharacterDetailsViewController: UIViewController {
 
     // MARK: - Lifecycle
     override func loadView() {
-        detailView.collectionView.delegate = self
-        detailView.collectionView.dataSource = self
-
         view = detailView
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setup()
+        setupController()
     }
+}
 
-    // MARK: - Setup
-    private func setup() {
+// MARK: - Setup
+extension RMCharacterDetailsViewController {
+    private func setupController() {
         title = viewModel.title
+
+        detailView.collectionView.delegate = self
+        detailView.collectionView.dataSource = self
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .action,
@@ -53,9 +56,8 @@ class RMCharacterDetailsViewController: UIViewController {
     }
 }
 
-// MARK: - Actions
+// MARK: - ActionMethods
 extension RMCharacterDetailsViewController {
-
     @objc
     private func didTapShare() {
         let itemsToShare = viewModel.getDataToShare()
@@ -64,7 +66,6 @@ extension RMCharacterDetailsViewController {
             activityItems: itemsToShare,
             applicationActivities: nil
         )
-
         // For iPad: Specify the location where the popover should appear
         if let popoverController = activityViewController.popoverPresentationController {
             popoverController.barButtonItem = self.navigationItem.rightBarButtonItem
@@ -76,7 +77,6 @@ extension RMCharacterDetailsViewController {
 
 // MARK: - UICollectionViewDataSource
 extension RMCharacterDetailsViewController: UICollectionViewDataSource {
-
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return viewModel.sections.count
     }

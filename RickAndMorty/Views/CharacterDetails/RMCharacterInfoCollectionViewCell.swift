@@ -8,14 +8,15 @@
 import UIKit
 
 final class RMCharacterInfoCollectionViewCell: UICollectionViewCell {
+
     static let cellIdentifier = "RMCharacterInfoCollectionViewCell"
 
-    // MARK: - View Properties
     private let valueLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 22, weight: .light)
         label.adjustsFontSizeToFitWidth = true
+
         return label
     }()
 
@@ -23,6 +24,7 @@ final class RMCharacterInfoCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 20, weight: .medium)
+
         label.adjustsFontSizeToFitWidth = true
         return label
     }()
@@ -30,12 +32,14 @@ final class RMCharacterInfoCollectionViewCell: UICollectionViewCell {
     private let iconImageView: UIImageView = {
         let icon = UIImageView()
         icon.contentMode = .scaleAspectFit
+
         return icon
     }()
 
     private let titleContainerView: UIView = {
         let view = UIView()
         view.backgroundColor = .quaternarySystemFill
+
         return view
     }()
 
@@ -60,15 +64,18 @@ final class RMCharacterInfoCollectionViewCell: UICollectionViewCell {
         iconImageView.tintColor = .label
         titleLabel.textColor = .label
     }
+}
 
-    // MARK: - SetupView
+// MARK: - Setup
+extension RMCharacterInfoCollectionViewCell {
     private func setupView() {
         contentView.backgroundColor = .secondarySystemBackground
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
-
         contentView.addSubviews(valueLabel, iconImageView, titleContainerView)
+
         titleContainerView.addSubviews(titleLabel)
+
         addConstraints()
     }
 }
@@ -85,7 +92,7 @@ extension RMCharacterInfoCollectionViewCell {
 }
 
 // MARK: - Constraints
-private extension RMCharacterInfoCollectionViewCell {
+extension RMCharacterInfoCollectionViewCell {
     private func addConstraints() {
         NSLayoutConstraint.activate([
             titleContainerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),

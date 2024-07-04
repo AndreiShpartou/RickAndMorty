@@ -8,13 +8,14 @@
 import UIKit
 
 class RMLocationTableViewCell: UITableViewCell {
+
     static let cellIdentifier = "RMLocationTableViewCell"
 
-    // MARK: - ViewProperties
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 20, weight: .medium)
         label.adjustsFontSizeToFitWidth = true
+
         return label
     }()
 
@@ -23,6 +24,7 @@ class RMLocationTableViewCell: UITableViewCell {
         label.font = .systemFont(ofSize: 15, weight: .regular)
         label.textColor = .secondaryLabel
         label.adjustsFontSizeToFitWidth = true
+
         return label
     }()
 
@@ -31,6 +33,7 @@ class RMLocationTableViewCell: UITableViewCell {
         label.font = .systemFont(ofSize: 15, weight: .light)
         label.textColor = .secondaryLabel
         label.adjustsFontSizeToFitWidth = true
+
         return label
     }()
 
@@ -53,8 +56,10 @@ class RMLocationTableViewCell: UITableViewCell {
         typeLabel.text = nil
         dimensionLabel.text = nil
     }
+}
 
-    // MARK: - SetupView
+// MARK: - Setup
+extension RMLocationTableViewCell {
     private func setupView() {
         contentView.addSubviews(nameLabel, typeLabel, dimensionLabel)
         accessoryType = .disclosureIndicator
@@ -73,7 +78,7 @@ extension RMLocationTableViewCell {
 }
 
 // MARK: - Constraints
-private extension RMLocationTableViewCell {
+extension RMLocationTableViewCell {
     func addConstraints() {
         NSLayoutConstraint.activate([
             nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),

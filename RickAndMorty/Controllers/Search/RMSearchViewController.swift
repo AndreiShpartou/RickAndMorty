@@ -12,7 +12,7 @@ import UIKit
 // Render no results zero state
 // Searching / API
 
-/// Configurable controller to search
+// Configurable controller to search
 final class RMSearchViewController: UIViewController {
 
     private let searchView: RMSearchView
@@ -20,6 +20,7 @@ final class RMSearchViewController: UIViewController {
 
     // MARK: - ConfigProperties
     struct Config {
+
         enum ConfigType {
             case character // name, status, gender
             case episode // name
@@ -59,6 +60,7 @@ final class RMSearchViewController: UIViewController {
             frame: .zero,
             viewModel: viewModel
         )
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -74,7 +76,7 @@ final class RMSearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        configureController()
+        setupController()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -82,9 +84,11 @@ final class RMSearchViewController: UIViewController {
 
         searchView.presentKeyboard()
     }
+}
 
-    // MARK: - Setup
-    private func configureController() {
+// MARK: - Setup
+extension RMSearchViewController {
+    private func setupController() {
         title = viewModel.config.type.title
 
         searchView.delegate = self
@@ -96,8 +100,10 @@ final class RMSearchViewController: UIViewController {
             action: #selector(didTapExecuteSearch)
         )
     }
+}
 
-    // MARK: - ActionMethods
+// MARK: - ActionMethods
+extension RMSearchViewController {
     @objc
     private func didTapExecuteSearch() {
         viewModel.executeSearch()
@@ -107,7 +113,6 @@ final class RMSearchViewController: UIViewController {
 
 // MARK: - RMSearchViewDelegate
 extension RMSearchViewController: RMSearchViewDelegate {
-
     func rmSearchView(_ searchView: RMSearchView, didSelectOption option: RMSearchInputViewViewModel.DynamicOption) {
         let viewController = RMSearchOptionPickerViewController(option: option) { [weak self] selection in
             DispatchQueue.main.async {
@@ -116,18 +121,21 @@ extension RMSearchViewController: RMSearchViewDelegate {
         }
         viewController.sheetPresentationController?.detents = [.medium()]
         viewController.sheetPresentationController?.prefersGrabberVisible = true
+
         present(viewController, animated: true)
     }
 
     func rmSearchView(_ searchView: RMSearchView, didSelectLocation location: RMLocation) {
         let viewController = RMLocationDetailsViewController(location: location)
         navigationItem.largeTitleDisplayMode = .never
+
         navigationController?.pushViewController(viewController, animated: true)
     }
 
     func rmSearchView(_ searchView: RMSearchView, didSelectCharacter character: RMCharacter) {
         let viewController = RMCharacterDetailsViewController(viewModel: .init(character: character))
         navigationItem.largeTitleDisplayMode = .never
+
         navigationController?.pushViewController(viewController, animated: true)
     }
 
@@ -135,6 +143,7 @@ extension RMSearchViewController: RMSearchViewDelegate {
         let episodeURL = URL(string: episode.url)
         let viewController = RMEpisodeDetailsViewController(url: episodeURL)
         navigationItem.largeTitleDisplayMode = .never
+
         navigationController?.pushViewController(viewController, animated: true)
     }
 }

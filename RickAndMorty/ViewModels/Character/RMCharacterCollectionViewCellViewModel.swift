@@ -8,12 +8,15 @@
 import Foundation
 
 final class RMCharacterCollectionViewCellViewModel {
+
     let characterName: String
+
     var characterStatusText: String {
         return "Status: \(characterStatus.text)"
     }
-    private let characterStatus: RMCharacterStatus
+
     private(set) var characterImageUrl: URL?
+    private let characterStatus: RMCharacterStatus
 
     // MARK: - Init
     init(

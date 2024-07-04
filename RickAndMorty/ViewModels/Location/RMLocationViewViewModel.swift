@@ -12,16 +12,16 @@ protocol RMLocationViewViewModelDelegate: AnyObject {
 }
 
 final class RMLocationViewViewModel {
-    // MARK: - Properties
+
     weak var delegate: RMLocationViewViewModelDelegate?
 
     var shouldShowLoadMoreIndicator: Bool {
         return apiInfo?.next != nil
     }
 
-    private(set) var cellViewModels: [RMLocationTableViewCellViewModel] = []
-
     var isLoadingMoreLocations = false
+
+    private(set) var cellViewModels: [RMLocationTableViewCellViewModel] = []
 
     private var locations: [RMLocation] = [] {
         didSet {
@@ -35,7 +35,6 @@ final class RMLocationViewViewModel {
             }
         }
     }
-
     // Location response info
     // Will contain next url, if present
     private var apiInfo: RMGetAllLocationsResponse.Info?
@@ -48,9 +47,6 @@ final class RMLocationViewViewModel {
 
     // MARK: - Init
     init() {}
-
-    // MARK: - PrivateMethods
-
 }
 
 // MARK: - PublicMethods
@@ -64,6 +60,7 @@ extension RMLocationViewViewModel {
         guard index < locations.count, index >= 0 else {
             return nil
         }
+
         return locations[index]
     }
 
@@ -87,14 +84,15 @@ extension RMLocationViewViewModel {
         }
     }
 
-    /// Paginate if additional locations are needed
+    // Paginate if additional locations are needed
     func fetchAdditionalLocations() {
         isLoadingMoreLocations = true
         guard let urlString = apiInfo?.next,
               let url = URL(string: urlString),
               let request = RMRequest(url: url) else {
-//            print("Failed to create request")
+
             isLoadingMoreLocations = false
+
             return
         }
 
@@ -121,6 +119,7 @@ extension RMLocationViewViewModel {
         )
     }
 
+    // MARK: - Delay
     func fetchAdditionalLocationsWithDelay(_ delay: TimeInterval) {
         isLoadingMoreLocations = true
         Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in

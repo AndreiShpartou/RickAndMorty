@@ -7,12 +7,12 @@
 
 import Foundation
 
-/// Represents unique API endpoint
+// Represents unique API endpoint
 @frozen enum RMEndpoint: String, Hashable, CaseIterable {
-    /// Endpoint to get character info
+    // Endpoint to get character info
     case character
-    /// Endpoint to get location info
+    // Endpoint to get location info
     case location
-    /// Endpoint to get episode info
+    // Endpoint to get episode info
     case episode
 }

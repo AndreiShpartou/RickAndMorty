@@ -8,6 +8,7 @@
 import Foundation
 
 final class RMImageLoader {
+
     static let shared = RMImageLoader()
 
     private var imageDataCache = NSCache<NSString, NSData>()

@@ -7,20 +7,23 @@
 
 import Foundation
 
-/// Primary API service object to get Rick and Morty data
+// Primary API service object to get Rick and Morty data
 final class RMService {
-    /// Shared singleton instance
+    // Shared singleton instance
     static let shared = RMService()
 
-    private let cacheManager = RMAPICacheManager()
-
-    private init() {}
-
+    // Error types
     enum RMServiceError: Error {
         case failedToCreateRequest
         case failedToGetData
     }
 
+    private let cacheManager = RMAPICacheManager()
+
+    // MARK: - Init
+    private init() {}
+
+    // MARK: - PublicMethods
     /// Send Rick and Morty API Call
     /// - Parameters:
     ///   - request: Request instance
@@ -71,7 +74,7 @@ final class RMService {
         task.resume()
     }
 
-    // MARK: - Private
+    // MARK: - PrivateMethods
     private func request(from rmRequest: RMRequest) -> URLRequest? {
         guard let url = rmRequest.url else {
             return nil

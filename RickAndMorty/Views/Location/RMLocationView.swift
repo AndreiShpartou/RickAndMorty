@@ -12,7 +12,7 @@ protocol RMLocationViewDelegate: AnyObject {
 }
 
 final class RMLocationView: UIView {
-    // MARK: - Properties
+
     weak var delegate: RMLocationViewDelegate?
 
     private var viewModel: RMLocationViewViewModel? {
@@ -55,15 +55,17 @@ final class RMLocationView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
 
-    // MARK: - SetupView
+// MARK: - Setup
+extension RMLocationView {
     private func setupView() {
         backgroundColor = .systemBackground
 
         addSubviews(tableView, spinner)
         spinner.startAnimating()
-
         configureTable()
+
         addConstraints()
     }
 
@@ -157,7 +159,7 @@ extension RMLocationView: UIScrollViewDelegate {
 }
 
 // MARK: - Constraints
-private extension RMLocationView {
+extension RMLocationView {
     private func addConstraints() {
         NSLayoutConstraint.activate([
             spinner.centerXAnchor.constraint(equalTo: centerXAnchor),

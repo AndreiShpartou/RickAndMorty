@@ -10,11 +10,10 @@ import UIKit
 protocol RMCharacterListViewViewModelDelegate: AnyObject {
     func didLoadInitialCharacters()
     func didLoadMoreCharacters(with newIndexPath: [IndexPath])
-
     func didSelectCharacter(_ character: RMCharacter)
 }
 
-/// View Model to handle character list view logic
+// View Model to handle character list view logic
 final class RMCharacterListViewViewModel: NSObject {
 
     weak var delegate: RMCharacterListViewViewModelDelegate?
@@ -42,11 +41,10 @@ final class RMCharacterListViewViewModel: NSObject {
     }
 
     private var cellViewModels: [RMCharacterCollectionViewCellViewModel] = []
-
     private var apiInfo: RMGetAllCharactersResponse.Info?
 
     // MARK: - Fetching characters
-    /// Fetch initial set of characters(20)
+    // Fetch initial set of characters(20)
     func fetchCharacters() {
         RMService.shared.execute(
             .listCharactersRequests,
@@ -70,7 +68,7 @@ final class RMCharacterListViewViewModel: NSObject {
         }
     }
 
-    /// Paginate if additional characters are needed
+    // Paginate if additional characters are needed
     func fetchAdditionalCharacters(url: URL) {
         isLoadingMoreCharacters = true
         guard let request = RMRequest(url: url) else {
@@ -111,6 +109,7 @@ final class RMCharacterListViewViewModel: NSObject {
         )
     }
 
+    // MARK: - Delay
     func fetchAdditionalCharactersWithDelay(_ delay: TimeInterval, url: URL) {
         isLoadingMoreCharacters = true
         Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in

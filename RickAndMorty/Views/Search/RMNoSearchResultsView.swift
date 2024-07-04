@@ -38,8 +38,10 @@ final class RMNoSearchResultsView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
 
-    // MARK: - SetupView
+// MARK: - Setup
+extension RMNoSearchResultsView {
     private func setupView() {
         isHidden = true
         addSubviews(iconView, label)
@@ -55,8 +57,8 @@ final class RMNoSearchResultsView: UIView {
 }
 
 // MARK: - Constraints
-private extension RMNoSearchResultsView {
-    func addConstraints() {
+extension RMNoSearchResultsView {
+    private func addConstraints() {
         NSLayoutConstraint.activate([
             iconView.centerXAnchor.constraint(equalTo: centerXAnchor),
             iconView.widthAnchor.constraint(equalToConstant: 90),

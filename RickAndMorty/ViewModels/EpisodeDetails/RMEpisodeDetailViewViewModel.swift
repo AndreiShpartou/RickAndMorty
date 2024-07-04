@@ -12,6 +12,7 @@ protocol RMEpisodeDetailViewViewModelDelegate: AnyObject {
 }
 
 final class RMEpisodeDetailViewViewModel {
+
     weak var delegate: RMEpisodeDetailViewViewModelDelegate?
 
     enum SectionType {
@@ -38,8 +39,7 @@ final class RMEpisodeDetailViewViewModel {
 
 // MARK: - Public
 extension RMEpisodeDetailViewViewModel {
-
-    // MARK: - Fetch episode model
+    // Fetch episode model
     func fetchEpisodeData() {
         guard let url = endpointURL,
               let request = RMRequest(url: url) else {

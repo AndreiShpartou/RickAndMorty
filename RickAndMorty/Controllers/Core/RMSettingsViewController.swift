@@ -10,16 +10,24 @@ import UIKit
 import SafariServices
 import StoreKit
 
-/// Controller to show various app options and settings
+// Controller to show various app options and settings
 final class RMSettingsViewController: UIViewController {
 
     private var settingsSwiftUIController: UIHostingController<RMSettingsView>?
 
+    // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .systemBackground
+        setupController()
+    }
+}
+
+// MARK: - Setup
+extension RMSettingsViewController {
+    private func setupController() {
         title = "Settings"
+        view.backgroundColor = .systemBackground
 
         addSwiftUIController()
     }
