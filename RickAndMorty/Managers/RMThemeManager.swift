@@ -7,14 +7,15 @@
 
 import UIKit
 
-// Manage dark / light mode
-class RMThemeManager {
-    // Shared singleton instance
-    static let shared = RMThemeManager()
+protocol RMThemeStorageProtocol {
+    var currentTheme: UIUserInterfaceStyle { get set }
+}
+
+class RMThemeStorage: RMThemeStorageProtocol {
 
     private let themeKey = "SelectedTheme"
 
-    private var currentTheme: UIUserInterfaceStyle {
+    var currentTheme: UIUserInterfaceStyle {
         get {
             guard let storedTheme = UserDefaults.standard.value(forKey: themeKey) as? Int,
                   let theme = UIUserInterfaceStyle(rawValue: storedTheme) else {
@@ -26,20 +27,29 @@ class RMThemeManager {
 
         set {
             UserDefaults.standard.setValue(newValue.rawValue, forKey: themeKey)
-            applyTheme(newValue)
         }
     }
+}
+
+// Manage dark / light mode
+class RMThemeManager {
+    // Shared singleton instance
+    static let shared = RMThemeManager()
+
+    private var themeStorage: RMThemeStorageProtocol = RMThemeStorage()
 
     // MARK: - Init
     private init() {}
 
     // MARK: - PublicMethods
     func applyCurrentTheme() {
-        applyTheme(currentTheme)
+        applyTheme(themeStorage.currentTheme)
     }
 
     func toggleTheme() {
-        currentTheme = (currentTheme == .dark) ? .light : .dark
+        let newTheme: UIUserInterfaceStyle = (themeStorage.currentTheme == .dark) ? .light : .dark
+        themeStorage.currentTheme = newTheme
+        applyTheme(newTheme)
     }
 
     // MARK: - PrivateMethods
