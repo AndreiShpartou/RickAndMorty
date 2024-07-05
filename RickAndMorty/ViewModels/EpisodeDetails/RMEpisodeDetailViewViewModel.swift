@@ -123,10 +123,10 @@ extension RMEpisodeDetailViewViewModel {
         let episode = dataTuple.episode
         let characters = dataTuple.characters
         var createdString = episode.created
-        if let date = RMCharacterInfoCollectionViewCellViewModel.dateFormatter.date(
+        if let date = RMDateFormatterUtils.formatter.date(
             from: episode.created
         ) {
-            createdString = RMCharacterInfoCollectionViewCellViewModel.shortDateFormatter.string(
+            createdString = RMDateFormatterUtils.shortFormatter.string(
                 from: date
             )
         }
@@ -156,10 +156,10 @@ extension RMEpisodeDetailViewViewModel {
 
         let episode = dataTuple.episode
         var createdString = episode.created
-        if let date = RMCharacterInfoCollectionViewCellViewModel.dateFormatter.date(
+        if let date = RMDateFormatterUtils.formatter.date(
             from: episode.created
         ) {
-            createdString = RMCharacterInfoCollectionViewCellViewModel.shortDateFormatter.string(
+            createdString = RMDateFormatterUtils.shortFormatter.string(
                 from: date
             )
         }

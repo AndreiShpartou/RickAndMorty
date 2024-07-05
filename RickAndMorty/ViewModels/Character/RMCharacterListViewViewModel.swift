@@ -8,6 +8,7 @@
 import UIKit
 
 // View Model to handle character list view logic
+// MARK: - ViewModel Implementation
 final class RMCharacterListViewViewModel: RMCharacterListViewViewModelProtocol {
 
     weak var delegate: RMCharacterListViewViewModelDelegate?
