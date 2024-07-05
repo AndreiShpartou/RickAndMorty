@@ -12,7 +12,7 @@ final class RMCharacterCollectionViewCell: UICollectionViewCell {
 
     static let cellIdentifier = "RMCharacterCollectionViewCell"
 
-    private let commonView = UIView(frame: .zero)
+    private let commonView = UIView()
     private var characterImageUrl: URL?
 
     private let imageView: UIImageView = {
@@ -61,6 +61,7 @@ final class RMCharacterCollectionViewCell: UICollectionViewCell {
     // MARK: - LifeCycle
     override func prepareForReuse() {
         super.prepareForReuse()
+
         imageView.image = nil
         nameLabel.text = nil
         statusLabel.text = nil
@@ -68,6 +69,7 @@ final class RMCharacterCollectionViewCell: UICollectionViewCell {
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
+
         setupLayer()
     }
 }

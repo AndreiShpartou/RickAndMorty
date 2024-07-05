@@ -124,10 +124,10 @@ extension RMLocationDetailViewViewModel {
         let location = dataTuple.location
         let characters = dataTuple.characters
         var createdString = location.created
-        if let date = RMCharacterInfoCollectionViewCellViewModel.dateFormatter.date(
+        if let date = RMDateFormatterUtils.formatter.date(
             from: location.created
         ) {
-            createdString = RMCharacterInfoCollectionViewCellViewModel.shortDateFormatter.string(
+            createdString = RMDateFormatterUtils.shortFormatter.string(
                 from: date
             )
         }
@@ -157,10 +157,10 @@ extension RMLocationDetailViewViewModel {
 
         let location = dataTuple.location
         var createdString = location.created
-        if let date = RMCharacterInfoCollectionViewCellViewModel.dateFormatter.date(
+        if let date = RMDateFormatterUtils.formatter.date(
             from: location.created
         ) {
-            createdString = RMCharacterInfoCollectionViewCellViewModel.shortDateFormatter.string(
+            createdString = RMDateFormatterUtils.shortFormatter.string(
                 from: date
             )
         }

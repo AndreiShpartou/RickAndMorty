@@ -8,6 +8,7 @@
 import UIKit
 
 // View controller to show details about a single character
+// MARK: - ViewController Implementation
 class RMCharacterDetailsViewController: UIViewController {
 
     private let viewModel: RMCharacterDetailViewViewModel
@@ -104,6 +105,7 @@ extension RMCharacterDetailsViewController: UICollectionViewDataSource {
                 fatalError("Unable to define cell for photo")
             }
             cell.configure(with: viewModel)
+
             return cell
         case .information(let viewModels):
             guard let cell = collectionView.dequeueReusableCell(
@@ -113,6 +115,7 @@ extension RMCharacterDetailsViewController: UICollectionViewDataSource {
                 fatalError("Unable to define cell for info")
             }
             cell.configure(with: viewModels[indexPath.row])
+
             return cell
         case .episodes(let viewModels):
             guard let cell = collectionView.dequeueReusableCell(
@@ -122,6 +125,7 @@ extension RMCharacterDetailsViewController: UICollectionViewDataSource {
                 fatalError("Unable to define cell for episode")
             }
             cell.configure(with: viewModels[indexPath.row])
+
             return cell
         }
     }

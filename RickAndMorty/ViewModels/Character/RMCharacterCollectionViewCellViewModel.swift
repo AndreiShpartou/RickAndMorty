@@ -17,16 +17,19 @@ final class RMCharacterCollectionViewCellViewModel {
 
     private(set) var characterImageUrl: URL?
     private let characterStatus: RMCharacterStatus
+    private let imageLoader: RMImageLoaderProtocol
 
     // MARK: - Init
     init(
         characterName: String,
         characterStatus: RMCharacterStatus,
-        characterImageUrl: URL?
+        characterImageUrl: URL?,
+        imageLoader: RMImageLoaderProtocol = RMImageLoader.shared
     ) {
         self.characterName = characterName
         self.characterStatus = characterStatus
         self.characterImageUrl = characterImageUrl
+        self.imageLoader = imageLoader
     }
 
     func fetchImage(completion: @escaping (Result<Data, Error>, URL?) -> Void) {
@@ -35,7 +38,7 @@ final class RMCharacterCollectionViewCellViewModel {
             return
         }
 
-        RMImageLoader.shared.downloadImage(url, completion: completion)
+        imageLoader.downloadImage(url, completion: completion)
     }
 }
 

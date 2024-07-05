@@ -12,11 +12,6 @@ final class RMEpisodeViewController: UIViewController {
 
     private let episodeListView = RMEpisodeListView()
 
-    // MARK: - DeInit
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-
     // MARK: - LifeCycle
     override func loadView() {
         view = episodeListView
@@ -28,12 +23,24 @@ final class RMEpisodeViewController: UIViewController {
         setupController()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        addObservers()
+    }
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
         if self.traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
             updateNavigationBar()
         }
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        removeObservers()
     }
 }
 
@@ -45,13 +52,6 @@ extension RMEpisodeViewController {
         addChangeThemeButton()
 
         episodeListView.delegate = self
-
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(tabBarItemDoubleTapped),
-            name: .tabBarItemDoubleTapped,
-            object: nil
-        )
     }
 
     private func addSearchButton() {
@@ -69,6 +69,19 @@ extension RMEpisodeViewController {
             target: self,
             action: #selector(didTapChangeTheme)
         )
+    }
+
+    private func addObservers() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(tabBarItemDoubleTapped),
+            name: .tabBarItemDoubleTapped,
+            object: nil
+        )
+    }
+
+    private func removeObservers() {
+        NotificationCenter.default.removeObserver(self, name: .tabBarItemDoubleTapped, object: nil)
     }
 
     private func updateNavigationBar() {
@@ -94,14 +107,7 @@ extension RMEpisodeViewController {
 
     @objc
     private func tabBarItemDoubleTapped(_ notification: Notification) {
-        guard let userInfo = notification.userInfo,
-              let viewController = userInfo["viewController"] as? UIViewController else {
-            return
-        }
-
-        if viewController == self {
-            episodeListView.setNilValueForScrollOffset()
-        }
+        episodeListView.setNilValueForScrollOffset()
     }
 }
 

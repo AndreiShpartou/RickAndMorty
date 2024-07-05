@@ -7,11 +7,10 @@
 
 import Foundation
 
-// Manages in memory API caches
-final class RMAPICacheManager {
+// Manages in-memory API caches
+final class RMAPICacheManager: RMAPICacheManagerProtocol {
 
     private var cacheDictionary: [RMEndpoint: NSCache<NSString, NSData>] = [:]
-    private var cache = NSCache<NSString, NSData>()
 
     init() {
         setupCache()

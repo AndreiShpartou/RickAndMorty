@@ -13,11 +13,6 @@ final class RMLocationViewController: UIViewController {
     private let locationView = RMLocationView()
     private let viewModel = RMLocationViewViewModel()
 
-    // MARK: - DeInit
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-
     // MARK: - LifeCycle
     override func loadView() {
         view = locationView
@@ -29,12 +24,24 @@ final class RMLocationViewController: UIViewController {
         setupController()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        addObservers()
+    }
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
         if self.traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
             updateNavigationBar()
         }
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        removeObservers()
     }
 }
 
@@ -49,13 +56,6 @@ extension RMLocationViewController {
         viewModel.delegate = self
 
         viewModel.fetchLocations()
-
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(tabBarItemDoubleTapped),
-            name: .tabBarItemDoubleTapped,
-            object: nil
-        )
     }
 
     private func addSearchButton() {
@@ -73,6 +73,19 @@ extension RMLocationViewController {
             target: self,
             action: #selector(didTapChangeTheme)
         )
+    }
+
+    private func addObservers() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(tabBarItemDoubleTapped),
+            name: .tabBarItemDoubleTapped,
+            object: nil
+        )
+    }
+
+    private func removeObservers() {
+        NotificationCenter.default.removeObserver(self, name: .tabBarItemDoubleTapped, object: nil)
     }
 
     private func updateNavigationBar() {
@@ -98,14 +111,7 @@ extension RMLocationViewController {
 
     @objc
     private func tabBarItemDoubleTapped(_ notification: Notification) {
-        guard let userInfo = notification.userInfo,
-              let viewController = userInfo["viewController"] as? UIViewController else {
-            return
-        }
-
-        if viewController == self {
-            locationView.setNilValueForScrollOffset()
-        }
+        locationView.setNilValueForScrollOffset()
     }
 }
 
