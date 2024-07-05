@@ -8,9 +8,11 @@
 import UIKit
 
 // Controller to show and search for Characters
+// MARK: - ViewController Implementation
 final class RMCharacterViewController: UIViewController {
 
-    private let characterListView = RMCharacterListView()
+    private let characterListView: RMCharacterListViewProtocol
+    private let viewModel: RMCharacterListViewViewModelProtocol
 
     // MARK: - LifeCycle
     override func loadView() {
@@ -23,6 +25,12 @@ final class RMCharacterViewController: UIViewController {
         setupController()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        addObservers()
+    }
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -31,9 +39,24 @@ final class RMCharacterViewController: UIViewController {
         }
     }
 
-    // MARK: - DeInit
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        removeObservers()
+    }
+
+    // MARK: - Init
+    init(
+        viewModel: RMCharacterListViewViewModelProtocol = RMCharacterListViewViewModel()
+    ) {
+        self.viewModel = viewModel
+        self.characterListView = RMCharacterListView(viewModel: viewModel)
+
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 
@@ -44,13 +67,6 @@ extension RMCharacterViewController {
         characterListView.delegate = self
         addSearchButton()
         addChangeThemeButton()
-
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(tabBarItemDoubleTapped),
-            name: .tabBarItemDoubleTapped,
-            object: nil
-        )
     }
 
     private func addChangeThemeButton() {
@@ -68,6 +84,19 @@ extension RMCharacterViewController {
             target: self,
             action: #selector(didTapSearch)
         )
+    }
+
+    private func addObservers() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(tabBarItemDoubleTapped),
+            name: .tabBarItemDoubleTapped,
+            object: nil
+        )
+    }
+
+    private func removeObservers() {
+        NotificationCenter.default.removeObserver(self, name: .tabBarItemDoubleTapped, object: nil)
     }
 
     private func updateNavigationBar() {
@@ -94,20 +123,13 @@ extension RMCharacterViewController {
 
     @objc
     private func tabBarItemDoubleTapped(_ notification: Notification) {
-        guard let userInfo = notification.userInfo,
-              let viewController = userInfo["viewController"] as? UIViewController else {
-            return
-        }
-
-        if viewController == self {
-            characterListView.setNilValueForScrollOffset()
-        }
+        characterListView.setNilValueForScrollOffset()
     }
 }
 
 // MARK: - RMCharacterListViewDelegate
 extension RMCharacterViewController: RMCharacterListViewDelegate {
-    func rmCharacterListView(_ characterListView: RMCharacterListView, didSelectCharacter character: RMCharacter) {
+    func rmCharacterListView(_ characterListView: RMCharacterListViewProtocol, didSelectCharacter character: RMCharacter) {
         // Open detail controller for that character
         let viewModel = RMCharacterDetailViewViewModel(character: character)
         let detailVC = RMCharacterDetailsViewController(viewModel: viewModel)

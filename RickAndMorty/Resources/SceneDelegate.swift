@@ -49,8 +49,7 @@ extension SceneDelegate: UITabBarControllerDelegate {
 
         NotificationCenter.default.post(
             name: .tabBarItemDoubleTapped,
-            object: nil,
-            userInfo: ["viewController": currentViewController]
+            object: nil
         )
 
         return true

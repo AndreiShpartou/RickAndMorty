@@ -7,12 +7,18 @@
 
 import Foundation
 
+// ViewModel for the character photo collection view cell
 final class RMCharacterPhotoCollectionViewCellViewModel {
 
     private let imageURL: URL?
+    private let imageLoader: RMImageLoaderProtocol
 
-    init(imageURL: URL?) {
+    init(
+        imageURL: URL?,
+        imageLoader: RMImageLoaderProtocol = RMImageLoader.shared
+    ) {
         self.imageURL = imageURL
+        self.imageLoader = imageLoader
     }
 
     func fetchImage(completion: @escaping (Result<Data, Error>, URL?) -> Void) {
@@ -21,6 +27,6 @@ final class RMCharacterPhotoCollectionViewCellViewModel {
             return
         }
 
-        RMImageLoader.shared.downloadImage(imageURL, completion: completion)
+        imageLoader.downloadImage(imageURL, completion: completion)
     }
 }

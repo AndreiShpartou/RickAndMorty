@@ -7,12 +7,6 @@
 
 import UIKit
 
-protocol RMEpisodeDataRender {
-    var episode: String { get }
-    var name: String { get }
-    var air_date: String { get }
-}
-
 final class RMCharacterEpisodeCollectionViewCellViewModel {
 
     let borderColor: UIColor
@@ -20,6 +14,7 @@ final class RMCharacterEpisodeCollectionViewCellViewModel {
     private let episodeDataUrl: URL?
     private var isFetching = false
     private var dataBlock: ((RMEpisodeDataRender) -> Void)?
+    private let service: RMServiceProtocol
 
     private var episode: RMEpisode? {
         didSet {
@@ -31,9 +26,14 @@ final class RMCharacterEpisodeCollectionViewCellViewModel {
     }
 
     // MARK: - Init
-    init(episodeDataUrl: URL?, borderColor: UIColor = .systemBlue) {
+    init(
+        episodeDataUrl: URL?,
+        borderColor: UIColor = .systemBlue,
+        service: RMServiceProtocol = RMService.shared
+    ) {
         self.episodeDataUrl = episodeDataUrl
         self.borderColor = borderColor
+        self.service = service
     }
 
     func registerForData(_ block: @escaping (RMEpisodeDataRender) -> Void) {
@@ -49,13 +49,14 @@ final class RMCharacterEpisodeCollectionViewCellViewModel {
 
             return
         }
+
         guard let url = episodeDataUrl,
-              let request = RMRequest(url: url) else {
+              let request = createRequest(from: url) else {
             return
         }
 
         isFetching = true
-        RMService.shared.execute(
+        service.execute(
             request,
             expecting: RMEpisode.self
         ) { [weak self] result in
@@ -66,9 +67,12 @@ final class RMCharacterEpisodeCollectionViewCellViewModel {
                     }
                 case .failure:
                     break
-//                    print(String(describing: failure))
                 }
         }
+    }
+
+    private func createRequest(from url: URL) -> RMRequest? {
+        return RMRequest(url: url)
     }
 }
 

@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class RMImageLoader {
+final class RMImageLoader: RMImageLoaderProtocol {
 
     static let shared = RMImageLoader()
 
