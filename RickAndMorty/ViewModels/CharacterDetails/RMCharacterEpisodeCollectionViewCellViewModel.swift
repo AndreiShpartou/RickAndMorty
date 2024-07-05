@@ -49,8 +49,9 @@ final class RMCharacterEpisodeCollectionViewCellViewModel {
 
             return
         }
+
         guard let url = episodeDataUrl,
-              let request = RMRequest(url: url) else {
+              let request = createRequest(from: url) else {
             return
         }
 
@@ -68,6 +69,10 @@ final class RMCharacterEpisodeCollectionViewCellViewModel {
                     break
                 }
         }
+    }
+
+    private func createRequest(from url: URL) -> RMRequest? {
+        return RMRequest(url: url)
     }
 }
 

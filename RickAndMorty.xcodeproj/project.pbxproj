@@ -85,6 +85,7 @@
 		6CE13C942C37E08F00102E46 /* RMURLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE13C932C37E08F00102E46 /* RMURLParser.swift */; };
 		6CE13C962C37EA2600102E46 /* RMServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE13C952C37EA2600102E46 /* RMServiceProtocol.swift */; };
 		6CE13C982C37EB3E00102E46 /* RMAPICacheManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE13C972C37EB3E00102E46 /* RMAPICacheManagerProtocol.swift */; };
+		6CE13C9A2C384C2000102E46 /* RMServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE13C992C384C2000102E46 /* RMServiceError.swift */; };
 		6CE7EF0B2C33FA5900A8D855 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE7EF0A2C33FA5900A8D855 /* Constants.swift */; };
 /* End PBXBuildFile section */
 
@@ -169,6 +170,7 @@
 		6CE13C932C37E08F00102E46 /* RMURLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMURLParser.swift; sourceTree = "<group>"; };
 		6CE13C952C37EA2600102E46 /* RMServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMServiceProtocol.swift; sourceTree = "<group>"; };
 		6CE13C972C37EB3E00102E46 /* RMAPICacheManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMAPICacheManagerProtocol.swift; sourceTree = "<group>"; };
+		6CE13C992C384C2000102E46 /* RMServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMServiceError.swift; sourceTree = "<group>"; };
 		6CE7EF0A2C33FA5900A8D855 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -532,6 +534,7 @@
 				6CAA56F72C0DE62F00BCEB29 /* RMService.swift */,
 				6CAA56F42C0DE62000BCEB29 /* RMRequest.swift */,
 				6CAA56F92C0DEB5700BCEB29 /* RMEndpoint.swift */,
+				6CE13C992C384C2000102E46 /* RMServiceError.swift */,
 			);
 			path = APIClient;
 			sourceTree = "<group>";
@@ -746,6 +749,7 @@
 				6C82542F2C1AC1AC0017C887 /* RMSearchView.swift in Sources */,
 				6CA132F92C1979E90040C32F /* RMLocationViewViewModel.swift in Sources */,
 				6CAA56F32C0DC8D300BCEB29 /* RMSettingsViewController.swift in Sources */,
+				6CE13C9A2C384C2000102E46 /* RMServiceError.swift in Sources */,
 				6C8254382C1AC5BC0017C887 /* RMSearchInputView.swift in Sources */,
 				6CAA56CB2C0DC00A00BCEB29 /* SceneDelegate.swift in Sources */,
 				6C6B49612C15A3CE006FE1B2 /* RMEpisodeListView.swift in Sources */,

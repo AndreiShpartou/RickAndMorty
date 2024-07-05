@@ -12,12 +12,6 @@ final class RMService: RMServiceProtocol {
     // Shared singleton instance
     static let shared = RMService()
 
-    // Error types
-    enum RMServiceError: Error {
-        case failedToCreateRequest
-        case failedToGetData
-    }
-
     private let cacheManager: RMAPICacheManagerProtocol = RMAPICacheManager()
 
     // MARK: - Init
@@ -47,7 +41,7 @@ final class RMService: RMServiceProtocol {
             return
         }
 
-        guard let urlRequest = self.createURLRequest(from: request) else {
+        guard let urlRequest = self.getURLRequest(from: request) else {
             completion(.failure(RMServiceError.failedToCreateRequest))
             return
         }
@@ -75,7 +69,7 @@ final class RMService: RMServiceProtocol {
     }
 
     // MARK: - PrivateMethods
-    private func createURLRequest(from rmRequest: RMRequest) -> URLRequest? {
+    private func getURLRequest(from rmRequest: RMRequest) -> URLRequest? {
         guard let url = rmRequest.url else {
             return nil
         }
