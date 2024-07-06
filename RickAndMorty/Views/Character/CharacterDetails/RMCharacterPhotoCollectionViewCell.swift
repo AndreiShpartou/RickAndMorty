@@ -49,15 +49,15 @@ extension RMCharacterPhotoCollectionViewCell {
 
 // MARK: - Public Methods
 extension RMCharacterPhotoCollectionViewCell {
-    func configure(with viewModel: RMCharacterPhotoCollectionViewCellViewModel) {
+    func configure(with viewModel: RMCharacterPhotoCollectionViewCellViewModelProtocol) {
         viewModel.fetchImage { [weak self] result, _ in
             switch result {
             case .success(let data):
                 DispatchQueue.main.async {
                     self?.imageView.image = UIImage(data: data)
                 }
-            case .failure:
-                break
+            case .failure(let error):
+                NSLog("Failed to fetch character detail image: \(error.localizedDescription)")
             }
         }
     }

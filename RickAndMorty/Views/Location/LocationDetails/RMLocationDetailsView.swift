@@ -1,24 +1,24 @@
 //
-//  RMEpisodeDetailsView.swift
+//  RMLocationDetailsView.swift
 //  RickAndMorty
 //
-//  Created by Andrei Shpartou on 09/06/2024.
+//  Created by Andrei Shpartou on 12/06/2024.
 //
 
 import UIKit
 
-protocol RMEpisodeDetailsViewDelegate: AnyObject {
-    func rmEpisodeDetailView(
-        _ detailView: RMEpisodeDetailsView,
+protocol RMLocationDetailsViewDelegate: AnyObject {
+    func rmLocationDetailView(
+        _ detailView: RMLocationDetailsView,
         didSelect character: RMCharacter
     )
 }
 
-final class RMEpisodeDetailsView: UIView {
+final class RMLocationDetailsView: UIView {
 
-    weak var delegate: RMEpisodeDetailsViewDelegate?
+    weak var delegate: RMLocationDetailsViewDelegate?
 
-    private var viewModel: RMEpisodeDetailViewViewModel? {
+    private var viewModel: RMLocationDetailViewViewModel? {
         didSet {
             spinner.stopAnimating()
             self.collectionView.reloadData()
@@ -26,7 +26,7 @@ final class RMEpisodeDetailsView: UIView {
             UIView.animate(
                 withDuration: 0.3
             ) {
-                self.collectionView.alpha = 1
+                    self.collectionView.alpha = 1
             }
         }
     }
@@ -47,7 +47,7 @@ final class RMEpisodeDetailsView: UIView {
 }
 
 // MARK: - Setup
-extension RMEpisodeDetailsView {
+extension RMLocationDetailsView {
     private func setupView() {
         backgroundColor = .systemBackground
 
@@ -60,6 +60,7 @@ extension RMEpisodeDetailsView {
     private func createActivityIndicator() -> UIActivityIndicatorView {
         let spinner = UIActivityIndicatorView()
         spinner.hidesWhenStopped = true
+
         return spinner
     }
 
@@ -148,21 +149,21 @@ extension RMEpisodeDetailsView {
 }
 
 // MARK: - PublicMethods
-extension RMEpisodeDetailsView {
-    func configure(with viewModel: RMEpisodeDetailViewViewModel) {
+extension RMLocationDetailsView {
+    func configure(with viewModel: RMLocationDetailViewViewModel) {
         self.viewModel = viewModel
     }
 }
 
 // MARK: - UICollectionViewDataSource
-extension RMEpisodeDetailsView: UICollectionViewDataSource {
+extension RMLocationDetailsView: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return viewModel?.cellViewModels.count ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let sections = viewModel?.cellViewModels else {
-            return Constants.numberOfItemsInSection
+            return Constants.zeroItemsInSection
         }
 
         let sectionType = sections[section]
@@ -175,8 +176,9 @@ extension RMEpisodeDetailsView: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+
         guard let sections = viewModel?.cellViewModels else {
-            fatalError("Unable to define ViewModel")
+            fatalError("No viewModel")
         }
 
         let sectionType = sections[indexPath.section]
@@ -187,7 +189,7 @@ extension RMEpisodeDetailsView: UICollectionViewDataSource {
                 withReuseIdentifier: RMEpisodeInfoCollectionViewCell.cellIdentifier,
                 for: indexPath
             ) as? RMEpisodeInfoCollectionViewCell else {
-                fatalError("Unable to define cell for info")
+                fatalError("Unable to define cell for episode info")
             }
             cell.configure(with: cellViewModel)
 
@@ -208,7 +210,7 @@ extension RMEpisodeDetailsView: UICollectionViewDataSource {
 }
 
 // MARK: - UICollectionViewDelegate
-extension RMEpisodeDetailsView: UICollectionViewDelegate {
+extension RMLocationDetailsView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
 
@@ -225,13 +227,13 @@ extension RMEpisodeDetailsView: UICollectionViewDelegate {
             guard let character = viewModel.character(at: indexPath.row) else {
                 return
             }
-            delegate?.rmEpisodeDetailView(self, didSelect: character)
+            delegate?.rmLocationDetailView(self, didSelect: character)
         }
     }
 }
 
 // MARK: - Constraints
-extension RMEpisodeDetailsView {
+extension RMLocationDetailsView {
     private func addConstraints() {
         NSLayoutConstraint.activate([
             spinner.centerXAnchor.constraint(equalTo: centerXAnchor),

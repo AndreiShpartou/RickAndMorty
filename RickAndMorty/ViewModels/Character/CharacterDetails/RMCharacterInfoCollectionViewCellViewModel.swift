@@ -7,6 +7,7 @@
 
 import UIKit
 
+// MARK: - ViewModel Implementation
 // Type of RMCharacterInfoCollectionViewCellViewModel
 enum InfoType: String {
     case status
@@ -53,7 +54,7 @@ enum InfoType: String {
     }
 }
 
-final class RMCharacterInfoCollectionViewCellViewModel {
+final class RMCharacterInfoCollectionViewCellViewModel: RMCharacterInfoCollectionViewCellViewModelProtocol {
 
     var title: String {
         return type.displayTitle

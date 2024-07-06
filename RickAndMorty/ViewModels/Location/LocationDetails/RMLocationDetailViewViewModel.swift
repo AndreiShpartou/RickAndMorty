@@ -54,8 +54,8 @@ extension RMLocationDetailViewViewModel {
                 switch result {
                 case .success(let model):
                     self?.fetchRelatedCharacters(location: model)
-                case .failure:
-                    break
+                case .failure(let error):
+                    NSLog("Failed to fetch location detail \(error.localizedDescription)")
                 }
         }
     }
@@ -102,8 +102,8 @@ extension RMLocationDetailViewViewModel {
                     switch result {
                     case .success(let model):
                         characters.append(model)
-                    case .failure:
-                        break
+                    case .failure(let error):
+                        NSLog("Failed to fetch location detail related characters: \(error.localizedDescription)")
                     }
             }
         }

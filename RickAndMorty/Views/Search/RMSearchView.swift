@@ -133,24 +133,24 @@ extension RMSearchView: RMSearchInputViewDelegate {
 }
 
 // MARK: - UICollectionViewDataSource
-extension RMSearchView: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return Constants.numberOfItemsInSection
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-
-        return cell
-    }
-}
-
+// extension RMSearchView: UICollectionViewDataSource {
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        return Constants.numberOfItemsInSection
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+//
+//        return cell
+//    }
+// }
+//
 // MARK: - UICollectionViewDelegate
-extension RMSearchView: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionView.deselectItem(at: indexPath, animated: true)
-    }
-}
+// extension RMSearchView: UICollectionViewDelegate {
+//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        collectionView.deselectItem(at: indexPath, animated: true)
+//    }
+// }
 
 // MARK: - RMSearchResultsViewDelegate
 extension RMSearchView: RMSearchResultsViewDelegate {
