@@ -78,8 +78,8 @@ extension RMLocationViewViewModel {
                     self?.delegate?.didFetchInitialLocations()
                 }
 
-            case .failure:
-                break
+            case .failure(let error):
+                NSLog("Failed to fetch initial locations: \(error.localizedDescription)")
             }
         }
     }
@@ -111,8 +111,8 @@ extension RMLocationViewViewModel {
                         self?.didLoadMoreLocationHandler?()
                         self?.isLoadingMoreLocations = false
                     }
-                case .failure:
-//                    print(String(describing: failure))
+                case .failure(let error):
+                    NSLog("Failed to fetch additional locations: \(error.localizedDescription)")
                     self?.isLoadingMoreLocations = false
                 }
             }

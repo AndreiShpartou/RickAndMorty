@@ -162,7 +162,7 @@ extension RMEpisodeDetailsView: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let sections = viewModel?.cellViewModels else {
-            return Constants.numberOfItemsInSection
+            return Constants.zeroItemsInSection
         }
 
         let sectionType = sections[section]

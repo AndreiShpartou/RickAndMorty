@@ -56,8 +56,8 @@ extension RMCharacterPhotoCollectionViewCell {
                 DispatchQueue.main.async {
                     self?.imageView.image = UIImage(data: data)
                 }
-            case .failure:
-                break
+            case .failure(let error):
+                NSLog("Failed to fetch character detail image: \(error.localizedDescription)")
             }
         }
     }

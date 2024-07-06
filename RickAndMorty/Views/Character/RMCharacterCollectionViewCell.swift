@@ -118,8 +118,8 @@ extension RMCharacterCollectionViewCell {
                     let image = UIImage(data: data)
                     self?.imageView.image = image
                 }
-            case .failure:
-                break
+            case .failure(let error):
+                NSLog("Failed to fetch character image: \(error.localizedDescription)")
             }
         }
     }

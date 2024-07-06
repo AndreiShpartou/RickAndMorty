@@ -36,11 +36,13 @@ final class RMCharacterEpisodeCollectionViewCellViewModel {
         self.service = service
     }
 
+    // Register a data block to be called when episode data is available
     func registerForData(_ block: @escaping (RMEpisodeDataRender) -> Void) {
         self.dataBlock = block
     }
 
     // MARK: - FetchData
+    // Fetch the episode data
     func fetchEpisode() {
         guard !isFetching else {
             if let model = episode {
@@ -50,8 +52,15 @@ final class RMCharacterEpisodeCollectionViewCellViewModel {
             return
         }
 
-        guard let url = episodeDataUrl,
-              let request = createRequest(from: url) else {
+        guard let url = episodeDataUrl else {
+            NSLog(RMServiceError.invalidURL.localizedDescription)
+            
+            return
+        }
+
+        guard let request = createRequest(from: url) else {
+            NSLog(RMServiceError.failedToCreateRequest.localizedDescription)
+            
             return
         }
 
@@ -60,19 +69,26 @@ final class RMCharacterEpisodeCollectionViewCellViewModel {
             request,
             expecting: RMEpisode.self
         ) { [weak self] result in
-                switch result {
-                case .success(let model):
-                    DispatchQueue.main.async {
-                        self?.episode = model
-                    }
-                case .failure:
-                    break
-                }
+            DispatchQueue.main.async {
+                self?.handleResult(result)
+            }
         }
     }
 
+    // Create a request from the given URL
     private func createRequest(from url: URL) -> RMRequest? {
         return RMRequest(url: url)
+    }
+
+    // Handle the result of the network request
+    private func handleResult(_ result: Result<RMEpisode, Error>) {
+        switch result {
+        case .success(let model):
+            episode = model
+        case .failure(let error):
+            NSLog("Failed to fetch character related episodes: \(error.localizedDescription)")
+        }
+        isFetching = false
     }
 }
 

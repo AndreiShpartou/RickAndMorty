@@ -86,7 +86,7 @@ extension RMCharacterDetailsViewController: UICollectionViewDataSource {
         let sectionType = viewModel.sections[section]
         switch sectionType {
         case .photo:
-            return Constants.numberOfItemsInSection
+            return Constants.oneItemInSection
         case .information(let viewModels):
             return viewModels.count
         case .episodes(let viewModels):

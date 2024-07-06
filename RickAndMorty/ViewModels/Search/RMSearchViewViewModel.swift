@@ -130,8 +130,8 @@ final class RMSearchViewViewModel {
                 case .success(let model):
                     // Episodes and characters: CollectionView; Location: TableView
                     self.processSearchResults(model: model)
-                case .failure:
-//                    print(String(describing: failure))
+                case .failure(let error):
+                    NSLog("Failed to make search API call: \(error.localizedDescription)")
                     self.handleNoResults()
                 }
         }

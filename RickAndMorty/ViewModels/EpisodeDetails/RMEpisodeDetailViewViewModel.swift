@@ -53,8 +53,8 @@ extension RMEpisodeDetailViewViewModel {
                 switch result {
                 case .success(let model):
                     self?.fetchRelatedCharacters(episode: model)
-                case .failure:
-                    break
+                case .failure(let error):
+                    NSLog("Failed to fetch episode detail: \(error.localizedDescription)")
                 }
         }
     }
@@ -101,8 +101,8 @@ extension RMEpisodeDetailViewViewModel {
                     switch result {
                     case .success(let model):
                         characters.append(model)
-                    case .failure:
-                        break
+                    case .failure(let error):
+                        NSLog("Failed to fetch episode related characters: \(error.localizedDescription)")
                     }
             }
         }
