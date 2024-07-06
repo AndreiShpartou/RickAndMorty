@@ -7,8 +7,9 @@
 
 import Foundation
 
+// MARK: - ViewModelImplementation
 // ViewModel for the character photo collection view cell
-final class RMCharacterPhotoCollectionViewCellViewModel {
+final class RMCharacterPhotoCollectionViewCellViewModel: RMCharacterPhotoCollectionViewCellViewModelProtocol {
 
     private let imageURL: URL?
     private let imageLoader: RMImageLoaderProtocol
@@ -23,7 +24,7 @@ final class RMCharacterPhotoCollectionViewCellViewModel {
 
     func fetchImage(completion: @escaping (Result<Data, Error>, URL?) -> Void) {
         guard let imageURL = imageURL else {
-            completion(.failure(URLError(.badURL)), nil)
+            completion(.failure(RMServiceError.invalidURL), nil)
             return
         }
 

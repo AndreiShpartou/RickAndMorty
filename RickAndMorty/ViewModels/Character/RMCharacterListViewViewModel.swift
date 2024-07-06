@@ -7,8 +7,8 @@
 
 import UIKit
 
-// View Model to handle character list view logic
 // MARK: - ViewModel Implementation
+// View Model to handle character list view logic
 final class RMCharacterListViewViewModel: RMCharacterListViewViewModelProtocol {
 
     weak var delegate: RMCharacterListViewViewModelDelegate?
@@ -61,9 +61,8 @@ final class RMCharacterListViewViewModel: RMCharacterListViewViewModelProtocol {
                 DispatchQueue.main.async {
                     self?.delegate?.didLoadInitialCharacters()
                 }
-            case .failure:
-                break
-//                print(String(describing: error))
+            case .failure(let error):
+                NSLog("Failed to fetch initial set of characters: \(error.localizedDescription)")
             }
         }
     }
@@ -101,8 +100,8 @@ final class RMCharacterListViewViewModel: RMCharacterListViewViewModelProtocol {
                         self?.delegate?.didLoadMoreCharacters(with: indexPathsToAdd)
                         self?.isLoadingMoreCharacters = false
                     }
-                case .failure:
-//                    print(String(describing: failure))
+                case .failure(let error):
+                    NSLog("Failed to fetch additional characters: \(error.localizedDescription)")
                     self?.isLoadingMoreCharacters = false
                 }
             }

@@ -74,8 +74,8 @@ final class RMSearchResultViewViewModel {
                             // Notify via callback
                             completion(newResults)
                         }
-                    case .failure:
-//                        print(String(describing: failure))
+                    case .failure(let error):
+                        NSLog("Failed to fetch additional character search results: \(error.localizedDescription)")
                         self?.isLoadingMoreResults = false
                     }
                 }
@@ -106,8 +106,8 @@ final class RMSearchResultViewViewModel {
                             // Notify via callback
                             completion(newResults)
                         }
-                    case .failure:
-//                        print(String(describing: failure))
+                    case .failure(let error):
+                        NSLog("Failed to fetch additional episodes search results: \(error.localizedDescription)")
                         self?.isLoadingMoreResults = false
                     }
                 }
@@ -158,8 +158,8 @@ final class RMSearchResultViewViewModel {
                         completion(newResults)
                         self?.isLoadingMoreResults = false
                     }
-                case .failure:
-//                    print(String(describing: failure))
+                case .failure(let error):
+                    NSLog("Failed to fetch additional locations search results: \(error.localizedDescription)")
                     self?.isLoadingMoreResults = false
                 }
             }

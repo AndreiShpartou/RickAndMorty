@@ -8,5 +8,6 @@
 import Foundation
 
 enum Constants {
-    static let numberOfItemsInSection = 0
+    static let zeroItemsInSection = 0
+    static let oneItemInSection = 1
 }

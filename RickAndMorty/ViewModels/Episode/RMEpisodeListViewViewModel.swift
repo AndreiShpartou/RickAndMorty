@@ -73,9 +73,8 @@ final class RMEpisodeListViewViewModel: NSObject {
                 DispatchQueue.main.async {
                     self?.delegate?.didLoadInitialEpisodes()
                 }
-            case .failure:
-                break
-//                print(String(describing: error))
+            case .failure(let error):
+                NSLog("Failed to fetch initial set of episodes: \(error.localizedDescription)")
             }
         }
     }
@@ -111,8 +110,8 @@ final class RMEpisodeListViewViewModel: NSObject {
                         self?.delegate?.didLoadMoreEpisodes(with: indexPathsToAdd)
                         self?.isLoadingMoreEpisodes = false
                     }
-                case .failure:
-//                    print(String(describing: failure))
+                case .failure(let error):
+                    NSLog("Failed to fetch additional episodes: \(error.localizedDescription)")
                     self?.isLoadingMoreEpisodes = false
                 }
             }

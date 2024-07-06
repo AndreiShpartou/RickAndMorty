@@ -76,7 +76,7 @@ extension RMCharacterEpisodeCollectionViewCell {
 
 // MARK: - Public Methods
 extension RMCharacterEpisodeCollectionViewCell {
-    func configure(with viewModel: RMCharacterEpisodeCollectionViewCellViewModel) {
+    func configure(with viewModel: any RMCharacterEpisodeCollectionViewCellViewModelProtocol) {
         viewModel.registerForData { [weak self] data in
             self?.seasonLabel.text = "Episode " + data.episode
             self?.nameLabel.text = data.name
