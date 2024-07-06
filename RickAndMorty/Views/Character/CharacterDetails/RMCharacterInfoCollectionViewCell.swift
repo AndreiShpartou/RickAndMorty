@@ -82,7 +82,7 @@ extension RMCharacterInfoCollectionViewCell {
 
 // MARK: - Public Methods
 extension RMCharacterInfoCollectionViewCell {
-    func configure(with viewModel: RMCharacterInfoCollectionViewCellViewModel) {
+    func configure(with viewModel: RMCharacterInfoCollectionViewCellViewModelProtocol) {
         titleLabel.text = viewModel.title
         valueLabel.text = viewModel.displayValue
         iconImageView.image = viewModel.iconImage

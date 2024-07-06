@@ -7,8 +7,9 @@
 
 import Foundation
 
+// MARK: - ViewModelImplementation
 // ViewModel for the character photo collection view cell
-final class RMCharacterPhotoCollectionViewCellViewModel {
+final class RMCharacterPhotoCollectionViewCellViewModel: RMCharacterPhotoCollectionViewCellViewModelProtocol {
 
     private let imageURL: URL?
     private let imageLoader: RMImageLoaderProtocol

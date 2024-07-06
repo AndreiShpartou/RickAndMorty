@@ -7,13 +7,14 @@
 
 import UIKit
 
-final class RMCharacterEpisodeCollectionViewCellViewModel {
+// MARK: - ViewModel Implementation
+final class RMCharacterEpisodeCollectionViewCellViewModel: RMCharacterEpisodeCollectionViewCellViewModelProtocol {
 
     let borderColor: UIColor
 
     private let episodeDataUrl: URL?
     private var isFetching = false
-    private var dataBlock: ((RMEpisodeDataRender) -> Void)?
+    private var dataBlock: ((RMEpisodeDataRenderProtocol) -> Void)?
     private let service: RMServiceProtocol
 
     private var episode: RMEpisode? {
@@ -37,7 +38,7 @@ final class RMCharacterEpisodeCollectionViewCellViewModel {
     }
 
     // Register a data block to be called when episode data is available
-    func registerForData(_ block: @escaping (RMEpisodeDataRender) -> Void) {
+    func registerForData(_ block: @escaping (RMEpisodeDataRenderProtocol) -> Void) {
         self.dataBlock = block
     }
 
@@ -54,13 +55,13 @@ final class RMCharacterEpisodeCollectionViewCellViewModel {
 
         guard let url = episodeDataUrl else {
             NSLog(RMServiceError.invalidURL.localizedDescription)
-            
+
             return
         }
 
         guard let request = createRequest(from: url) else {
             NSLog(RMServiceError.failedToCreateRequest.localizedDescription)
-            
+
             return
         }
 

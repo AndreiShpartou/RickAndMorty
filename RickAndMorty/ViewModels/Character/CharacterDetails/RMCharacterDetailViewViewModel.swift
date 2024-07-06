@@ -6,12 +6,15 @@
 //
 import UIKit
 
+// MARK: - ViewModel Implementation
 final class RMCharacterDetailViewViewModel {
 
+    typealias EpisodeDataRender = RMEpisodeDataRenderProtocol
+
     enum SectionType {
-        case photo(viewModel: RMCharacterPhotoCollectionViewCellViewModel)
-        case information(viewModels: [RMCharacterInfoCollectionViewCellViewModel])
-        case episodes(viewModels: [RMCharacterEpisodeCollectionViewCellViewModel])
+        case photo(viewModel: RMCharacterPhotoCollectionViewCellViewModelProtocol)
+        case information(viewModels: [RMCharacterInfoCollectionViewCellViewModelProtocol])
+        case episodes(viewModels: [any RMCharacterEpisodeCollectionViewCellViewModelProtocol])
     }
 
     var sections: [SectionType] = []
@@ -56,21 +59,27 @@ final class RMCharacterDetailViewViewModel {
 
     // MARK: - SetupSections
     private func setupSections() {
+        let photoViewModel = RMCharacterPhotoCollectionViewCellViewModel(imageURL: URL(string: character.image))
+
+        let infoViewModels = [
+            RMCharacterInfoCollectionViewCellViewModel(type: .status, value: character.status.rawValue),
+            RMCharacterInfoCollectionViewCellViewModel(type: .gender, value: character.gender.rawValue),
+            RMCharacterInfoCollectionViewCellViewModel(type: .type, value: character.type),
+            RMCharacterInfoCollectionViewCellViewModel(type: .species, value: character.species),
+            RMCharacterInfoCollectionViewCellViewModel(type: .origin, value: character.origin.name),
+            RMCharacterInfoCollectionViewCellViewModel(type: .location, value: character.location.name),
+            RMCharacterInfoCollectionViewCellViewModel(type: .created, value: character.created),
+            RMCharacterInfoCollectionViewCellViewModel(type: .episodeCount, value: "\(character.episode.count)")
+        ]
+
+        let episodeViewModels = character.episode.compactMap {
+            return RMCharacterEpisodeCollectionViewCellViewModel(episodeDataUrl: URL(string: $0))
+        }
+
         sections = [
-            .photo(viewModel: .init(imageURL: URL(string: character.image))),
-            .information(viewModels: [
-                .init(type: .status, value: character.status.rawValue),
-                .init(type: .gender, value: character.gender.rawValue),
-                .init(type: .type, value: character.type),
-                .init(type: .species, value: character.species),
-                .init(type: .origin, value: character.origin.name),
-                .init(type: .location, value: character.location.name),
-                .init(type: .created, value: character.created),
-                .init(type: .episodeCount, value: "\(character.episode.count)")
-            ]),
-            .episodes(viewModels: character.episode.compactMap {
-                return RMCharacterEpisodeCollectionViewCellViewModel(episodeDataUrl: URL(string: $0))
-            })
+            .photo(viewModel: photoViewModel),
+            .information(viewModels: infoViewModels),
+            .episodes(viewModels: episodeViewModels)
         ]
     }
 }

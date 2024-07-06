@@ -74,7 +74,6 @@ final class RMEpisodeListViewViewModel: NSObject {
                     self?.delegate?.didLoadInitialEpisodes()
                 }
             case .failure(let error):
-                break
                 NSLog("Failed to fetch initial set of episodes: \(error.localizedDescription)")
             }
         }
