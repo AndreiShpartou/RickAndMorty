@@ -133,7 +133,7 @@ extension RMSearchViewController: RMSearchViewDelegate {
     }
 
     func rmSearchView(_ searchView: RMSearchView, didSelectCharacter character: RMCharacter) {
-        let viewController = RMCharacterDetailsViewController(viewModel: .init(character: character))
+        let viewController = RMCharacterDetailsViewController(viewModel: RMCharacterDetailViewViewModel(character: character))
         navigationItem.largeTitleDisplayMode = .never
 
         navigationController?.pushViewController(viewController, animated: true)

@@ -7,13 +7,7 @@
 
 import Foundation
 
-protocol RMEpisodeDataRenderProtocol {
-    var episode: String { get }
-    var name: String { get }
-    var air_date: String { get }
-}
-
-struct RMEpisode: Codable, RMEpisodeDataRenderProtocol {
+struct RMEpisode: Codable, RMEpisodeProtocol {
     let id: Int
     let name: String
     let air_date: String

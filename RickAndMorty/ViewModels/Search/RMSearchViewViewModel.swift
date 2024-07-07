@@ -142,20 +142,24 @@ final class RMSearchViewViewModel {
         var nextUrl: String?
         if let characterResults = model as? RMGetAllCharactersResponse {
             resultsVM = .characters(characterResults.results.map {
-                return RMCharacterCollectionViewCellViewModel(
-                    characterName: $0.name,
-                    characterStatus: $0.status,
-                    characterImageUrl: URL(string: $0.image)
+                return RMCharacterCollectionViewCellViewModelWrapper(
+                    RMCharacterCollectionViewCellViewModel(
+                        characterName: $0.name,
+                        characterStatus: $0.status,
+                        characterImageUrl: URL(string: $0.image)
+                    )
                 )
             })
             nextUrl = characterResults.info.next
             self.searchResultModels = characterResults.results
         } else if let episodesResults = model as? RMGetAllEpisodesResponse {
-            resultsVM = .episodes(episodesResults.results.map({
-                return RMCharacterEpisodeCollectionViewCellViewModel(
-                    episodeDataUrl: URL(string: $0.url)
+            resultsVM = .episodes(episodesResults.results.map {
+                return RMCharacterEpisodeCollectionViewCellViewModelWrapper(
+                    RMCharacterEpisodeCollectionViewCellViewModel(
+                        episodeDataUrl: URL(string: $0.url)
+                    )
                 )
-            }))
+            })
             nextUrl = episodesResults.info.next
             self.searchResultModels = episodesResults.results
         } else if let locationsResults = model as? RMGetAllLocationsResponse {

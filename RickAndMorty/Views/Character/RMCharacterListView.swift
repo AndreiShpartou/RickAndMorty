@@ -123,7 +123,7 @@ extension RMCharacterListView {
 
 // MARK: - RMCharacterListViewViewModelDelegate
 extension RMCharacterListView: RMCharacterListViewViewModelDelegate {
-    func didSelectCharacter(_ character: RMCharacter) {
+    func didSelectCharacter(_ character: RMCharacterProtocol) {
         delegate?.rmCharacterListView(self, didSelectCharacter: character)
     }
 

@@ -17,7 +17,7 @@ final class RMCharacterEpisodeCollectionViewCellViewModel: RMCharacterEpisodeCol
     private var dataBlock: ((RMEpisodeDataRenderProtocol) -> Void)?
     private let service: RMServiceProtocol
 
-    private var episode: RMEpisode? {
+    private var episode: RMEpisodeProtocol? {
         didSet {
             guard let model = episode else {
                 return

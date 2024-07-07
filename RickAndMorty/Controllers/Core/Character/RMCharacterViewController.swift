@@ -129,7 +129,7 @@ extension RMCharacterViewController {
 
 // MARK: - RMCharacterListViewDelegate
 extension RMCharacterViewController: RMCharacterListViewDelegate {
-    func rmCharacterListView(_ characterListView: RMCharacterListViewProtocol, didSelectCharacter character: RMCharacter) {
+    func rmCharacterListView(_ characterListView: RMCharacterListViewProtocol, didSelectCharacter character: RMCharacterProtocol) {
         // Open detail controller for that character
         let viewModel = RMCharacterDetailViewViewModel(character: character)
         let detailVC = RMCharacterDetailsViewController(viewModel: viewModel)

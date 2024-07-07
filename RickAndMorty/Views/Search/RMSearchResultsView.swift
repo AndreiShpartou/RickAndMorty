@@ -187,7 +187,7 @@ extension RMSearchResultsView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         // Character | Episode
         let viewModel = collectionViewCellViewModels[indexPath.row]
-        if let characterViewModel = viewModel as? RMCharacterCollectionViewCellViewModel {
+        if let characterViewModel = viewModel as? RMCharacterCollectionViewCellViewModelWrapper {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: RMCharacterCollectionViewCell.cellIdentifier,
                 for: indexPath
@@ -198,7 +198,7 @@ extension RMSearchResultsView: UICollectionViewDataSource {
             cell.configure(with: characterViewModel)
 
             return cell
-        } else if let episodeViewModel = viewModel as? RMCharacterEpisodeCollectionViewCellViewModel {
+        } else if let episodeViewModel = viewModel as? RMCharacterEpisodeCollectionViewCellViewModelWrapper {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: RMCharacterEpisodeCollectionViewCell.cellIdentifier,
                 for: indexPath
@@ -272,13 +272,13 @@ extension RMSearchResultsView: UICollectionViewDelegateFlowLayout {
         let viewModel = collectionViewCellViewModels[indexPath.row]
         let bounds = collectionView.bounds
         let isLandscapeMultiplier = UIDevice.isLandscape ? 0.45 : 1
-        if viewModel is RMCharacterCollectionViewCellViewModel {
+        if viewModel is RMCharacterCollectionViewCellViewModelWrapper {
             let width = UIDevice.isPhone ? ((bounds.width - 30) / 2) * isLandscapeMultiplier : (bounds.width - 60) / 4
             return CGSize(
                 width: width,
                 height: width * 1.5
             )
-        } else if viewModel is RMCharacterEpisodeCollectionViewCellViewModel {
+        } else if viewModel is RMCharacterEpisodeCollectionViewCellViewModelWrapper {
             let width = UIDevice.isPhone ? (bounds.width - 20) * isLandscapeMultiplier : (bounds.width - 30) / 2
             return CGSize(
                 width: width,

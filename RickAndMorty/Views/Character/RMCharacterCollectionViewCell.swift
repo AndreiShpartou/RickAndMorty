@@ -13,39 +13,10 @@ final class RMCharacterCollectionViewCell: UICollectionViewCell {
     static let cellIdentifier = "RMCharacterCollectionViewCell"
 
     private let commonView = UIView()
+    private let imageView: UIImageView = .createImageView(contentMode: .scaleAspectFill, clipsToBounds: true)
+    private let nameLabel: UILabel = .createLabel(fontSize: 18, weight: .medium, textColor: .label)
+    private let statusLabel: UILabel = .createLabel(fontSize: 16, weight: .regular, textColor: .secondaryLabel)
     private var characterImageUrl: URL?
-
-    private let imageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-
-        return imageView
-    }()
-
-    private let nameLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .label
-        label.font = .systemFont(
-            ofSize: 18,
-            weight: .medium
-        )
-        label.adjustsFontSizeToFitWidth = true
-
-        return label
-    }()
-
-    private let statusLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .secondaryLabel
-        label.font = .systemFont(
-            ofSize: 16,
-            weight: .regular
-        )
-        label.adjustsFontSizeToFitWidth = true
-
-        return label
-    }()
 
     // MARK: - Init
     override init(frame: CGRect) {
@@ -62,15 +33,39 @@ final class RMCharacterCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        imageView.image = nil
-        nameLabel.text = nil
-        statusLabel.text = nil
+        resetView()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
         setupLayer()
+    }
+}
+
+// MARK: - PublicMethods
+extension RMCharacterCollectionViewCell {
+    func configure(with viewModel: RMCharacterCollectionViewCellViewModelWrapper) {
+        nameLabel.text = viewModel.characterName
+        statusLabel.text = viewModel.characterStatusText
+        characterImageUrl = viewModel.characterImageUrl
+
+        viewModel.fetchImage { [weak self] result, url in
+            switch result {
+            case .success(let data):
+                guard let currentURL = self?.characterImageUrl,
+                      let responseURL = url,
+                      currentURL == responseURL else {
+                    return
+                }
+
+                DispatchQueue.main.async {
+                    self?.imageView.image = UIImage(data: data)
+                }
+            case .failure(let error):
+                NSLog("Failed to fetch character image: \(error.localizedDescription)")
+            }
+        }
     }
 }
 
@@ -96,32 +91,11 @@ extension RMCharacterCollectionViewCell {
         contentView.layer.shadowOffset = CGSize(width: -5, height: 5)
         contentView.layer.shadowOpacity = 0.3
     }
-}
 
-// MARK: - PublicMethods
-extension RMCharacterCollectionViewCell {
-    func configure(with viewModel: RMCharacterCollectionViewCellViewModel) {
-        nameLabel.text = viewModel.characterName
-        statusLabel.text = viewModel.characterStatusText
-        characterImageUrl = viewModel.characterImageUrl
-
-        viewModel.fetchImage { [weak self] result, url in
-            switch result {
-            case .success(let data):
-                guard let currentURL = self?.characterImageUrl,
-                      let responseURL = url,
-                      currentURL == responseURL else {
-                    return
-                }
-
-                DispatchQueue.main.async {
-                    let image = UIImage(data: data)
-                    self?.imageView.image = image
-                }
-            case .failure(let error):
-                NSLog("Failed to fetch character image: \(error.localizedDescription)")
-            }
-        }
+    private func resetView() {
+        imageView.image = nil
+        nameLabel.text = nil
+        statusLabel.text = nil
     }
 }
 
