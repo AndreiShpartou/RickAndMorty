@@ -7,17 +7,9 @@
 import UIKit
 
 // MARK: - ViewModel Implementation
-final class RMCharacterDetailViewViewModel {
+final class RMCharacterDetailViewViewModel: RMCharacterDetailViewViewModelProtocol {
 
-    typealias EpisodeDataRender = RMEpisodeDataRenderProtocol
-
-    enum SectionType {
-        case photo(viewModel: RMCharacterPhotoCollectionViewCellViewModelProtocol)
-        case information(viewModels: [RMCharacterInfoCollectionViewCellViewModelProtocol])
-        case episodes(viewModels: [RMCharacterEpisodeCollectionViewCellViewModelWrapper])
-    }
-
-    var sections: [SectionType] = []
+    weak var delegate: RMCharacterDetailViewViewModelDelegate?
 
     var title: String {
         character.name.uppercased()
@@ -27,14 +19,16 @@ final class RMCharacterDetailViewViewModel {
         character.episode
     }
 
-    private let character: RMCharacter
+    private(set) var sections: [SectionType] = []
+
+    private let character: RMCharacterProtocol
 
     private var requestUrl: URL? {
         return URL(string: character.url)
     }
 
     // MARK: - Init
-    init(character: RMCharacter) {
+    init(character: RMCharacterProtocol) {
         self.character = character
         setupSections()
     }
@@ -80,7 +74,7 @@ final class RMCharacterDetailViewViewModel {
 
         sections = [
             .photo(viewModel: photoViewModel),
-            .information(viewModels: infoViewModels),
+            .characterInfo(viewModels: infoViewModels),
             .episodes(viewModels: episodeViewModels)
         ]
     }

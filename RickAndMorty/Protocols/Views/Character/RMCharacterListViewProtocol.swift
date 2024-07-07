@@ -15,6 +15,6 @@ protocol RMCharacterListViewProtocol: UIView {
 protocol RMCharacterListViewDelegate: AnyObject {
     func rmCharacterListView(
         _ characterListView: RMCharacterListViewProtocol,
-        didSelectCharacter character: RMCharacter
+        didSelectCharacter character: RMCharacterProtocol
     )
 }

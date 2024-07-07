@@ -9,4 +9,6 @@ import Foundation
 
 enum SectionType {
     case photo(viewModel: RMCharacterPhotoCollectionViewCellViewModelProtocol)
+    case characterInfo(viewModels: [RMCharacterInfoCollectionViewCellViewModelProtocol])
+    case episodes(viewModels: [RMCharacterEpisodeCollectionViewCellViewModelWrapper])
 }

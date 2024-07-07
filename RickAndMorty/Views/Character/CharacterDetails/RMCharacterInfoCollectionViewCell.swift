@@ -11,37 +11,10 @@ final class RMCharacterInfoCollectionViewCell: UICollectionViewCell {
 
     static let cellIdentifier = "RMCharacterInfoCollectionViewCell"
 
-    private let valueLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.font = .systemFont(ofSize: 22, weight: .light)
-        label.adjustsFontSizeToFitWidth = true
-
-        return label
-    }()
-
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.font = .systemFont(ofSize: 20, weight: .medium)
-
-        label.adjustsFontSizeToFitWidth = true
-        return label
-    }()
-
-    private let iconImageView: UIImageView = {
-        let icon = UIImageView()
-        icon.contentMode = .scaleAspectFit
-
-        return icon
-    }()
-
-    private let titleContainerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .quaternarySystemFill
-
-        return view
-    }()
+    private let valueLabel: UILabel = .createLabel(fontSize: 22, weight: .light, numberOfLines: 0)
+    private let titleLabel: UILabel = .createLabel(fontSize: 20, weight: .medium, textAlignment: .center)
+    private lazy var iconImageView: UIImageView = .createImageView(contentMode: .scaleAspectFit)
+    private lazy var titleContainerView: UIView = createTitleContainerView()
 
     // MARK: - Init
     override init(frame: CGRect) {
@@ -58,11 +31,18 @@ final class RMCharacterInfoCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        valueLabel.text = nil
-        titleLabel.text = nil
-        iconImageView.image = nil
-        iconImageView.tintColor = .label
-        titleLabel.textColor = .label
+        resetView()
+    }
+}
+
+// MARK: - Public Methods
+extension RMCharacterInfoCollectionViewCell {
+    func configure(with viewModel: RMCharacterInfoCollectionViewCellViewModelProtocol) {
+        titleLabel.text = viewModel.title
+        valueLabel.text = viewModel.displayValue
+        iconImageView.image = viewModel.iconImage
+        iconImageView.tintColor = viewModel.tintColor
+        titleLabel.textColor = viewModel.tintColor
     }
 }
 
@@ -78,16 +58,24 @@ extension RMCharacterInfoCollectionViewCell {
 
         addConstraints()
     }
+
+    func resetView() {
+        valueLabel.text = nil
+        titleLabel.text = nil
+        iconImageView.image = nil
+        iconImageView.tintColor = .label
+        titleLabel.textColor = .label
+    }
 }
 
-// MARK: - Public Methods
+// MARK: - Helpers
 extension RMCharacterInfoCollectionViewCell {
-    func configure(with viewModel: RMCharacterInfoCollectionViewCellViewModelProtocol) {
-        titleLabel.text = viewModel.title
-        valueLabel.text = viewModel.displayValue
-        iconImageView.image = viewModel.iconImage
-        iconImageView.tintColor = viewModel.tintColor
-        titleLabel.textColor = viewModel.tintColor
+
+    private func createTitleContainerView() -> UIView {
+        let view = UIView()
+        view.backgroundColor = .quaternarySystemFill
+
+        return view
     }
 }
 

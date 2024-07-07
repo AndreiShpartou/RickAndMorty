@@ -84,7 +84,7 @@ extension RMEpisodeDetailsViewController: RMEpisodeDetailViewViewModelDelegate {
 extension RMEpisodeDetailsViewController: RMEpisodeDetailsViewDelegate {
     func rmEpisodeDetailView(_ detailView: RMEpisodeDetailsView, didSelect character: RMCharacter) {
         let viewController = RMCharacterDetailsViewController(
-            viewModel: .init(character: character)
+            viewModel: RMCharacterDetailViewViewModel(character: character)
         )
         viewController.title = character.name
         viewController.navigationItem.largeTitleDisplayMode = .never
