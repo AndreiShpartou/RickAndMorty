@@ -8,7 +8,7 @@
 import Foundation
 
 enum RMSearchResultType {
-    case characters([RMCharacterCollectionViewCellViewModel])
+    case characters([RMCharacterCollectionViewCellViewModelWrapper])
     case episodes([RMCharacterEpisodeCollectionViewCellViewModel])
     case locations([RMLocationTableViewCellViewModel])
 }
@@ -58,14 +58,16 @@ final class RMSearchResultViewViewModel {
                         self?.loadPageHandler?(moreResults)
 
                         let additionalResults = moreResults.compactMap {
-                            return RMCharacterCollectionViewCellViewModel(
-                                characterName: $0.name,
-                                characterStatus: $0.status,
-                                characterImageUrl: URL(string: $0.image)
+                            return RMCharacterCollectionViewCellViewModelWrapper(
+                                RMCharacterCollectionViewCellViewModel(
+                                    characterName: $0.name,
+                                    characterStatus: $0.status,
+                                    characterImageUrl: URL(string: $0.image)
+                                )
                             )
                         }
 
-                        var newResults: [RMCharacterCollectionViewCellViewModel] = []
+                        var newResults: [RMCharacterCollectionViewCellViewModelWrapper] = []
                         newResults = existingResults + additionalResults
                         self?.results = .characters(newResults)
 

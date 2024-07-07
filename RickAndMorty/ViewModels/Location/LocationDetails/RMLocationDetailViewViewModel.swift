@@ -17,7 +17,7 @@ final class RMLocationDetailViewViewModel {
 
     enum SectionType {
         case information(viewModels: [RMEpisodeInfoCollectionViewCellViewModel])
-        case characters(viewModels: [RMCharacterCollectionViewCellViewModel])
+        case characters(viewModels: [RMCharacterCollectionViewCellViewModelWrapper])
     }
 
     private(set) var cellViewModels: [SectionType] = []
@@ -140,10 +140,12 @@ extension RMLocationDetailViewViewModel {
                 .init(title: "Created", value: createdString)
             ]),
             .characters(viewModels: characters.compactMap {
-                RMCharacterCollectionViewCellViewModel(
-                    characterName: $0.name,
-                    characterStatus: $0.status,
-                    characterImageUrl: URL(string: $0.image)
+                RMCharacterCollectionViewCellViewModelWrapper(
+                    RMCharacterCollectionViewCellViewModel(
+                        characterName: $0.name,
+                        characterStatus: $0.status,
+                        characterImageUrl: URL(string: $0.image)
+                    )
                 )
             })
         ]

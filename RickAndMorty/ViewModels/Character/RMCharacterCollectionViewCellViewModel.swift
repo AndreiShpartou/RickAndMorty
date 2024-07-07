@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - ViewModel Implementation
-final class RMCharacterCollectionViewCellViewModel {
+final class RMCharacterCollectionViewCellViewModel: RMCharacterCollectionViewCellViewModelProtocol {
 
     let characterName: String
 

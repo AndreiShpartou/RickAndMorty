@@ -100,7 +100,7 @@ extension RMCharacterCollectionViewCell {
 
 // MARK: - PublicMethods
 extension RMCharacterCollectionViewCell {
-    func configure(with viewModel: RMCharacterCollectionViewCellViewModel) {
+    func configure(with viewModel: RMCharacterCollectionViewCellViewModelWrapper) {
         nameLabel.text = viewModel.characterName
         statusLabel.text = viewModel.characterStatusText
         characterImageUrl = viewModel.characterImageUrl

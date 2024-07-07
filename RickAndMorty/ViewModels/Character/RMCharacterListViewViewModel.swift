@@ -21,17 +21,19 @@ final class RMCharacterListViewViewModel: RMCharacterListViewViewModelProtocol {
         return apiInfo?.next
     }
 
-    private(set) var cellViewModels: [RMCharacterCollectionViewCellViewModel] = []
+    private(set) var cellViewModels: [RMCharacterCollectionViewCellViewModelWrapper] = []
 
     private(set) var isLoadingMoreCharacters = false
 
     private var characters: [RMCharacter] = [] {
         didSet {
             for character in characters {
-                let viewModel = RMCharacterCollectionViewCellViewModel(
-                    characterName: character.name,
-                    characterStatus: character.status,
-                    characterImageUrl: URL(string: character.image)
+                let viewModel = RMCharacterCollectionViewCellViewModelWrapper(
+                    RMCharacterCollectionViewCellViewModel(
+                        characterName: character.name,
+                        characterStatus: character.status,
+                        characterImageUrl: URL(string: character.image)
+                    )
                 )
 
                 if !cellViewModels.contains(viewModel) {

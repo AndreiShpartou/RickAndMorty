@@ -11,7 +11,7 @@ protocol RMCharacterListViewViewModelProtocol: AnyObject {
     var delegate: RMCharacterListViewViewModelDelegate? { get set }
     var shouldShowLoadMoreIndicator: Bool { get }
     var nextUrlString: String? { get }
-    var cellViewModels: [RMCharacterCollectionViewCellViewModel] { get }
+    var cellViewModels: [RMCharacterCollectionViewCellViewModelWrapper] { get }
     var isLoadingMoreCharacters: Bool { get }
 
     func fetchCharacters()
