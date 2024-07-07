@@ -11,14 +11,7 @@ final class RMCharacterPhotoCollectionViewCell: UICollectionViewCell {
 
     static let cellIdentifier = "RMCharacterPhotoCollectionViewCell"
 
-    private let imageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 15
-
-        return imageView
-    }()
+    private lazy var imageView: UIImageView = .createImageView(contentMode: .scaleAspectFill, clipsToBounds: true, cornerRadius: 15)
 
     // MARK: - Init
     override init(frame: CGRect) {
@@ -39,14 +32,6 @@ final class RMCharacterPhotoCollectionViewCell: UICollectionViewCell {
     }
 }
 
-// MARK: - Setup
-extension RMCharacterPhotoCollectionViewCell {
-    private func setupView() {
-        contentView.addSubviews(imageView)
-        addConstraints()
-    }
-}
-
 // MARK: - Public Methods
 extension RMCharacterPhotoCollectionViewCell {
     func configure(with viewModel: RMCharacterPhotoCollectionViewCellViewModelProtocol) {
@@ -60,6 +45,14 @@ extension RMCharacterPhotoCollectionViewCell {
                 NSLog("Failed to fetch character detail image: \(error.localizedDescription)")
             }
         }
+    }
+}
+
+// MARK: - Setup
+extension RMCharacterPhotoCollectionViewCell {
+    private func setupView() {
+        contentView.addSubviews(imageView)
+        addConstraints()
     }
 }
 

@@ -85,7 +85,7 @@ extension RMLocationDetailsViewController: RMLocationDetailViewViewModelDelegate
 extension RMLocationDetailsViewController: RMLocationDetailsViewDelegate {
     func rmLocationDetailView(_ detailView: RMLocationDetailsView, didSelect character: RMCharacter) {
         let viewController = RMCharacterDetailsViewController(
-            viewModel: .init(character: character)
+            viewModel: RMCharacterDetailViewViewModel(character: character)
         )
         viewController.title = character.name
         viewController.navigationItem.largeTitleDisplayMode = .never

@@ -11,17 +11,17 @@ protocol RMCharacterListViewViewModelProtocol: AnyObject {
     var delegate: RMCharacterListViewViewModelDelegate? { get set }
     var shouldShowLoadMoreIndicator: Bool { get }
     var nextUrlString: String? { get }
-    var cellViewModels: [RMCharacterCollectionViewCellViewModel] { get }
+    var cellViewModels: [RMCharacterCollectionViewCellViewModelWrapper] { get }
     var isLoadingMoreCharacters: Bool { get }
 
     func fetchCharacters()
     func fetchAdditionalCharacters(url: URL)
     func fetchAdditionalCharactersWithDelay(_ delay: TimeInterval, url: URL)
-    func getCharacter(at index: Int) -> RMCharacter
+    func getCharacter(at index: Int) -> RMCharacterProtocol
 }
 
 protocol RMCharacterListViewViewModelDelegate: AnyObject {
     func didLoadInitialCharacters()
     func didLoadMoreCharacters(with newIndexPath: [IndexPath])
-    func didSelectCharacter(_ character: RMCharacter)
+    func didSelectCharacter(_ character: RMCharacterProtocol)
 }

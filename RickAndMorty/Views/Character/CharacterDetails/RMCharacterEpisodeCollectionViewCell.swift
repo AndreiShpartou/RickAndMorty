@@ -11,31 +11,9 @@ final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
 
     static let cellIdentifier = "RMCharacterEpisodeCollectionViewCell"
 
-    private let seasonLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 20, weight: .semibold)
-        label.adjustsFontSizeToFitWidth = true
-
-        return label
-    }()
-
-    private let nameLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 22, weight: .regular)
-        label.numberOfLines = 0
-        label.adjustsFontSizeToFitWidth = true
-
-        return label
-    }()
-
-    private let airDateLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .left
-        label.font = .systemFont(ofSize: 18, weight: .light)
-        label.adjustsFontSizeToFitWidth = true
-
-        return label
-    }()
+    private let seasonLabel: UILabel = .createLabel(fontSize: 20, weight: .semibold)
+    private let nameLabel: UILabel = .createLabel(fontSize: 22, weight: .regular, numberOfLines: 0)
+    private let airDateLabel: UILabel = .createLabel(fontSize: 18, weight: .light)
 
     // MARK: - Init
     override init(frame: CGRect) {
@@ -52,9 +30,20 @@ final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        nameLabel.text = nil
-        airDateLabel.text = nil
-        seasonLabel.text = nil
+        resetLabels()
+    }
+}
+
+// MARK: - Public Methods
+extension RMCharacterEpisodeCollectionViewCell {
+    func configure(with viewModel: RMCharacterEpisodeCollectionViewCellViewModelWrapper) {
+        viewModel.registerForData { [weak self] data in
+            self?.seasonLabel.text = "Episode \(data.episode)"
+            self?.nameLabel.text = data.name
+            self?.airDateLabel.text = "Aired on \(data.air_date)"
+        }
+        viewModel.fetchEpisode()
+        contentView.layer.borderColor = viewModel.borderColor.cgColor
     }
 }
 
@@ -72,18 +61,11 @@ extension RMCharacterEpisodeCollectionViewCell {
         contentView.layer.cornerRadius = 8
         contentView.layer.borderWidth = 2
     }
-}
 
-// MARK: - Public Methods
-extension RMCharacterEpisodeCollectionViewCell {
-    func configure(with viewModel: any RMCharacterEpisodeCollectionViewCellViewModelProtocol) {
-        viewModel.registerForData { [weak self] data in
-            self?.seasonLabel.text = "Episode " + data.episode
-            self?.nameLabel.text = data.name
-            self?.airDateLabel.text = "Aired on " + data.air_date
-        }
-        viewModel.fetchEpisode()
-        contentView.layer.borderColor = viewModel.borderColor.cgColor
+    private func resetLabels() {
+        seasonLabel.text = nil
+        nameLabel.text = nil
+        airDateLabel.text = nil
     }
 }
 

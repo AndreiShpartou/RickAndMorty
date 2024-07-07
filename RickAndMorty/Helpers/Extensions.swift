@@ -27,3 +27,35 @@ extension Notification.Name {
     static let tabBarItemDoubleTapped = Notification.Name("tabBarItemDoubleTapped")
     static let didChangeTheme = Notification.Name("didChangeTheme")
 }
+
+extension UILabel {
+    static func createLabel(
+        fontSize: CGFloat,
+        weight: UIFont.Weight,
+        numberOfLines: Int = 1,
+        textAlignment: NSTextAlignment = .left,
+        textColor: UIColor? = nil
+    ) -> UILabel {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: fontSize, weight: weight)
+        label.adjustsFontSizeToFitWidth = true
+        label.numberOfLines = numberOfLines
+        label.textAlignment = textAlignment
+        if let textColor = textColor {
+            label.textColor = textColor
+        }
+
+        return label
+    }
+}
+
+extension UIImageView {
+    static func createImageView(contentMode: UIView.ContentMode, clipsToBounds: Bool = false, cornerRadius: CGFloat = 0) -> UIImageView {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = clipsToBounds
+        imageView.layer.cornerRadius = cornerRadius
+
+        return imageView
+    }
+}
