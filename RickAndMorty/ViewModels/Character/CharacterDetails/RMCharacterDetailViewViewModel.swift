@@ -14,7 +14,7 @@ final class RMCharacterDetailViewViewModel {
     enum SectionType {
         case photo(viewModel: RMCharacterPhotoCollectionViewCellViewModelProtocol)
         case information(viewModels: [RMCharacterInfoCollectionViewCellViewModelProtocol])
-        case episodes(viewModels: [any RMCharacterEpisodeCollectionViewCellViewModelProtocol])
+        case episodes(viewModels: [RMCharacterEpisodeCollectionViewCellViewModelWrapper])
     }
 
     var sections: [SectionType] = []
@@ -73,7 +73,9 @@ final class RMCharacterDetailViewViewModel {
         ]
 
         let episodeViewModels = character.episode.compactMap {
-            return RMCharacterEpisodeCollectionViewCellViewModel(episodeDataUrl: URL(string: $0))
+            return RMCharacterEpisodeCollectionViewCellViewModelWrapper(
+                RMCharacterEpisodeCollectionViewCellViewModel(episodeDataUrl: URL(string: $0))
+            )
         }
 
         sections = [

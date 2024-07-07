@@ -31,8 +31,9 @@ final class RMCharacterCollectionViewCellViewModelWrapper: RMCharacterCollection
         return _characterImageUrl()
     }
 
-    // Closures to pass the protocol requirements to the wrapped instance
+    // AnyHashable to store the base object for hashable conformance
     private let _base: AnyHashable
+    // Closures to pass the protocol requirements to the wrapped instance
     private let _characterName: () -> String
     private let _characterStatusText: () -> String
     private let _characterImageUrl: () -> URL?

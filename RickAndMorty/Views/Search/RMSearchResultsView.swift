@@ -198,7 +198,7 @@ extension RMSearchResultsView: UICollectionViewDataSource {
             cell.configure(with: characterViewModel)
 
             return cell
-        } else if let episodeViewModel = viewModel as? RMCharacterEpisodeCollectionViewCellViewModel {
+        } else if let episodeViewModel = viewModel as? RMCharacterEpisodeCollectionViewCellViewModelWrapper {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: RMCharacterEpisodeCollectionViewCell.cellIdentifier,
                 for: indexPath
@@ -278,7 +278,7 @@ extension RMSearchResultsView: UICollectionViewDelegateFlowLayout {
                 width: width,
                 height: width * 1.5
             )
-        } else if viewModel is RMCharacterEpisodeCollectionViewCellViewModel {
+        } else if viewModel is RMCharacterEpisodeCollectionViewCellViewModelWrapper {
             let width = UIDevice.isPhone ? (bounds.width - 20) * isLandscapeMultiplier : (bounds.width - 30) / 2
             return CGSize(
                 width: width,

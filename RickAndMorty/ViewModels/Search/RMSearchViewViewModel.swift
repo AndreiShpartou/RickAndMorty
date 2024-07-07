@@ -153,11 +153,13 @@ final class RMSearchViewViewModel {
             nextUrl = characterResults.info.next
             self.searchResultModels = characterResults.results
         } else if let episodesResults = model as? RMGetAllEpisodesResponse {
-            resultsVM = .episodes(episodesResults.results.map({
-                return RMCharacterEpisodeCollectionViewCellViewModel(
-                    episodeDataUrl: URL(string: $0.url)
+            resultsVM = .episodes(episodesResults.results.map {
+                return RMCharacterEpisodeCollectionViewCellViewModelWrapper(
+                    RMCharacterEpisodeCollectionViewCellViewModel(
+                        episodeDataUrl: URL(string: $0.url)
+                    )
                 )
-            }))
+            })
             nextUrl = episodesResults.info.next
             self.searchResultModels = episodesResults.results
         } else if let locationsResults = model as? RMGetAllLocationsResponse {
