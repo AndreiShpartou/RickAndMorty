@@ -1,33 +1,25 @@
 //
-//  RMLocationDetailViewViewModel.swift
+//  RMEpisodeDetailViewViewModel.swift
 //  RickAndMorty
 //
-//  Created by Andrei Shpartou on 12/06/2024.
+//  Created by Andrei Shpartou on 09/06/2024.
 //
 
 import Foundation
 
-protocol RMLocationDetailViewViewModelDelegate: AnyObject {
-    func didFetchLocationDetail()
-}
+final class RMEpisodeDetailsViewViewModel {
 
-final class RMLocationDetailViewViewModel {
+    weak var delegate: RMEpisodeDetailsViewViewModelDelegate?
 
-    weak var delegate: RMLocationDetailViewViewModelDelegate?
-
-    enum SectionType {
-        case information(viewModels: [RMEpisodeInfoCollectionViewCellViewModel])
-        case characters(viewModels: [RMCharacterCollectionViewCellViewModelWrapper])
-    }
-
-    private(set) var cellViewModels: [SectionType] = []
+    private(set) var sections: [SectionType] = []
 
     private let endpointURL: URL?
+    private let service: RMServiceProtocol
 
-    private var dataTuple: (location: RMLocation, characters: [RMCharacter])? {
+    private var dataTuple: (episode: RMEpisode, characters: [RMCharacter])? {
         didSet {
-            createCellViewModels()
-            delegate?.didFetchLocationDetail()
+            setupSections()
+            delegate?.didFetchEpisodeDetail()
         }
     }
 
@@ -38,10 +30,9 @@ final class RMLocationDetailViewViewModel {
 }
 
 // MARK: - Public
-extension RMLocationDetailViewViewModel {
-
-    // MARK: - Fetch location model
-    func fetchLocationData() {
+extension RMEpisodeDetailsViewViewModel {
+    // Fetch episode model
+    func fetchEpisodeData() {
         guard let url = endpointURL,
               let request = RMRequest(url: url) else {
             return
@@ -49,13 +40,13 @@ extension RMLocationDetailViewViewModel {
 
         RMService.shared.execute(
             request,
-            expecting: RMLocation.self
+            expecting: RMEpisode.self
         ) { [weak self] result in
                 switch result {
                 case .success(let model):
-                    self?.fetchRelatedCharacters(location: model)
+                    self?.fetchRelatedCharacters(episode: model)
                 case .failure(let error):
-                    NSLog("Failed to fetch location detail \(error.localizedDescription)")
+                    NSLog("Failed to fetch episode detail: \(error.localizedDescription)")
                 }
         }
     }
@@ -69,14 +60,14 @@ extension RMLocationDetailViewViewModel {
     }
 
     func getDataToShare() -> [Any] {
-        return [getLocationDescription()]
+        return [getEpisodeDescription()]
     }
 }
 
 // MARK: - Private
-extension RMLocationDetailViewViewModel {
-    private func fetchRelatedCharacters(location: RMLocation) {
-        let characterUrls = location.residents.compactMap {
+extension RMEpisodeDetailsViewViewModel {
+    private func fetchRelatedCharacters(episode: RMEpisode) {
+        let characterUrls = episode.characters.compactMap {
             return URL(string: $0)
         }
 
@@ -103,75 +94,79 @@ extension RMLocationDetailViewViewModel {
                     case .success(let model):
                         characters.append(model)
                     case .failure(let error):
-                        NSLog("Failed to fetch location detail related characters: \(error.localizedDescription)")
+                        NSLog("Failed to fetch episode related characters: \(error.localizedDescription)")
                     }
             }
         }
 
         group.notify(queue: .main) {
             self.dataTuple = (
-                location: location,
+                episode: episode,
                 characters: characters
             )
         }
     }
 
-    private func createCellViewModels() {
+    private func setupSections() {
         guard let dataTuple = dataTuple else {
             return
         }
 
-        let location = dataTuple.location
+        let episode = dataTuple.episode
         let characters = dataTuple.characters
-        var createdString = location.created
+        var createdString = episode.created
         if let date = RMDateFormatterUtils.formatter.date(
-            from: location.created
+            from: episode.created
         ) {
             createdString = RMDateFormatterUtils.shortFormatter.string(
                 from: date
             )
         }
 
-        cellViewModels = [
-            .information(viewModels: [
-                .init(title: "Location Name", value: location.name),
-                .init(title: "Type", value: location.type),
-                .init(title: "Dimension", value: location.dimension),
-                .init(title: "Created", value: createdString)
-            ]),
-            .characters(viewModels: characters.compactMap {
-                RMCharacterCollectionViewCellViewModelWrapper(
-                    RMCharacterCollectionViewCellViewModel(
-                        characterName: $0.name,
-                        characterStatus: $0.status,
-                        characterImageUrl: URL(string: $0.image)
-                    )
+        let infoViewModels = [
+            RMEpisodeInfoCollectionViewCellViewModel(title: "Episode Name", value: episode.name),
+            RMEpisodeInfoCollectionViewCellViewModel(title: "Air Date", value: episode.air_date),
+            RMEpisodeInfoCollectionViewCellViewModel(title: "Episode", value: episode.episode),
+            RMEpisodeInfoCollectionViewCellViewModel(title: "Created", value: createdString)
+        ]
+
+        let characterViewModels = characters.compactMap {
+            RMCharacterCollectionViewCellViewModelWrapper(
+                RMCharacterCollectionViewCellViewModel(
+                    characterName: $0.name,
+                    characterStatus: $0.status,
+                    characterImageUrl: URL(string: $0.image)
                 )
-            })
+            )
+        }
+
+        sections = [
+            .episodeInfo(viewModels: infoViewModels),
+            .characters(viewModels: characterViewModels)
         ]
     }
 
-    private func getLocationDescription() -> RMShareItem {
+    private func getEpisodeDescription() -> RMShareItem {
         guard let dataTuple = dataTuple else {
             let text = "No description"
             return RMShareItem(subject: text, details: text)
         }
 
-        let location = dataTuple.location
-        var createdString = location.created
+        let episode = dataTuple.episode
+        var createdString = episode.created
         if let date = RMDateFormatterUtils.formatter.date(
-            from: location.created
+            from: episode.created
         ) {
             createdString = RMDateFormatterUtils.shortFormatter.string(
                 from: date
             )
         }
 
-        let subject = "Location: \(location.name)"
+        let subject = "Episode: \(episode.name)"
         let details = """
-            Location Name: "\(location.name)"
-            Type: "\(location.type)"
-            Dimension: "\(location.dimension)"
+            Episode Name: "\(episode.name)"
+            Air Date: "\(episode.air_date)"
+            Episode: "\(episode.episode)"
             Created: "\(createdString)"
         """
 

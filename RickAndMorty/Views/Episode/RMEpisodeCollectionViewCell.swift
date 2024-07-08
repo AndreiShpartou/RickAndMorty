@@ -1,5 +1,5 @@
 //
-//  RMCharacterEpisodeCollectionViewCell.swift
+//  RMEpisodeCollectionViewCell.swift
 //  RickAndMorty
 //
 //  Created by Andrei Shpartou on 08/06/2024.
@@ -7,9 +7,9 @@
 
 import UIKit
 
-final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
+final class RMEpisodeCollectionViewCell: UICollectionViewCell {
 
-    static let cellIdentifier = "RMCharacterEpisodeCollectionViewCell"
+    static let cellIdentifier = "RMEpisodeCollectionViewCell"
 
     private let seasonLabel: UILabel = .createLabel(fontSize: 20, weight: .semibold)
     private let nameLabel: UILabel = .createLabel(fontSize: 22, weight: .regular, numberOfLines: 0)
@@ -35,8 +35,8 @@ final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
 }
 
 // MARK: - Public Methods
-extension RMCharacterEpisodeCollectionViewCell {
-    func configure(with viewModel: RMCharacterEpisodeCollectionViewCellViewModelWrapper) {
+extension RMEpisodeCollectionViewCell {
+    func configure(with viewModel: RMEpisodeCollectionViewCellViewModelWrapper) {
         viewModel.registerForData { [weak self] data in
             self?.seasonLabel.text = "Episode \(data.episode)"
             self?.nameLabel.text = data.name
@@ -48,7 +48,7 @@ extension RMCharacterEpisodeCollectionViewCell {
 }
 
 // MARK: - Setup
-extension RMCharacterEpisodeCollectionViewCell {
+extension RMEpisodeCollectionViewCell {
     private func setupView() {
         contentView.backgroundColor = .tertiarySystemBackground
         contentView.addSubviews(seasonLabel, nameLabel, airDateLabel)
@@ -70,7 +70,7 @@ extension RMCharacterEpisodeCollectionViewCell {
 }
 
 // MARK: - Constraints
-extension RMCharacterEpisodeCollectionViewCell {
+extension RMEpisodeCollectionViewCell {
     private func addConstraints() {
         NSLayoutConstraint.activate([
             seasonLabel.leadingAnchor.constraint(

@@ -131,7 +131,7 @@ extension RMCharacterViewController {
 extension RMCharacterViewController: RMCharacterListViewDelegate {
     func rmCharacterListView(_ characterListView: RMCharacterListViewProtocol, didSelectCharacter character: RMCharacterProtocol) {
         // Open detail controller for that character
-        let viewModel = RMCharacterDetailViewViewModel(character: character)
+        let viewModel = RMCharacterDetailsViewViewModel(character: character)
         let detailVC = RMCharacterDetailsViewController(viewModel: viewModel)
         detailVC.navigationItem.largeTitleDisplayMode = .never
 

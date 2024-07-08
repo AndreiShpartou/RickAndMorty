@@ -36,8 +36,8 @@ final class RMEpisodeListView: UIView {
         collectionView.isHidden = true
         collectionView.alpha = 0
         collectionView.register(
-            RMCharacterEpisodeCollectionViewCell.self,
-            forCellWithReuseIdentifier: RMCharacterEpisodeCollectionViewCell.cellIdentifier
+            RMEpisodeCollectionViewCell.self,
+            forCellWithReuseIdentifier: RMEpisodeCollectionViewCell.cellIdentifier
         )
         collectionView.register(
             RMFooterLoadingCollectionReusableView.self,

@@ -10,7 +10,7 @@ import UIKit
 protocol RMCharacterDetailsViewProtocol: UIView {
     var delegate: RMCharacterDetailsViewDelegate? { get set }
 
-    init(frame: CGRect, viewModel: RMCharacterDetailViewViewModelProtocol)
+    init(frame: CGRect, viewModel: RMCharacterDetailsViewViewModelProtocol)
 }
 
 protocol RMCharacterDetailsViewDelegate: AnyObject {

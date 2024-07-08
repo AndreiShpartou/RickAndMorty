@@ -11,11 +11,11 @@ import UIKit
 // MARK: - ViewController Implementation
 class RMCharacterDetailsViewController: UIViewController {
 
-    private let viewModel: RMCharacterDetailViewViewModelProtocol
+    private let viewModel: RMCharacterDetailsViewViewModelProtocol
     private let detailView: RMCharacterDetailsViewProtocol
 
     // MARK: - Init
-    init(viewModel: RMCharacterDetailViewViewModelProtocol) {
+    init(viewModel: RMCharacterDetailsViewViewModelProtocol) {
         self.viewModel = viewModel
         self.detailView = RMCharacterDetailsView(
             frame: .zero,

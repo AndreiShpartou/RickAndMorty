@@ -1,5 +1,5 @@
 //
-//  RMCharacterEpisodeCollectionViewCellViewModelProtocol.swift
+//  RMEpisodeCollectionViewCellViewModelProtocol.swift
 //  RickAndMorty
 //
 //  Created by Andrei Shpartou on 06/07/2024.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol RMCharacterEpisodeCollectionViewCellViewModelProtocol: AnyObject, Hashable {
+protocol RMEpisodeCollectionViewCellViewModelProtocol: AnyObject, Hashable {
     var borderColor: UIColor { get }
     func registerForData(_ block: @escaping (RMEpisodeDataRenderProtocol) -> Void)
     func fetchEpisode()
@@ -15,7 +15,7 @@ protocol RMCharacterEpisodeCollectionViewCellViewModelProtocol: AnyObject, Hasha
 
 // To use this protocol without needing any keyword and suffering performance issues, create a type-erased wrapper.
 // This wrapper hides the concrete type of the wrapped instance while preserving its `Hashable` conformance
-final class RMCharacterEpisodeCollectionViewCellViewModelWrapper: RMCharacterEpisodeCollectionViewCellViewModelProtocol {
+final class RMEpisodeCollectionViewCellViewModelWrapper: RMEpisodeCollectionViewCellViewModelProtocol {
 
     var borderColor: UIColor {
         return _borderColor()
@@ -28,7 +28,7 @@ final class RMCharacterEpisodeCollectionViewCellViewModelWrapper: RMCharacterEpi
     private let _registerForData: (@escaping (RMEpisodeDataRenderProtocol) -> Void) -> Void
     private let _fetchEpisode: () -> Void
 
-    init<T: RMCharacterEpisodeCollectionViewCellViewModelProtocol>(_ base: T) {
+    init<T: RMEpisodeCollectionViewCellViewModelProtocol>(_ base: T) {
         _base = AnyHashable(base)
         _borderColor = {
             base.borderColor
@@ -49,7 +49,7 @@ final class RMCharacterEpisodeCollectionViewCellViewModelWrapper: RMCharacterEpi
         _base.hash(into: &hasher)
     }
 
-    static func == (lhs: RMCharacterEpisodeCollectionViewCellViewModelWrapper, rhs: RMCharacterEpisodeCollectionViewCellViewModelWrapper) -> Bool {
+    static func == (lhs: RMEpisodeCollectionViewCellViewModelWrapper, rhs: RMEpisodeCollectionViewCellViewModelWrapper) -> Bool {
         return lhs.hashValue == rhs.hashValue
     }
 }

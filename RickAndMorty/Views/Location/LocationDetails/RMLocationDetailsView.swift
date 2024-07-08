@@ -18,7 +18,7 @@ final class RMLocationDetailsView: UIView {
 
     weak var delegate: RMLocationDetailsViewDelegate?
 
-    private var viewModel: RMLocationDetailViewViewModel? {
+    private var viewModel: RMLocationDetailsViewViewModel? {
         didSet {
             spinner.stopAnimating()
             self.collectionView.reloadData()
@@ -150,7 +150,7 @@ extension RMLocationDetailsView {
 
 // MARK: - PublicMethods
 extension RMLocationDetailsView {
-    func configure(with viewModel: RMLocationDetailViewViewModel) {
+    func configure(with viewModel: RMLocationDetailsViewViewModel) {
         self.viewModel = viewModel
     }
 }

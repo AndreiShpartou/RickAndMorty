@@ -10,12 +10,12 @@ import UIKit
 // View controller to show details about a single episode
 final class RMEpisodeDetailsViewController: UIViewController {
 
-    private let viewModel: RMEpisodeDetailViewViewModel
+    private let viewModel: RMEpisodeDetailsViewViewModel
     private let episodeDetailView = RMEpisodeDetailsView()
 
     // MARK: - Init
     init(url: URL?) {
-        self.viewModel = RMEpisodeDetailViewViewModel(endpointURL: url)
+        self.viewModel = RMEpisodeDetailsViewViewModel(endpointURL: url)
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -74,7 +74,7 @@ extension RMEpisodeDetailsViewController {
 }
 
 // MARK: - RMEpisodeDetailViewViewModelDelegate
-extension RMEpisodeDetailsViewController: RMEpisodeDetailViewViewModelDelegate {
+extension RMEpisodeDetailsViewController: RMEpisodeDetailsViewViewModelDelegate {
     func didFetchEpisodeDetail() {
         episodeDetailView.configure(with: viewModel)
     }
@@ -84,7 +84,7 @@ extension RMEpisodeDetailsViewController: RMEpisodeDetailViewViewModelDelegate {
 extension RMEpisodeDetailsViewController: RMEpisodeDetailsViewDelegate {
     func rmEpisodeDetailView(_ detailView: RMEpisodeDetailsView, didSelect character: RMCharacter) {
         let viewController = RMCharacterDetailsViewController(
-            viewModel: RMCharacterDetailViewViewModel(character: character)
+            viewModel: RMCharacterDetailsViewViewModel(character: character)
         )
         viewController.title = character.name
         viewController.navigationItem.largeTitleDisplayMode = .never

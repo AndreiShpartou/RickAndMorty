@@ -70,7 +70,7 @@ extension RMEpisodeInfoCollectionViewCell {
 
 // MARK: - Public
 extension RMEpisodeInfoCollectionViewCell {
-    func configure(with viewModel: RMEpisodeInfoCollectionViewCellViewModel) {
+    func configure(with viewModel: RMEpisodeInfoCollectionViewCellViewModelProtocol) {
         titleLabel.text = viewModel.title
         valueLabel.text = viewModel.value
     }
