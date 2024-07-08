@@ -18,7 +18,7 @@ final class RMEpisodeDetailsView: UIView {
 
     weak var delegate: RMEpisodeDetailsViewDelegate?
 
-    private var viewModel: RMEpisodeDetailViewViewModel? {
+    private var viewModel: RMEpisodeDetailsViewViewModel? {
         didSet {
             spinner.stopAnimating()
             self.collectionView.reloadData()
@@ -88,15 +88,17 @@ extension RMEpisodeDetailsView {
     }
 
     private func createLayout(for section: Int) -> NSCollectionLayoutSection {
-        guard let sections = viewModel?.cellViewModels else {
+        guard let sections = viewModel?.sections else {
             return createInfoLayout()
         }
 
         switch sections[section] {
-        case .information:
+        case .episodeInfo:
             return createInfoLayout()
         case .characters:
             return createCharacterLayout()
+        default:
+            fatalError("Unacceptable section type!")
         }
     }
 
@@ -149,7 +151,7 @@ extension RMEpisodeDetailsView {
 
 // MARK: - PublicMethods
 extension RMEpisodeDetailsView {
-    func configure(with viewModel: RMEpisodeDetailViewViewModel) {
+    func configure(with viewModel: RMEpisodeDetailsViewViewModel) {
         self.viewModel = viewModel
     }
 }
@@ -157,31 +159,33 @@ extension RMEpisodeDetailsView {
 // MARK: - UICollectionViewDataSource
 extension RMEpisodeDetailsView: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return viewModel?.cellViewModels.count ?? 0
+        return viewModel?.sections.count ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let sections = viewModel?.cellViewModels else {
+        guard let sections = viewModel?.sections else {
             return Constants.zeroItemsInSection
         }
 
         let sectionType = sections[section]
         switch sectionType {
-        case .information(let viewModels):
+        case .episodeInfo(let viewModels):
             return viewModels.count
         case .characters(let viewModels):
             return viewModels.count
+        default:
+            fatalError("Unacceptable section type!")
         }
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let sections = viewModel?.cellViewModels else {
+        guard let sections = viewModel?.sections else {
             fatalError("Unable to define ViewModel")
         }
 
         let sectionType = sections[indexPath.section]
         switch sectionType {
-        case .information(let viewModels):
+        case .episodeInfo(let viewModels):
             let cellViewModel = viewModels[indexPath.row]
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: RMEpisodeInfoCollectionViewCell.cellIdentifier,
@@ -203,6 +207,8 @@ extension RMEpisodeDetailsView: UICollectionViewDataSource {
             cell.configure(with: cellViewModel)
 
             return cell
+        default:
+            fatalError("Unacceptable section type!")
         }
     }
 }
@@ -215,17 +221,19 @@ extension RMEpisodeDetailsView: UICollectionViewDelegate {
         guard let viewModel = viewModel else {
             return
         }
-        let sections = viewModel.cellViewModels
+        let sections = viewModel.sections
         let sectionType = sections[indexPath.section]
 
         switch sectionType {
-        case .information:
+        case .episodeInfo:
             break
         case .characters:
             guard let character = viewModel.character(at: indexPath.row) else {
                 return
             }
             delegate?.rmEpisodeDetailView(self, didSelect: character)
+        default:
+            fatalError("Unacceptable section type!")
         }
     }
 }

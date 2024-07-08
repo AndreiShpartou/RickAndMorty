@@ -10,13 +10,13 @@ import UIKit
 // View controller to show details about a single location
 final class RMLocationDetailsViewController: UIViewController {
 
-    private let viewModel: RMLocationDetailViewViewModel
+    private let viewModel: RMLocationDetailsViewViewModel
     private let locationDetailView = RMLocationDetailsView()
 
     // MARK: - Init
     init(location: RMLocation) {
         let url = URL(string: location.url)
-        self.viewModel = RMLocationDetailViewViewModel(endpointURL: url)
+        self.viewModel = RMLocationDetailsViewViewModel(endpointURL: url)
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -75,7 +75,7 @@ extension RMLocationDetailsViewController {
 }
 
 // MARK: - RMLocationDetailViewViewModelDelegate
-extension RMLocationDetailsViewController: RMLocationDetailViewViewModelDelegate {
+extension RMLocationDetailsViewController: RMLocationDetailsViewViewModelDelegate {
     func didFetchLocationDetail() {
         locationDetailView.configure(with: viewModel)
     }
@@ -85,7 +85,7 @@ extension RMLocationDetailsViewController: RMLocationDetailViewViewModelDelegate
 extension RMLocationDetailsViewController: RMLocationDetailsViewDelegate {
     func rmLocationDetailView(_ detailView: RMLocationDetailsView, didSelect character: RMCharacter) {
         let viewController = RMCharacterDetailsViewController(
-            viewModel: RMCharacterDetailViewViewModel(character: character)
+            viewModel: RMCharacterDetailsViewViewModel(character: character)
         )
         viewController.title = character.name
         viewController.navigationItem.largeTitleDisplayMode = .never

@@ -39,8 +39,8 @@ final class RMEpisodeListViewViewModel: NSObject {
     private var episodes: [RMEpisode] = [] {
         didSet {
             for episode in episodes {
-                let viewModel = RMCharacterEpisodeCollectionViewCellViewModelWrapper(
-                    RMCharacterEpisodeCollectionViewCellViewModel(
+                let viewModel = RMEpisodeCollectionViewCellViewModelWrapper(
+                    RMEpisodeCollectionViewCellViewModel(
                         episodeDataUrl: URL(string: episode.url),
                         borderColor: borderColors.randomElement() ?? .systemBlue
                     )
@@ -53,7 +53,7 @@ final class RMEpisodeListViewViewModel: NSObject {
         }
     }
 
-    private var cellViewModels: [RMCharacterEpisodeCollectionViewCellViewModelWrapper] = []
+    private var cellViewModels: [RMEpisodeCollectionViewCellViewModelWrapper] = []
 
     private var apiInfo: RMGetAllEpisodesResponse.Info?
 
@@ -136,9 +136,9 @@ extension RMEpisodeListViewViewModel: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: RMCharacterEpisodeCollectionViewCell.cellIdentifier,
+            withReuseIdentifier: RMEpisodeCollectionViewCell.cellIdentifier,
             for: indexPath
-        ) as? RMCharacterEpisodeCollectionViewCell else {
+        ) as? RMEpisodeCollectionViewCell else {
             fatalError("Unsupported cell")
         }
 
