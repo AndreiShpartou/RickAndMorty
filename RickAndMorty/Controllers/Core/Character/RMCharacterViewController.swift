@@ -14,6 +14,20 @@ final class RMCharacterViewController: UIViewController {
     private let characterListView: RMCharacterListViewProtocol
     private let viewModel: RMCharacterListViewViewModelProtocol
 
+    // MARK: - Init
+    init(
+        viewModel: RMCharacterListViewViewModelProtocol = RMCharacterListViewViewModel()
+    ) {
+        self.viewModel = viewModel
+        self.characterListView = RMCharacterListView(viewModel: viewModel)
+
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     // MARK: - LifeCycle
     override func loadView() {
         view = characterListView
@@ -43,20 +57,6 @@ final class RMCharacterViewController: UIViewController {
         super.viewWillDisappear(animated)
 
         removeObservers()
-    }
-
-    // MARK: - Init
-    init(
-        viewModel: RMCharacterListViewViewModelProtocol = RMCharacterListViewViewModel()
-    ) {
-        self.viewModel = viewModel
-        self.characterListView = RMCharacterListView(viewModel: viewModel)
-
-        super.init(nibName: nil, bundle: nil)
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
 

@@ -16,32 +16,8 @@ final class RMCharacterListView: UIView, RMCharacterListViewProtocol {
     private let viewModel: RMCharacterListViewViewModelProtocol
     private let collectionHandler: RMCharacterListViewCollectionHandler
 
-    private let spinner: UIActivityIndicatorView = {
-        let spinner = UIActivityIndicatorView(style: .large)
-        spinner.hidesWhenStopped = true
-
-        return spinner
-    }()
-
-    private let collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 10, right: 10)
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.isHidden = true
-        collectionView.alpha = 0
-        collectionView.register(
-            RMCharacterCollectionViewCell.self,
-            forCellWithReuseIdentifier: RMCharacterCollectionViewCell.cellIdentifier
-        )
-        collectionView.register(
-            RMFooterLoadingCollectionReusableView.self,
-            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
-            withReuseIdentifier: RMFooterLoadingCollectionReusableView.identifier
-        )
-
-        return collectionView
-    }()
+    private lazy var spinner: UIActivityIndicatorView = createSpinner()
+    private lazy var collectionView: UICollectionView = createCollectionView()
 
     // MARK: - Init
     init(viewModel: RMCharacterListViewViewModelProtocol) {
@@ -118,6 +94,36 @@ extension RMCharacterListView {
     @objc
     func orientationDidChange(_ notification: Notification) {
         collectionView.collectionViewLayout.invalidateLayout()
+    }
+}
+
+// MARK: - Helpers
+extension RMCharacterListView {
+    private func createSpinner() -> UIActivityIndicatorView {
+        let spinner = UIActivityIndicatorView(style: .large)
+        spinner.hidesWhenStopped = true
+
+        return spinner
+    }
+
+    private func createCollectionView() -> UICollectionView {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 10, right: 10)
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.isHidden = true
+        collectionView.alpha = 0
+        collectionView.register(
+            RMCharacterCollectionViewCell.self,
+            forCellWithReuseIdentifier: RMCharacterCollectionViewCell.cellIdentifier
+        )
+        collectionView.register(
+            RMFooterLoadingCollectionReusableView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+            withReuseIdentifier: RMFooterLoadingCollectionReusableView.identifier
+        )
+
+        return collectionView
     }
 }
 

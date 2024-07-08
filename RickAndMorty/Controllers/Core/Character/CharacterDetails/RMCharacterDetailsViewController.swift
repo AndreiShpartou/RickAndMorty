@@ -46,8 +46,6 @@ extension RMCharacterDetailsViewController {
     private func setupController() {
         title = viewModel.title
 
-//        detailView.collectionView.delegate = self
-//        detailView.collectionView.dataSource = self
         detailView.delegate = self
         addShareButton()
     }
@@ -79,77 +77,6 @@ extension RMCharacterDetailsViewController {
         present(activityViewController, animated: true)
     }
 }
-
-// MARK: - UICollectionViewDataSource
-// extension RMCharacterDetailsViewController: UICollectionViewDataSource {
-//    func numberOfSections(in collectionView: UICollectionView) -> Int {
-//        return viewModel.sections.count
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        let sectionType = viewModel.sections[section]
-//        switch sectionType {
-//        case .photo:
-//            return Constants.oneItemInSection
-//        case .characterInfo(let viewModels):
-//            return viewModels.count
-//        case .episodes(let viewModels):
-//            return viewModels.count
-//        }
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        let sectionType = viewModel.sections[indexPath.section]
-//        switch sectionType {
-//        case .photo(let viewModel):
-//            guard let cell = collectionView.dequeueReusableCell(
-//                withReuseIdentifier: RMCharacterPhotoCollectionViewCell.cellIdentifier,
-//                for: indexPath
-//            ) as? RMCharacterPhotoCollectionViewCell else {
-//                fatalError("Unable to define cell for photo")
-//            }
-//            cell.configure(with: viewModel)
-//
-//            return cell
-//        case .characterInfo(let viewModels):
-//            guard let cell = collectionView.dequeueReusableCell(
-//                withReuseIdentifier: RMCharacterInfoCollectionViewCell.cellIdentifier,
-//                for: indexPath
-//            ) as? RMCharacterInfoCollectionViewCell else {
-//                fatalError("Unable to define cell for info")
-//            }
-//            cell.configure(with: viewModels[indexPath.row])
-//
-//            return cell
-//        case .episodes(let viewModels):
-//            guard let cell = collectionView.dequeueReusableCell(
-//                withReuseIdentifier: RMCharacterEpisodeCollectionViewCell.cellIdentifier,
-//                for: indexPath
-//            ) as? RMCharacterEpisodeCollectionViewCell else {
-//                fatalError("Unable to define cell for episode")
-//            }
-//            cell.configure(with: viewModels[indexPath.row])
-//
-//            return cell
-//        }
-//    }
-// }
-//
-// MARK: - UICollectionViewDelegate
-// extension RMCharacterDetailsViewController: UICollectionViewDelegate {
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let sectionType = viewModel.sections[indexPath.section]
-//        switch sectionType {
-//        case .episodes:
-//            let episodes = self.viewModel.episodes
-//            let selection = episodes[indexPath.row]
-//            let viewController = RMEpisodeDetailsViewController(url: URL(string: selection))
-//            navigationController?.pushViewController(viewController, animated: true)
-//        default:
-//            break
-//        }
-//    }
-// }
 
 // MARK: - RMCharacterDetailsViewDelegate
 extension RMCharacterDetailsViewController: RMCharacterDetailsViewDelegate {

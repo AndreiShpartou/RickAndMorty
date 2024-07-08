@@ -12,10 +12,10 @@ final class RMCharacterDetailsView: UIView, RMCharacterDetailsViewProtocol {
 
     weak var delegate: RMCharacterDetailsViewDelegate?
 
-    private(set) lazy var collectionView: UICollectionView = createCollectionView()
-
     private let viewModel: RMCharacterDetailViewViewModelProtocol
     private let collectionHandler: RMCharacterDetailsCollectionViewHandler
+
+    private lazy var collectionView: UICollectionView = createCollectionView()
     private lazy var spinner: UIActivityIndicatorView = createSpinner()
 
     // MARK: - Init

@@ -9,7 +9,6 @@ import UIKit
 
 protocol RMCharacterDetailsViewProtocol: UIView {
     var delegate: RMCharacterDetailsViewDelegate? { get set }
-    var collectionView: UICollectionView { get }
 
     init(frame: CGRect, viewModel: RMCharacterDetailViewViewModelProtocol)
 }
