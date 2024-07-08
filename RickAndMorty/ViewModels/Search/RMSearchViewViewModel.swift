@@ -154,8 +154,8 @@ final class RMSearchViewViewModel {
             self.searchResultModels = characterResults.results
         } else if let episodesResults = model as? RMGetAllEpisodesResponse {
             resultsVM = .episodes(episodesResults.results.map {
-                return RMCharacterEpisodeCollectionViewCellViewModelWrapper(
-                    RMCharacterEpisodeCollectionViewCellViewModel(
+                return RMEpisodeCollectionViewCellViewModelWrapper(
+                    RMEpisodeCollectionViewCellViewModel(
                         episodeDataUrl: URL(string: $0.url)
                     )
                 )

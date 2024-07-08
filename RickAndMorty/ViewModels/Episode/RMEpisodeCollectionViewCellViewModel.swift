@@ -1,5 +1,5 @@
 //
-//  RMCharacterEpisodeCollectionViewCellViewModel.swift
+//  RMEpisodeCollectionViewCellViewModel.swift
 //  RickAndMorty
 //
 //  Created by Andrei Shpartou on 08/06/2024.
@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - ViewModel Implementation
-final class RMCharacterEpisodeCollectionViewCellViewModel: RMCharacterEpisodeCollectionViewCellViewModelProtocol {
+final class RMEpisodeCollectionViewCellViewModel: RMEpisodeCollectionViewCellViewModelProtocol {
 
     let borderColor: UIColor
 
@@ -94,13 +94,13 @@ final class RMCharacterEpisodeCollectionViewCellViewModel: RMCharacterEpisodeCol
 }
 
 // MARK: - Hashable
-extension RMCharacterEpisodeCollectionViewCellViewModel: Hashable {
+extension RMEpisodeCollectionViewCellViewModel: Hashable {
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(self.episodeDataUrl?.absoluteString ?? "")
     }
 
-    static func == (lhs: RMCharacterEpisodeCollectionViewCellViewModel, rhs: RMCharacterEpisodeCollectionViewCellViewModel) -> Bool {
+    static func == (lhs: RMEpisodeCollectionViewCellViewModel, rhs: RMEpisodeCollectionViewCellViewModel) -> Bool {
         return lhs.hashValue == rhs.hashValue
     }
 }

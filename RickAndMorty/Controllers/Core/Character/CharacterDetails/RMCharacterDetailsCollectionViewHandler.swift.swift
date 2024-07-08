@@ -10,9 +10,9 @@ import Foundation
 import UIKit
 
 class RMCharacterDetailsCollectionViewHandler: NSObject, UICollectionViewDataSource, UICollectionViewDelegate {
-    private let viewModel: RMCharacterDetailViewViewModelProtocol
+    private let viewModel: RMCharacterDetailsViewViewModelProtocol
 
-    init(viewModel: RMCharacterDetailViewViewModelProtocol) {
+    init(viewModel: RMCharacterDetailsViewViewModelProtocol) {
         self.viewModel = viewModel
     }
 }
@@ -32,6 +32,8 @@ extension RMCharacterDetailsCollectionViewHandler {
             return viewModels.count
         case .episodes(let viewModels):
             return viewModels.count
+        default:
+            fatalError("Unacceptable section type!")
         }
     }
 
@@ -60,14 +62,16 @@ extension RMCharacterDetailsCollectionViewHandler {
             return cell
         case .episodes(let viewModels):
             guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: RMCharacterEpisodeCollectionViewCell.cellIdentifier,
+                withReuseIdentifier: RMEpisodeCollectionViewCell.cellIdentifier,
                 for: indexPath
-            ) as? RMCharacterEpisodeCollectionViewCell else {
+            ) as? RMEpisodeCollectionViewCell else {
                 fatalError("Unable to define cell for episode")
             }
             cell.configure(with: viewModels[indexPath.row])
 
             return cell
+        default:
+            fatalError("Unacceptable section type!")
         }
     }
 }

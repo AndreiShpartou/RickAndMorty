@@ -53,8 +53,8 @@ final class RMSearchResultsView: UIView {
             forCellWithReuseIdentifier: RMCharacterCollectionViewCell.cellIdentifier
         )
         collectionView.register(
-            RMCharacterEpisodeCollectionViewCell.self,
-            forCellWithReuseIdentifier: RMCharacterEpisodeCollectionViewCell.cellIdentifier
+            RMEpisodeCollectionViewCell.self,
+            forCellWithReuseIdentifier: RMEpisodeCollectionViewCell.cellIdentifier
         )
         // Footer for loading
         collectionView.register(
@@ -198,11 +198,11 @@ extension RMSearchResultsView: UICollectionViewDataSource {
             cell.configure(with: characterViewModel)
 
             return cell
-        } else if let episodeViewModel = viewModel as? RMCharacterEpisodeCollectionViewCellViewModelWrapper {
+        } else if let episodeViewModel = viewModel as? RMEpisodeCollectionViewCellViewModelWrapper {
             guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: RMCharacterEpisodeCollectionViewCell.cellIdentifier,
+                withReuseIdentifier: RMEpisodeCollectionViewCell.cellIdentifier,
                 for: indexPath
-            ) as? RMCharacterEpisodeCollectionViewCell else {
+            ) as? RMEpisodeCollectionViewCell else {
                 fatalError("Failed to determine cell type")
             }
 
@@ -278,7 +278,7 @@ extension RMSearchResultsView: UICollectionViewDelegateFlowLayout {
                 width: width,
                 height: width * 1.5
             )
-        } else if viewModel is RMCharacterEpisodeCollectionViewCellViewModelWrapper {
+        } else if viewModel is RMEpisodeCollectionViewCellViewModelWrapper {
             let width = UIDevice.isPhone ? (bounds.width - 20) * isLandscapeMultiplier : (bounds.width - 30) / 2
             return CGSize(
                 width: width,

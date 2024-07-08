@@ -12,14 +12,14 @@ final class RMCharacterDetailsView: UIView, RMCharacterDetailsViewProtocol {
 
     weak var delegate: RMCharacterDetailsViewDelegate?
 
-    private(set) lazy var collectionView: UICollectionView = createCollectionView()
-
-    private let viewModel: RMCharacterDetailViewViewModelProtocol
+    private let viewModel: RMCharacterDetailsViewViewModelProtocol
     private let collectionHandler: RMCharacterDetailsCollectionViewHandler
+
+    private lazy var collectionView: UICollectionView = createCollectionView()
     private lazy var spinner: UIActivityIndicatorView = createSpinner()
 
     // MARK: - Init
-    init(frame: CGRect, viewModel: RMCharacterDetailViewViewModelProtocol) {
+    init(frame: CGRect, viewModel: RMCharacterDetailsViewViewModelProtocol) {
         self.viewModel = viewModel
         self.collectionHandler = RMCharacterDetailsCollectionViewHandler(viewModel: viewModel)
         super.init(frame: frame)
@@ -44,15 +44,17 @@ extension RMCharacterDetailsView {
         addConstraints()
     }
 
-    private func createSection(for sectionIndex: Int) -> NSCollectionLayoutSection {
+    private func createLayout(for sectionIndex: Int) -> NSCollectionLayoutSection {
         let sectionTypes = viewModel.sections
         switch sectionTypes[sectionIndex] {
         case .photo:
-            return viewModel.createPhotoSectionLayout()
+            return createPhotoSectionLayout()
         case .characterInfo:
-            return viewModel.createInfoSectionLayout()
+            return createInfoSectionLayout()
         case .episodes:
-            return viewModel.createEpisodeSectionLayout()
+            return createEpisodeSectionLayout()
+        default:
+            fatalError("Unacceptable section type!")
         }
     }
 
@@ -62,11 +64,96 @@ extension RMCharacterDetailsView {
     }
 }
 
+// MARK: - Layout
+extension RMCharacterDetailsView {
+    private func createPhotoSectionLayout() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(1.0)
+            )
+        )
+        item.contentInsets = NSDirectionalEdgeInsets(
+            top: 0,
+            leading: 0,
+            bottom: 10,
+            trailing: 0
+        )
+
+        let group = NSCollectionLayoutGroup.vertical(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalWidth(1.0) // .fractionalHeight(0.5)
+            ),
+            subitems: [item]
+        )
+
+        let section = NSCollectionLayoutSection(group: group)
+
+        return section
+    }
+
+    private func createInfoSectionLayout() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(UIDevice.isPhone ? 0.5 : 0.25),
+                heightDimension: .fractionalHeight(1.0)
+            )
+        )
+        item.contentInsets = NSDirectionalEdgeInsets(
+            top: 2,
+            leading: 2,
+            bottom: 2,
+            trailing: 2
+        )
+
+        let group = NSCollectionLayoutGroup.horizontal(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .absolute(150)
+            ),
+            subitems: UIDevice.isPhone ? [item, item] : [item, item, item, item]
+        )
+
+        let section = NSCollectionLayoutSection(group: group)
+
+        return section
+    }
+
+    private func createEpisodeSectionLayout() -> NSCollectionLayoutSection {
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(1.0)
+            )
+        )
+        item.contentInsets = NSDirectionalEdgeInsets(
+            top: 10,
+            leading: 5,
+            bottom: 10,
+            trailing: 5
+        )
+
+        let group = NSCollectionLayoutGroup.horizontal(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(UIDevice.isPhone ? 0.8 : 0.4),
+                heightDimension: .absolute(150)
+            ),
+            subitems: [item]
+        )
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .groupPaging
+
+        return section
+    }
+}
+
 // MARK: - Helpers
 extension RMCharacterDetailsView {
     private func createCollectionView() -> UICollectionView {
         let layout = UICollectionViewCompositionalLayout { [weak self] sectionIndex, _ in
-            return self?.createSection(for: sectionIndex)
+            return self?.createLayout(for: sectionIndex)
         }
 
         let collectionView = UICollectionView(
@@ -83,8 +170,8 @@ extension RMCharacterDetailsView {
             forCellWithReuseIdentifier: RMCharacterInfoCollectionViewCell.cellIdentifier
         )
         collectionView.register(
-            RMCharacterEpisodeCollectionViewCell.self,
-            forCellWithReuseIdentifier: RMCharacterEpisodeCollectionViewCell.cellIdentifier
+            RMEpisodeCollectionViewCell.self,
+            forCellWithReuseIdentifier: RMEpisodeCollectionViewCell.cellIdentifier
         )
 
         return collectionView
@@ -99,7 +186,7 @@ extension RMCharacterDetailsView {
 }
 
 // MARK: - RMCharacterDetailViewViewModelDelegate
-extension RMCharacterDetailsView: RMCharacterDetailViewViewModelDelegate {
+extension RMCharacterDetailsView: RMCharacterDetailsViewViewModelDelegate {
     func didSelectEpisode(_ episodeStringURL: String) {
         delegate?.rmCharacterListView(self, didSelectEpisode: episodeStringURL)
     }
