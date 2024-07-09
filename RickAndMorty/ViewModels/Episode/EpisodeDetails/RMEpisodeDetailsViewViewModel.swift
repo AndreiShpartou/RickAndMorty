@@ -24,8 +24,9 @@ final class RMEpisodeDetailsViewViewModel {
     }
 
     // MARK: - Init
-    init(endpointURL: URL?) {
+    init(endpointURL: URL?, service: RMServiceProtocol = RMService.shared) {
         self.endpointURL = endpointURL
+        self.service = service
     }
 }
 

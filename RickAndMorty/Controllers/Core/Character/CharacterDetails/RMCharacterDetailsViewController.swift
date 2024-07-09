@@ -11,16 +11,15 @@ import UIKit
 // MARK: - ViewController Implementation
 class RMCharacterDetailsViewController: UIViewController {
 
-    private let viewModel: RMCharacterDetailsViewViewModelProtocol
     private let detailView: RMCharacterDetailsViewProtocol
+    private let collectionHandler: RMCharacterDetailsCollectionHandler
+    private let viewModel: RMCharacterDetailsViewViewModelProtocol
 
     // MARK: - Init
     init(viewModel: RMCharacterDetailsViewViewModelProtocol) {
         self.viewModel = viewModel
-        self.detailView = RMCharacterDetailsView(
-            frame: .zero,
-            viewModel: viewModel
-        )
+        self.collectionHandler = RMCharacterDetailsCollectionHandler(viewModel: viewModel)
+        self.detailView = RMCharacterDetailsView(collectionHandler: collectionHandler)
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -47,6 +46,7 @@ extension RMCharacterDetailsViewController {
         title = viewModel.title
 
         detailView.delegate = self
+        collectionHandler.delegate = self
         addShareButton()
     }
 
@@ -80,8 +80,28 @@ extension RMCharacterDetailsViewController {
 
 // MARK: - RMCharacterDetailsViewDelegate
 extension RMCharacterDetailsViewController: RMCharacterDetailsViewDelegate {
-    func rmCharacterListView(_ characterListView: RMCharacterDetailsViewProtocol, didSelectEpisode episodeStringURL: String) {
-        let episodeVC = RMEpisodeDetailsViewController(url: URL(string: episodeStringURL))
-        navigationController?.pushViewController(episodeVC, animated: true)
+    func rmCharacterListView(_ characterDetailsView: RMCharacterDetailsViewProtocol, createLayoutFor sectionIndex: Int) -> NSCollectionLayoutSection {
+        let sectionTypes = viewModel.sections
+        switch sectionTypes[sectionIndex] {
+        case .photo:
+            return characterDetailsView.createPhotoSectionLayout()
+        case .characterInfo:
+            return characterDetailsView.createInfoSectionLayout()
+        case .episodes:
+            return characterDetailsView.createEpisodeSectionLayout()
+        default:
+            fatalError("Unacceptable section type!")
+        }
+    }
+}
+
+extension RMCharacterDetailsViewController: RMCharacterDetailsCollectionHandlerDelegate {
+    func didSelectItemAt(_ section: Int, _ index: Int) {
+        let sectionType = viewModel.sections[section]
+        if case .episodes = sectionType {
+            let episodeStringURL = viewModel.episodes[index]
+            let episodeVC = RMEpisodeDetailsViewController(url: URL(string: episodeStringURL))
+            navigationController?.pushViewController(episodeVC, animated: true)
+        }
     }
 }

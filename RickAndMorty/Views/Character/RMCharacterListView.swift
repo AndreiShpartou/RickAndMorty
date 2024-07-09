@@ -11,32 +11,22 @@ import UIKit
 // MARK: - View Implementation
 final class RMCharacterListView: UIView, RMCharacterListViewProtocol {
 
-    weak var delegate: RMCharacterListViewDelegate?
-
-    private let viewModel: RMCharacterListViewViewModelProtocol
-    private let collectionHandler: RMCharacterListViewCollectionHandler
+    private let collectionHandler: RMCharacterCollectionHandler
 
     private lazy var spinner: UIActivityIndicatorView = createSpinner()
     private lazy var collectionView: UICollectionView = createCollectionView()
 
     // MARK: - Init
-    init(viewModel: RMCharacterListViewViewModelProtocol) {
-        self.viewModel = viewModel
-        self.collectionHandler = RMCharacterListViewCollectionHandler(viewModel: viewModel)
+    init(collectionHandler: RMCharacterCollectionHandler) {
+        self.collectionHandler = collectionHandler
 
         super.init(frame: .zero)
 
         setupView()
-        addObservers()
-        setupViewModel()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    deinit {
-        removeObservers()
     }
 }
 
@@ -60,29 +50,6 @@ extension RMCharacterListView {
         collectionView.dataSource = collectionHandler
         collectionView.delegate = collectionHandler
     }
-
-    private func addObservers() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(orientationDidChange),
-            name: UIDevice.orientationDidChangeNotification,
-            object: nil
-        )
-    }
-
-    private func removeObservers() {
-        NotificationCenter.default.removeObserver(
-            self,
-            name: UIDevice.orientationDidChangeNotification,
-            object: nil
-        )
-    }
-
-    // MARK: - SetupViewModel
-    private func setupViewModel() {
-        viewModel.delegate = self
-        viewModel.fetchCharacters()
-    }
 }
 
 // MARK: - PublicMethods
@@ -91,9 +58,23 @@ extension RMCharacterListView {
         collectionView.setContentOffset(.zero, animated: true)
     }
 
-    @objc
-    func orientationDidChange(_ notification: Notification) {
+    func orientationDidChange() {
         collectionView.collectionViewLayout.invalidateLayout()
+    }
+
+    func didLoadInitialCharacters() {
+        self.spinner.stopAnimating()
+        self.collectionView.isHidden = false
+        collectionView.reloadData() // Initial fetch of characters
+        UIView.animate(withDuration: 0.4) {
+            self.collectionView.alpha = 1
+        }
+    }
+
+    func didLoadMoreCharacters(with newIndexPath: [IndexPath]) {
+        collectionView.performBatchUpdates { [weak self] in
+            self?.collectionView.insertItems(at: newIndexPath)
+        }
     }
 }
 
@@ -124,28 +105,6 @@ extension RMCharacterListView {
         )
 
         return collectionView
-    }
-}
-
-// MARK: - RMCharacterListViewViewModelDelegate
-extension RMCharacterListView: RMCharacterListViewViewModelDelegate {
-    func didSelectCharacter(_ character: RMCharacterProtocol) {
-        delegate?.rmCharacterListView(self, didSelectCharacter: character)
-    }
-
-    func didLoadInitialCharacters() {
-        self.spinner.stopAnimating()
-        self.collectionView.isHidden = false
-        collectionView.reloadData() // Initial fetch of characters
-        UIView.animate(withDuration: 0.4) {
-            self.collectionView.alpha = 1
-        }
-    }
-
-    func didLoadMoreCharacters(with newIndexPath: [IndexPath]) {
-        collectionView.performBatchUpdates { [weak self] in
-            self?.collectionView.insertItems(at: newIndexPath)
-        }
     }
 }
 

@@ -10,12 +10,14 @@ import UIKit
 protocol RMCharacterDetailsViewProtocol: UIView {
     var delegate: RMCharacterDetailsViewDelegate? { get set }
 
-    init(frame: CGRect, viewModel: RMCharacterDetailsViewViewModelProtocol)
+    func createPhotoSectionLayout() -> NSCollectionLayoutSection
+    func createInfoSectionLayout() -> NSCollectionLayoutSection
+    func createEpisodeSectionLayout() -> NSCollectionLayoutSection
 }
 
 protocol RMCharacterDetailsViewDelegate: AnyObject {
     func rmCharacterListView(
-        _ characterListView: RMCharacterDetailsViewProtocol,
-        didSelectEpisode episodeStringURL: String
-    )
+        _ characterDetailsView: RMCharacterDetailsViewProtocol,
+        createLayoutFor sectionIndex: Int
+    ) -> NSCollectionLayoutSection
 }

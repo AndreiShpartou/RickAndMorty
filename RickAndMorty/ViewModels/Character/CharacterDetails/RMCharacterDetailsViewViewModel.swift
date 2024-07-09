@@ -9,8 +9,6 @@ import UIKit
 // MARK: - ViewModel Implementation
 final class RMCharacterDetailsViewViewModel: RMCharacterDetailsViewViewModelProtocol {
 
-    weak var delegate: RMCharacterDetailsViewViewModelDelegate?
-
     var title: String {
         character.name.uppercased()
     }
