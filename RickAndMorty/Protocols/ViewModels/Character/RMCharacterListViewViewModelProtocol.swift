@@ -23,5 +23,4 @@ protocol RMCharacterListViewViewModelProtocol: AnyObject {
 protocol RMCharacterListViewViewModelDelegate: AnyObject {
     func didLoadInitialCharacters()
     func didLoadMoreCharacters(with newIndexPath: [IndexPath])
-    func didSelectCharacter(_ character: RMCharacterProtocol)
 }

@@ -11,18 +11,15 @@ import UIKit
 final class RMCharacterDetailsView: UIView, RMCharacterDetailsViewProtocol {
 
     weak var delegate: RMCharacterDetailsViewDelegate?
-
-    private let viewModel: RMCharacterDetailsViewViewModelProtocol
-    private let collectionHandler: RMCharacterDetailsCollectionViewHandler
+    private let collectionHandler: RMCharacterDetailsCollectionHandler
 
     private lazy var collectionView: UICollectionView = createCollectionView()
     private lazy var spinner: UIActivityIndicatorView = createSpinner()
 
     // MARK: - Init
-    init(frame: CGRect, viewModel: RMCharacterDetailsViewViewModelProtocol) {
-        self.viewModel = viewModel
-        self.collectionHandler = RMCharacterDetailsCollectionViewHandler(viewModel: viewModel)
-        super.init(frame: frame)
+    init(collectionHandler: RMCharacterDetailsCollectionHandler) {
+        self.collectionHandler = collectionHandler
+        super.init(frame: .zero)
 
         setupView()
     }
@@ -38,24 +35,9 @@ extension RMCharacterDetailsView {
         backgroundColor = .systemBackground
 
         addSubviews(collectionView, spinner)
-        viewModel.delegate = self
         setupCollectionView()
 
         addConstraints()
-    }
-
-    private func createLayout(for sectionIndex: Int) -> NSCollectionLayoutSection {
-        let sectionTypes = viewModel.sections
-        switch sectionTypes[sectionIndex] {
-        case .photo:
-            return createPhotoSectionLayout()
-        case .characterInfo:
-            return createInfoSectionLayout()
-        case .episodes:
-            return createEpisodeSectionLayout()
-        default:
-            fatalError("Unacceptable section type!")
-        }
     }
 
     private func setupCollectionView() {
@@ -66,7 +48,7 @@ extension RMCharacterDetailsView {
 
 // MARK: - Layout
 extension RMCharacterDetailsView {
-    private func createPhotoSectionLayout() -> NSCollectionLayoutSection {
+    func createPhotoSectionLayout() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
@@ -93,7 +75,7 @@ extension RMCharacterDetailsView {
         return section
     }
 
-    private func createInfoSectionLayout() -> NSCollectionLayoutSection {
+    func createInfoSectionLayout() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(UIDevice.isPhone ? 0.5 : 0.25),
@@ -120,7 +102,7 @@ extension RMCharacterDetailsView {
         return section
     }
 
-    private func createEpisodeSectionLayout() -> NSCollectionLayoutSection {
+    func createEpisodeSectionLayout() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
@@ -153,7 +135,11 @@ extension RMCharacterDetailsView {
 extension RMCharacterDetailsView {
     private func createCollectionView() -> UICollectionView {
         let layout = UICollectionViewCompositionalLayout { [weak self] sectionIndex, _ in
-            return self?.createLayout(for: sectionIndex)
+            guard let strongSelf = self else {
+                return nil
+            }
+
+            return strongSelf.delegate?.rmCharacterListView(strongSelf, createLayoutFor: sectionIndex)
         }
 
         let collectionView = UICollectionView(
@@ -182,13 +168,6 @@ extension RMCharacterDetailsView {
         spinner.hidesWhenStopped = true
 
         return spinner
-    }
-}
-
-// MARK: - RMCharacterDetailViewViewModelDelegate
-extension RMCharacterDetailsView: RMCharacterDetailsViewViewModelDelegate {
-    func didSelectEpisode(_ episodeStringURL: String) {
-        delegate?.rmCharacterListView(self, didSelectEpisode: episodeStringURL)
     }
 }
 

@@ -65,9 +65,8 @@ final class RMCharacterInfoCollectionViewCellViewModel: RMCharacterInfoCollectio
             return "None"
         }
 
-        if type == .created,
-           let date = RMDateFormatterUtils.formatter.date(from: value) {
-            return RMDateFormatterUtils.shortFormatter.string(from: date)
+        if type == .created {
+            return RMDateFormatterUtils.getShortFormattedString(from: value)
         }
 
         return value

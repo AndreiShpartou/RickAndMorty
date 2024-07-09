@@ -10,7 +10,7 @@ import UIKit
 protocol RMEpisodeDetailsViewDelegate: AnyObject {
     func rmEpisodeDetailView(
         _ detailView: RMEpisodeDetailsView,
-        didSelect character: RMCharacter
+        didSelect character: RMCharacterProtocol
     )
 }
 
