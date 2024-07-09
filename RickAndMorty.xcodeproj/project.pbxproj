@@ -371,7 +371,6 @@
 		6C7A21F12C119BB2001E4C81 /* Other */ = {
 			isa = PBXGroup;
 			children = (
-				6C99FA052C148B1B0077198F /* RMEpisodeDetailsViewController.swift */,
 				6CA132FF2C19A5D10040C32F /* RMLocationDetailsViewController.swift */,
 			);
 			path = Other;
@@ -622,12 +621,29 @@
 			isa = PBXGroup;
 			children = (
 				6CE13C8B2C37C55600102E46 /* Character */,
+				6CD1541D2C3D96D300278BEB /* Episode */,
 				6CAA56CC2C0DC00A00BCEB29 /* RMTabViewController.swift */,
 				6CAA56EE2C0DC8BD00BCEB29 /* RMLocationViewController.swift */,
-				6CAA56F02C0DC8C700BCEB29 /* RMEpisodeViewController.swift */,
 				6CAA56F22C0DC8D300BCEB29 /* RMSettingsViewController.swift */,
 			);
 			path = Core;
+			sourceTree = "<group>";
+		};
+		6CD1541D2C3D96D300278BEB /* Episode */ = {
+			isa = PBXGroup;
+			children = (
+				6CAA56F02C0DC8C700BCEB29 /* RMEpisodeViewController.swift */,
+				6CD1541E2C3D96DF00278BEB /* EpisodeDetails */,
+			);
+			path = Episode;
+			sourceTree = "<group>";
+		};
+		6CD1541E2C3D96DF00278BEB /* EpisodeDetails */ = {
+			isa = PBXGroup;
+			children = (
+				6C99FA052C148B1B0077198F /* RMEpisodeDetailsViewController.swift */,
+			);
+			path = EpisodeDetails;
 			sourceTree = "<group>";
 		};
 		6CE13C8B2C37C55600102E46 /* Character */ = {

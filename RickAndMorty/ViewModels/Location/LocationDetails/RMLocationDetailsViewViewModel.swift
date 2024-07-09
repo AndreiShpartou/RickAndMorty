@@ -123,14 +123,7 @@ extension RMLocationDetailsViewViewModel {
 
         let location = dataTuple.location
         let characters = dataTuple.characters
-        var createdString = location.created
-        if let date = RMDateFormatterUtils.formatter.date(
-            from: location.created
-        ) {
-            createdString = RMDateFormatterUtils.shortFormatter.string(
-                from: date
-            )
-        }
+        let createdString = RMDateFormatterUtils.getShortFormattedString(from: location.created)
 
         cellViewModels = [
             .information(viewModels: [
@@ -158,14 +151,7 @@ extension RMLocationDetailsViewViewModel {
         }
 
         let location = dataTuple.location
-        var createdString = location.created
-        if let date = RMDateFormatterUtils.formatter.date(
-            from: location.created
-        ) {
-            createdString = RMDateFormatterUtils.shortFormatter.string(
-                from: date
-            )
-        }
+        let createdString = RMDateFormatterUtils.getShortFormattedString(from: location.created)
 
         let subject = "Location: \(location.name)"
         let details = """

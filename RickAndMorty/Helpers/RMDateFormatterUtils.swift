@@ -24,4 +24,11 @@ enum RMDateFormatterUtils {
 
         return formatter
     }()
+
+    static func getShortFormattedString(from dateString: String) -> String {
+        if let date = formatter.date(from: dateString) {
+            return shortFormatter.string(from: date)
+        }
+        return dateString
+    }
 }

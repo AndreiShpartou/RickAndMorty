@@ -82,7 +82,7 @@ extension RMEpisodeDetailsViewController: RMEpisodeDetailsViewViewModelDelegate 
 
 // MARK: - RMEpisodeDetailViewDelegate
 extension RMEpisodeDetailsViewController: RMEpisodeDetailsViewDelegate {
-    func rmEpisodeDetailView(_ detailView: RMEpisodeDetailsView, didSelect character: RMCharacter) {
+    func rmEpisodeDetailView(_ detailView: RMEpisodeDetailsView, didSelect character: RMCharacterProtocol) {
         let viewController = RMCharacterDetailsViewController(
             viewModel: RMCharacterDetailsViewViewModel(character: character)
         )
