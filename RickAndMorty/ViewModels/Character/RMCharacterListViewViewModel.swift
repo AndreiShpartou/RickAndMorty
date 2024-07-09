@@ -25,7 +25,7 @@ final class RMCharacterListViewViewModel: RMCharacterListViewViewModelProtocol {
 
     private(set) var isLoadingMoreCharacters = false
 
-    private var service: RMServiceProtocol = RMService.shared
+    private var service: RMServiceProtocol
 
     private var characters: [RMCharacterProtocol] = [] {
         didSet {

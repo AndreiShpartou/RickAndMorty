@@ -9,7 +9,14 @@ import Foundation
 
 import UIKit
 
-class RMCharacterDetailsCollectionViewHandler: NSObject, UICollectionViewDataSource, UICollectionViewDelegate {
+protocol RMCharacterDetailsCollectionHandlerDelegate: AnyObject {
+    func didSelectItemAt(_ section: Int, _ index: Int)
+}
+
+class RMCharacterDetailsCollectionHandler: NSObject, UICollectionViewDataSource, UICollectionViewDelegate {
+
+    weak var delegate: RMCharacterDetailsCollectionHandlerDelegate?
+
     private let viewModel: RMCharacterDetailsViewViewModelProtocol
 
     init(viewModel: RMCharacterDetailsViewViewModelProtocol) {
@@ -18,7 +25,7 @@ class RMCharacterDetailsCollectionViewHandler: NSObject, UICollectionViewDataSou
 }
 
 // MARK: - CollectionView DataSource
-extension RMCharacterDetailsCollectionViewHandler {
+extension RMCharacterDetailsCollectionHandler {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return viewModel.sections.count
     }
@@ -77,12 +84,8 @@ extension RMCharacterDetailsCollectionViewHandler {
 }
 
 // MARK: - CollectionView Delegation
-extension RMCharacterDetailsCollectionViewHandler {
+extension RMCharacterDetailsCollectionHandler {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let sectionType = viewModel.sections[indexPath.section]
-        if case .episodes = sectionType {
-            let selection = viewModel.episodes[indexPath.row]
-            viewModel.delegate?.didSelectEpisode(selection)
-        }
+        delegate?.didSelectItemAt(indexPath.section, indexPath.row)
     }
 }

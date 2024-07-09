@@ -12,14 +12,14 @@ import UIKit
 final class RMCharacterViewController: UIViewController {
 
     private let characterListView: RMCharacterListViewProtocol
+    private let collectionHandler: RMCharacterCollectionHandler
     private let viewModel: RMCharacterListViewViewModelProtocol
 
     // MARK: - Init
-    init(
-        viewModel: RMCharacterListViewViewModelProtocol = RMCharacterListViewViewModel()
-    ) {
+    init(viewModel: RMCharacterListViewViewModelProtocol = RMCharacterListViewViewModel()) {
+        self.collectionHandler = RMCharacterCollectionHandler(viewModel: viewModel)
+        self.characterListView = RMCharacterListView(collectionHandler: collectionHandler)
         self.viewModel = viewModel
-        self.characterListView = RMCharacterListView(viewModel: viewModel)
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -64,9 +64,15 @@ final class RMCharacterViewController: UIViewController {
 extension RMCharacterViewController {
     private func setupController() {
         title = "Characters"
-        characterListView.delegate = self
+        setupViewModel()
+        collectionHandler.delegate = self
         addSearchButton()
         addChangeThemeButton()
+    }
+
+    private func setupViewModel() {
+        viewModel.delegate = self
+        viewModel.fetchCharacters()
     }
 
     private func addChangeThemeButton() {
@@ -93,10 +99,27 @@ extension RMCharacterViewController {
             name: .tabBarItemDoubleTapped,
             object: nil
         )
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(orientationDidChange),
+            name: UIDevice.orientationDidChangeNotification,
+            object: nil
+        )
     }
 
     private func removeObservers() {
-        NotificationCenter.default.removeObserver(self, name: .tabBarItemDoubleTapped, object: nil)
+        NotificationCenter.default.removeObserver(
+            self,
+            name: .tabBarItemDoubleTapped,
+            object: nil
+        )
+
+        NotificationCenter.default.removeObserver(
+            self,
+            name: UIDevice.orientationDidChangeNotification,
+            object: nil
+        )
     }
 
     private func updateNavigationBar() {
@@ -125,16 +148,33 @@ extension RMCharacterViewController {
     private func tabBarItemDoubleTapped(_ notification: Notification) {
         characterListView.setNilValueForScrollOffset()
     }
+
+    @objc
+    private func orientationDidChange(_ notification: Notification) {
+        characterListView.orientationDidChange()
+    }
 }
 
-// MARK: - RMCharacterListViewDelegate
-extension RMCharacterViewController: RMCharacterListViewDelegate {
-    func rmCharacterListView(_ characterListView: RMCharacterListViewProtocol, didSelectCharacter character: RMCharacterProtocol) {
+// MARK: - RMCharacterCollectionHandlerDelegate
+extension RMCharacterViewController: RMCharacterCollectionHandlerDelegate {
+    func didSelectItemAt(_ index: Int) {
         // Open detail controller for that character
+        let character = viewModel.getCharacter(at: index)
         let viewModel = RMCharacterDetailsViewViewModel(character: character)
         let detailVC = RMCharacterDetailsViewController(viewModel: viewModel)
         detailVC.navigationItem.largeTitleDisplayMode = .never
 
         navigationController?.pushViewController(detailVC, animated: true)
+    }
+}
+
+// MARK: - RMCharacterListViewViewModelDelegate
+extension RMCharacterViewController: RMCharacterListViewViewModelDelegate {
+    func didLoadInitialCharacters() {
+        characterListView.didLoadInitialCharacters()
+    }
+
+    func didLoadMoreCharacters(with newIndexPath: [IndexPath]) {
+        characterListView.didLoadMoreCharacters(with: newIndexPath)
     }
 }

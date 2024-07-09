@@ -6,7 +6,14 @@
 //
 import UIKit
 
-final class RMCharacterListViewCollectionHandler: NSObject {
+protocol RMCharacterCollectionHandlerDelegate: AnyObject {
+    func didSelectItemAt(_ index: Int)
+}
+
+final class RMCharacterCollectionHandler: NSObject {
+
+    weak var delegate: RMCharacterCollectionHandlerDelegate?
+
     private let viewModel: RMCharacterListViewViewModelProtocol
 
     // MARK: - Init
@@ -16,7 +23,7 @@ final class RMCharacterListViewCollectionHandler: NSObject {
 }
 
 // MARK: - CollectionView DataSource
-extension RMCharacterListViewCollectionHandler: UICollectionViewDataSource {
+extension RMCharacterCollectionHandler: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         viewModel.cellViewModels.count
     }
@@ -61,7 +68,7 @@ extension RMCharacterListViewCollectionHandler: UICollectionViewDataSource {
     }
 }
 // MARK: - CollectionView Delegation
-extension RMCharacterListViewCollectionHandler: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+extension RMCharacterCollectionHandler: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 
         let bounds = collectionView.bounds
@@ -82,13 +89,12 @@ extension RMCharacterListViewCollectionHandler: UICollectionViewDelegate, UIColl
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
-        let character = viewModel.getCharacter(at: indexPath.row)
-        viewModel.delegate?.didSelectCharacter(character)
+        delegate?.didSelectItemAt(indexPath.row)
     }
 }
 
 // MARK: - UIScrollViewDelegate
-extension RMCharacterListViewCollectionHandler: UIScrollViewDelegate {
+extension RMCharacterCollectionHandler: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard viewModel.shouldShowLoadMoreIndicator,
               !viewModel.isLoadingMoreCharacters,
