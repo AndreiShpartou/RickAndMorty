@@ -8,9 +8,25 @@
 import UIKit
 
 // Controller to show and search for Episodes
+// MARK: - ViewController Implementation
 final class RMEpisodeViewController: UIViewController {
 
-    private let episodeListView = RMEpisodeListView()
+    private let episodeListView: RMEpisodeListViewProtocol
+    private let collectionHandler: RMEpisodeCollectionHandler
+    private let viewModel: RMEpisodeListViewViewModelProtocol
+
+    // MARK: - Init
+    init(viewModel: RMEpisodeListViewViewModelProtocol = RMEpisodeListViewViewModel()) {
+        self.collectionHandler = RMEpisodeCollectionHandler(viewModel: viewModel)
+        self.episodeListView = RMEpisodeListView(collectionHandler: collectionHandler)
+        self.viewModel = viewModel
+
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     // MARK: - LifeCycle
     override func loadView() {
@@ -48,10 +64,15 @@ final class RMEpisodeViewController: UIViewController {
 extension RMEpisodeViewController {
     private func setupController() {
         title = "Episodes"
+        setupViewModel()
+        collectionHandler.delegate = self
         addSearchButton()
         addChangeThemeButton()
+    }
 
-        episodeListView.delegate = self
+    private func setupViewModel() {
+        viewModel.delegate = self
+        viewModel.fetchEpisodes()
     }
 
     private func addSearchButton() {
@@ -78,10 +99,27 @@ extension RMEpisodeViewController {
             name: .tabBarItemDoubleTapped,
             object: nil
         )
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(orientationDidChange),
+            name: UIDevice.orientationDidChangeNotification,
+            object: nil
+        )
     }
 
     private func removeObservers() {
-        NotificationCenter.default.removeObserver(self, name: .tabBarItemDoubleTapped, object: nil)
+        NotificationCenter.default.removeObserver(
+            self,
+            name: .tabBarItemDoubleTapped,
+            object: nil
+        )
+
+        NotificationCenter.default.removeObserver(
+            self,
+            name: UIDevice.orientationDidChangeNotification,
+            object: nil
+        )
     }
 
     private func updateNavigationBar() {
@@ -109,15 +147,31 @@ extension RMEpisodeViewController {
     private func tabBarItemDoubleTapped(_ notification: Notification) {
         episodeListView.setNilValueForScrollOffset()
     }
+
+    @objc
+    private func orientationDidChange(_ notification: Notification) {
+        episodeListView.orientationDidChange()
+    }
 }
 
-// MARK: - RMEpisodeListViewDelegate
-extension RMEpisodeViewController: RMEpisodeListViewDelegate {
-    func rmEpisodeListView(_ episodeListView: RMEpisodeListView, didSelectEpisode episode: RMEpisode) {
-        // Open detail controller for that episode
+// MARK: - RMEpisodeCollectionHandlerDelegate
+extension RMEpisodeViewController: RMEpisodeCollectionHandlerDelegate {
+    func didSelectItemAt(_ index: Int) {
+        // Open detail controller for episode
+        let episode = viewModel.getEpisode(at: index)
         let detailVC = RMEpisodeDetailsViewController(url: URL(string: episode.url))
         detailVC.navigationItem.largeTitleDisplayMode = .never
 
         navigationController?.pushViewController(detailVC, animated: true)
+    }
+}
+
+extension RMEpisodeViewController: RMEpisodeListViewViewModelDelegate {
+    func didLoadInitialEpisodes() {
+        episodeListView.didLoadInitialEpisodes()
+    }
+
+    func didLoadMoreEpisodes(with newIndexPath: [IndexPath]) {
+        episodeListView.didLoadMoreEpisodes(with: newIndexPath)
     }
 }

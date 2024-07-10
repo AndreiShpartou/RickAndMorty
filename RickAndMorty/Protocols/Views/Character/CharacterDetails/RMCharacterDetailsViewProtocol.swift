@@ -16,8 +16,8 @@ protocol RMCharacterDetailsViewProtocol: UIView {
 }
 
 protocol RMCharacterDetailsViewDelegate: AnyObject {
-    func rmCharacterListView(
-        _ characterDetailsView: RMCharacterDetailsViewProtocol,
+    func rmCharacterDetailsView(
+        _ detailsView: RMCharacterDetailsViewProtocol,
         createLayoutFor sectionIndex: Int
     ) -> NSCollectionLayoutSection
 }

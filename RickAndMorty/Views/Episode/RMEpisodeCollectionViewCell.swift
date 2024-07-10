@@ -7,6 +7,7 @@
 
 import UIKit
 
+// Single cell for an episode
 final class RMEpisodeCollectionViewCell: UICollectionViewCell {
 
     static let cellIdentifier = "RMEpisodeCollectionViewCell"
@@ -19,7 +20,7 @@ final class RMEpisodeCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        setupView()
+        setupContentView()
     }
 
     required init?(coder: NSCoder) {
@@ -49,7 +50,7 @@ extension RMEpisodeCollectionViewCell {
 
 // MARK: - Setup
 extension RMEpisodeCollectionViewCell {
-    private func setupView() {
+    private func setupContentView() {
         contentView.backgroundColor = .tertiarySystemBackground
         contentView.addSubviews(seasonLabel, nameLabel, airDateLabel)
 

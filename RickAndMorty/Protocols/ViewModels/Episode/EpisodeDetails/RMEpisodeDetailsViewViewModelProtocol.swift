@@ -7,14 +7,16 @@
 
 import Foundation
 
-protocol RMEpisodeDetailViewViewModelProtocol {
+protocol RMEpisodeDetailsViewViewModelProtocol: AnyObject {
     var delegate: RMEpisodeDetailsViewViewModelDelegate? { get set }
     var sections: [SectionType] { get }
+    var title: String { get }
+
     func fetchEpisodeData()
     func character(at index: Int) -> RMCharacterProtocol?
     func getDataToShare() -> [Any]
 }
 
 protocol RMEpisodeDetailsViewViewModelDelegate: AnyObject {
-    func didFetchEpisodeDetail()
+    func didFetchEpisodeDetails()
 }

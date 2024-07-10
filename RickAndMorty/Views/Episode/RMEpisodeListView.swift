@@ -7,28 +7,86 @@
 
 import UIKit
 
-protocol RMEpisodeListViewDelegate: AnyObject {
-    func rmEpisodeListView(
-        _ characterListView: RMEpisodeListView,
-        didSelectEpisode episode: RMEpisode
-    )
-}
-
 // View that handles showing list of episodes, loader, etc.
+// MARK: - View Implementation
 final class RMEpisodeListView: UIView {
 
-    weak var delegate: RMEpisodeListViewDelegate?
+    private let collectionHandler: RMEpisodeCollectionHandler
 
-    private let viewModel = RMEpisodeListViewViewModel()
+    private lazy var spinner: UIActivityIndicatorView = createSpinner()
+    private lazy var collectionView: UICollectionView = createCollectionView()
 
-    private let spinner: UIActivityIndicatorView = {
+    // MARK: - Init
+    init(collectionHandler: RMEpisodeCollectionHandler) {
+        self.collectionHandler = collectionHandler
+        super.init(frame: .zero)
+
+        setupView()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+// MARK: - RMEpisodeListViewProtocol
+extension RMEpisodeListView: RMEpisodeListViewProtocol {
+    func setNilValueForScrollOffset() {
+        collectionView.setContentOffset(.zero, animated: true)
+    }
+
+    func orientationDidChange() {
+        collectionView.collectionViewLayout.invalidateLayout()
+    }
+
+    func didLoadInitialEpisodes() {
+        self.spinner.stopAnimating()
+        self.collectionView.isHidden = false
+        collectionView.reloadData() // Initial fetch of characters
+        UIView.animate(withDuration: 0.4) {
+            self.collectionView.alpha = 1
+        }
+    }
+
+    func didLoadMoreEpisodes(with newIndexPath: [IndexPath]) {
+        collectionView.performBatchUpdates { [weak self] in
+            self?.collectionView.insertItems(at: newIndexPath)
+        }
+    }
+}
+
+// MARK: - Setup
+extension RMEpisodeListView {
+    private func setupView() {
+        backgroundColor = .systemBackground
+
+        addSubviews(collectionView, spinner)
+        setupSubviews()
+
+        addConstraints()
+    }
+
+    private func setupSubviews() {
+        setupCollectionView()
+        spinner.startAnimating()
+    }
+
+    private func setupCollectionView() {
+        collectionView.dataSource = collectionHandler
+        collectionView.delegate = collectionHandler
+    }
+}
+
+// MARK: - Helpers
+extension RMEpisodeListView {
+    private func createSpinner() -> UIActivityIndicatorView {
         let spinner = UIActivityIndicatorView(style: .large)
         spinner.hidesWhenStopped = true
 
         return spinner
-    }()
+    }
 
-    private let collectionView: UICollectionView = {
+    private func createCollectionView() -> UICollectionView {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 10, right: 10)
@@ -46,91 +104,6 @@ final class RMEpisodeListView: UIView {
         )
 
         return collectionView
-    }()
-
-    // MARK: - Init
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-
-        setupView()
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    // MARK: - DeInit
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-}
-
-// MARK: - Setup
-extension RMEpisodeListView {
-    private func setupView() {
-        backgroundColor = .systemBackground
-
-        addSubviews(collectionView, spinner)
-        setupSubviews()
-        setupObservers()
-
-        addConstraints()
-    }
-
-    private func setupSubviews() {
-        setupCollectionView()
-        spinner.startAnimating()
-        viewModel.delegate = self
-        viewModel.fetchEpisodes()
-    }
-
-    private func setupCollectionView() {
-        collectionView.dataSource = viewModel
-        collectionView.delegate = viewModel
-    }
-
-    // MARK: - SetupObservers
-    private func setupObservers() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(orientationDidChange),
-            name: UIDevice.orientationDidChangeNotification,
-            object: nil
-        )
-    }
-}
-
-// MARK: - Public
-extension RMEpisodeListView {
-    @objc
-    func orientationDidChange(_ notification: Notification) {
-        collectionView.collectionViewLayout.invalidateLayout()
-    }
-
-    func setNilValueForScrollOffset() {
-        collectionView.setContentOffset(.zero, animated: true)
-    }
-}
-
-// MARK: - RMEpisodeListViewViewModelDelegate
-extension RMEpisodeListView: RMEpisodeListViewViewModelDelegate {
-    func didSelectEpisode(_ episode: RMEpisode) {
-        delegate?.rmEpisodeListView(self, didSelectEpisode: episode)
-    }
-
-    func didLoadInitialEpisodes() {
-        self.spinner.stopAnimating()
-        self.collectionView.isHidden = false
-        collectionView.reloadData() // Initial fetch of characters
-        UIView.animate(withDuration: 0.4) {
-            self.collectionView.alpha = 1
-        }
-    }
-
-    func didLoadMoreEpisodes(with newIndexPath: [IndexPath]) {
-        collectionView.performBatchUpdates { [weak self] in
-            self?.collectionView.insertItems(at: newIndexPath)
-        }
     }
 }
 

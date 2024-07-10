@@ -9,9 +9,9 @@ import UIKit
 
 // View controller to show details about a single character
 // MARK: - ViewController Implementation
-class RMCharacterDetailsViewController: UIViewController {
+final class RMCharacterDetailsViewController: UIViewController {
 
-    private let detailView: RMCharacterDetailsViewProtocol
+    private let detailsView: RMCharacterDetailsViewProtocol
     private let collectionHandler: RMCharacterDetailsCollectionHandler
     private let viewModel: RMCharacterDetailsViewViewModelProtocol
 
@@ -19,7 +19,7 @@ class RMCharacterDetailsViewController: UIViewController {
     init(viewModel: RMCharacterDetailsViewViewModelProtocol) {
         self.viewModel = viewModel
         self.collectionHandler = RMCharacterDetailsCollectionHandler(viewModel: viewModel)
-        self.detailView = RMCharacterDetailsView(collectionHandler: collectionHandler)
+        self.detailsView = RMCharacterDetailsView(collectionHandler: collectionHandler)
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -28,9 +28,9 @@ class RMCharacterDetailsViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: - Lifecycle
+    // MARK: - LifeCycle
     override func loadView() {
-        view = detailView
+        view = detailsView
     }
 
     override func viewDidLoad() {
@@ -45,7 +45,7 @@ extension RMCharacterDetailsViewController {
     private func setupController() {
         title = viewModel.title
 
-        detailView.delegate = self
+        detailsView.delegate = self
         collectionHandler.delegate = self
         addShareButton()
     }
@@ -80,7 +80,7 @@ extension RMCharacterDetailsViewController {
 
 // MARK: - RMCharacterDetailsViewDelegate
 extension RMCharacterDetailsViewController: RMCharacterDetailsViewDelegate {
-    func rmCharacterListView(_ characterDetailsView: RMCharacterDetailsViewProtocol, createLayoutFor sectionIndex: Int) -> NSCollectionLayoutSection {
+    func rmCharacterDetailsView(_ characterDetailsView: RMCharacterDetailsViewProtocol, createLayoutFor sectionIndex: Int) -> NSCollectionLayoutSection {
         let sectionTypes = viewModel.sections
         switch sectionTypes[sectionIndex] {
         case .photo:
@@ -95,6 +95,7 @@ extension RMCharacterDetailsViewController: RMCharacterDetailsViewDelegate {
     }
 }
 
+// MARK: - RMCharacterDetailsCollectionHandlerDelegate
 extension RMCharacterDetailsViewController: RMCharacterDetailsCollectionHandlerDelegate {
     func didSelectItemAt(_ section: Int, _ index: Int) {
         let sectionType = viewModel.sections[section]

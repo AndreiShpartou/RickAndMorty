@@ -8,9 +8,13 @@
 import Foundation
 
 // MARK: - ViewModel Implementation
-final class RMEpisodeDetailsViewViewModel {
+final class RMEpisodeDetailsViewViewModel: RMEpisodeDetailsViewViewModelProtocol {
 
     weak var delegate: RMEpisodeDetailsViewViewModelDelegate?
+
+    var title: String {
+        "Episode: \(dataTuple?.episode.episode.uppercased() ?? "")"
+    }
 
     private(set) var sections: [SectionType] = []
 
@@ -20,7 +24,7 @@ final class RMEpisodeDetailsViewViewModel {
     private var dataTuple: (episode: RMEpisodeProtocol, characters: [RMCharacterProtocol])? {
         didSet {
             setupSections()
-            delegate?.didFetchEpisodeDetail()
+            delegate?.didFetchEpisodeDetails()
         }
     }
 
@@ -50,7 +54,7 @@ final class RMEpisodeDetailsViewViewModel {
         }
     }
 
-    // Fetch episode model
+    // Fetch character model
     func character(at index: Int) -> RMCharacterProtocol? {
         return dataTuple?.characters[index]
     }

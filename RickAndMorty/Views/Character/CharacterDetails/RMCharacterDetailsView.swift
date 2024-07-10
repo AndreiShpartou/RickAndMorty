@@ -8,7 +8,7 @@
 import UIKit
 
 // View for single character info
-final class RMCharacterDetailsView: UIView, RMCharacterDetailsViewProtocol {
+final class RMCharacterDetailsView: UIView {
 
     weak var delegate: RMCharacterDetailsViewDelegate?
     private let collectionHandler: RMCharacterDetailsCollectionHandler
@@ -29,25 +29,9 @@ final class RMCharacterDetailsView: UIView, RMCharacterDetailsViewProtocol {
     }
 }
 
-// MARK: - Setup
-extension RMCharacterDetailsView {
-    private func setupView() {
-        backgroundColor = .systemBackground
-
-        addSubviews(collectionView, spinner)
-        setupCollectionView()
-
-        addConstraints()
-    }
-
-    private func setupCollectionView() {
-        collectionView.dataSource = collectionHandler
-        collectionView.delegate = collectionHandler
-    }
-}
-
-// MARK: - Layout
-extension RMCharacterDetailsView {
+// MARK: - RMCharacterDetailsViewProtocol
+extension RMCharacterDetailsView: RMCharacterDetailsViewProtocol {
+    // MARK: - Layout
     func createPhotoSectionLayout() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
@@ -131,6 +115,23 @@ extension RMCharacterDetailsView {
     }
 }
 
+// MARK: - Setup
+extension RMCharacterDetailsView {
+    private func setupView() {
+        backgroundColor = .systemBackground
+
+        addSubviews(collectionView, spinner)
+        setupCollectionView()
+
+        addConstraints()
+    }
+
+    private func setupCollectionView() {
+        collectionView.dataSource = collectionHandler
+        collectionView.delegate = collectionHandler
+    }
+}
+
 // MARK: - Helpers
 extension RMCharacterDetailsView {
     private func createCollectionView() -> UICollectionView {
@@ -139,7 +140,7 @@ extension RMCharacterDetailsView {
                 return nil
             }
 
-            return strongSelf.delegate?.rmCharacterListView(strongSelf, createLayoutFor: sectionIndex)
+            return strongSelf.delegate?.rmCharacterDetailsView(strongSelf, createLayoutFor: sectionIndex)
         }
 
         let collectionView = UICollectionView(
