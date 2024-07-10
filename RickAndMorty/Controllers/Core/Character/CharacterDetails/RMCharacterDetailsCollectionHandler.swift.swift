@@ -1,5 +1,5 @@
 //
-//  RMCharacterDetailsCollectionViewHandler.swift.swift
+//  RMCharacterDetailsCollectionHandler.swift
 //  RickAndMorty
 //
 //  Created by Andrei Shpartou on 07/07/2024.

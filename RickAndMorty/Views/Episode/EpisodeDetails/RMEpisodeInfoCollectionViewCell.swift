@@ -11,23 +11,8 @@ final class RMEpisodeInfoCollectionViewCell: UICollectionViewCell {
 
     static let cellIdentifier = "RMEpisodeInfoCollectionViewCell"
 
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 20, weight: .medium)
-        label.adjustsFontSizeToFitWidth = true
-
-        return label
-    }()
-
-    private let valueLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .right
-        label.numberOfLines = 0
-        label.font = .systemFont(ofSize: 20, weight: .regular)
-        label.adjustsFontSizeToFitWidth = true
-
-        return label
-    }()
+    private let titleLabel: UILabel = .createLabel(fontSize: 20, weight: .medium)
+    private let valueLabel: UILabel = .createLabel(fontSize: 20, weight: .regular, numberOfLines: 0, textAlignment: .right)
 
     // MARK: - Init
     override init(frame: CGRect) {
@@ -44,8 +29,15 @@ final class RMEpisodeInfoCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        titleLabel.text = nil
-        valueLabel.text = nil
+        resetView()
+    }
+}
+
+// MARK: - PublicMethods
+extension RMEpisodeInfoCollectionViewCell {
+    func configure(with viewModel: RMEpisodeInfoCollectionViewCellViewModelProtocol) {
+        titleLabel.text = viewModel.title
+        valueLabel.text = viewModel.value
     }
 }
 
@@ -53,26 +45,23 @@ final class RMEpisodeInfoCollectionViewCell: UICollectionViewCell {
 extension RMEpisodeInfoCollectionViewCell {
     private func setupView() {
         contentView.backgroundColor = .secondarySystemBackground
-        contentView.addSubviews(titleLabel, valueLabel)
-
         setupLayer()
+
+        contentView.addSubviews(titleLabel, valueLabel)
 
         addConstraints()
     }
 
     private func setupLayer() {
-        layer.cornerRadius = 8
-        layer.masksToBounds = true
-        layer.borderWidth = 1
-        layer.borderColor = UIColor.secondaryLabel.cgColor
+        contentView.layer.cornerRadius = 8
+        contentView.layer.masksToBounds = true
+        contentView.layer.borderWidth = 1
+        contentView.layer.borderColor = UIColor.secondaryLabel.cgColor
     }
-}
 
-// MARK: - Public
-extension RMEpisodeInfoCollectionViewCell {
-    func configure(with viewModel: RMEpisodeInfoCollectionViewCellViewModelProtocol) {
-        titleLabel.text = viewModel.title
-        valueLabel.text = viewModel.value
+    private func resetView() {
+        titleLabel.text = nil
+        valueLabel.text = nil
     }
 }
 

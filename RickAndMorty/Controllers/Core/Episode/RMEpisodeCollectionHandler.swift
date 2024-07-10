@@ -1,38 +1,37 @@
 //
-//  RMCharacterCollectionHandler.swift
+//  RMEpisodeCollectionHandler.swift
 //  RickAndMorty
 //
-//  Created by Andrei Shpartou on 04/07/2024.
+//  Created by Andrei Shpartou on 10/07/2024.
 //
 import UIKit
 
-protocol RMCharacterCollectionHandlerDelegate: AnyObject {
+protocol RMEpisodeCollectionHandlerDelegate: AnyObject {
     func didSelectItemAt(_ index: Int)
 }
 
-final class RMCharacterCollectionHandler: NSObject {
+final class RMEpisodeCollectionHandler: NSObject {
+    weak var delegate: RMEpisodeCollectionHandlerDelegate?
 
-    weak var delegate: RMCharacterCollectionHandlerDelegate?
-
-    private let viewModel: RMCharacterListViewViewModelProtocol
+    private let viewModel: RMEpisodeListViewViewModelProtocol
 
     // MARK: - Init
-    init(viewModel: RMCharacterListViewViewModelProtocol) {
+    init(viewModel: RMEpisodeListViewViewModelProtocol) {
         self.viewModel = viewModel
     }
 }
 
 // MARK: - CollectionView DataSource
-extension RMCharacterCollectionHandler: UICollectionViewDataSource {
+extension RMEpisodeCollectionHandler: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         viewModel.cellViewModels.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: RMCharacterCollectionViewCell.cellIdentifier,
+            withReuseIdentifier: RMEpisodeCollectionViewCell.cellIdentifier,
             for: indexPath
-        ) as? RMCharacterCollectionViewCell else {
+        ) as? RMEpisodeCollectionViewCell else {
             fatalError("Unsupported cell")
         }
 
@@ -67,23 +66,15 @@ extension RMCharacterCollectionHandler: UICollectionViewDataSource {
         )
     }
 }
-// MARK: - CollectionView Delegation
-extension RMCharacterCollectionHandler: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+
+// MARK: - UICollectionViewDelegateFlowLayout
+extension RMEpisodeCollectionHandler: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-
         let bounds = collectionView.bounds
-        let width: CGFloat
-        let isLandscapeMultiplier = UIDevice.isLandscape ? 0.45 : 1
-        if UIDevice.isPhone {
-            width = (bounds.width - 30) * isLandscapeMultiplier / 2
-        } else {
-            // Mac or iPad
-            width = (bounds.width - 50) / 4
-        }
-
+        let width = bounds.width - 20
         return CGSize(
             width: width,
-            height: width * 1.5
+            height: 100
         )
     }
 
@@ -94,10 +85,10 @@ extension RMCharacterCollectionHandler: UICollectionViewDelegate, UICollectionVi
 }
 
 // MARK: - UIScrollViewDelegate
-extension RMCharacterCollectionHandler: UIScrollViewDelegate {
+extension RMEpisodeCollectionHandler: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard viewModel.shouldShowLoadMoreIndicator,
-              !viewModel.isLoadingMoreCharacters,
+              !viewModel.isLoadingMoreEpisodes,
               !viewModel.cellViewModels.isEmpty,
               let nextUrlString = viewModel.nextUrlString,
               let url = URL(string: nextUrlString) else {
@@ -109,7 +100,7 @@ extension RMCharacterCollectionHandler: UIScrollViewDelegate {
         let totalScrollViewFixedHeight = scrollView.frame.size.height
 
         if totalContentHeight != 0, offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
-            viewModel.fetchAdditionalCharactersWithDelay(0.1, url: url)
+            viewModel.fetchAdditionalEpisodesWithDelay(0.1, url: url)
         }
     }
 }

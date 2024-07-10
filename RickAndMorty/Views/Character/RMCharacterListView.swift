@@ -9,7 +9,7 @@ import UIKit
 
 // View that handles showing list of characters, loader, etc.
 // MARK: - View Implementation
-final class RMCharacterListView: UIView, RMCharacterListViewProtocol {
+final class RMCharacterListView: UIView {
 
     private let collectionHandler: RMCharacterCollectionHandler
 
@@ -19,7 +19,6 @@ final class RMCharacterListView: UIView, RMCharacterListViewProtocol {
     // MARK: - Init
     init(collectionHandler: RMCharacterCollectionHandler) {
         self.collectionHandler = collectionHandler
-
         super.init(frame: .zero)
 
         setupView()
@@ -27,6 +26,32 @@ final class RMCharacterListView: UIView, RMCharacterListViewProtocol {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+// MARK: - RMCharacterListViewProtocol
+extension RMCharacterListView: RMCharacterListViewProtocol {
+    func setNilValueForScrollOffset() {
+        collectionView.setContentOffset(.zero, animated: true)
+    }
+
+    func orientationDidChange() {
+        collectionView.collectionViewLayout.invalidateLayout()
+    }
+
+    func didLoadInitialCharacters() {
+        self.spinner.stopAnimating()
+        self.collectionView.isHidden = false
+        collectionView.reloadData() // Initial fetch of characters
+        UIView.animate(withDuration: 0.4) {
+            self.collectionView.alpha = 1
+        }
+    }
+
+    func didLoadMoreCharacters(with newIndexPath: [IndexPath]) {
+        collectionView.performBatchUpdates { [weak self] in
+            self?.collectionView.insertItems(at: newIndexPath)
+        }
     }
 }
 
@@ -49,32 +74,6 @@ extension RMCharacterListView {
     private func setupCollectionView() {
         collectionView.dataSource = collectionHandler
         collectionView.delegate = collectionHandler
-    }
-}
-
-// MARK: - PublicMethods
-extension RMCharacterListView {
-    func setNilValueForScrollOffset() {
-        collectionView.setContentOffset(.zero, animated: true)
-    }
-
-    func orientationDidChange() {
-        collectionView.collectionViewLayout.invalidateLayout()
-    }
-
-    func didLoadInitialCharacters() {
-        self.spinner.stopAnimating()
-        self.collectionView.isHidden = false
-        collectionView.reloadData() // Initial fetch of characters
-        UIView.animate(withDuration: 0.4) {
-            self.collectionView.alpha = 1
-        }
-    }
-
-    func didLoadMoreCharacters(with newIndexPath: [IndexPath]) {
-        collectionView.performBatchUpdates { [weak self] in
-            self?.collectionView.insertItems(at: newIndexPath)
-        }
     }
 }
 
