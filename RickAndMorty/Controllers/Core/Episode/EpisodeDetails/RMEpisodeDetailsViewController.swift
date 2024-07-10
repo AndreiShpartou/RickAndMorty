@@ -8,14 +8,18 @@
 import UIKit
 
 // View controller to show details about a single episode
+// MARK: - ViewController Implementation
 final class RMEpisodeDetailsViewController: UIViewController {
 
-    private let viewModel: RMEpisodeDetailsViewViewModel
-    private let episodeDetailView = RMEpisodeDetailsView()
+    private let detailsView: RMEpisodeDetailsViewProtocol
+    private let collectionHandler: RMEpisodeDetailsCollectionHandler
+    private let viewModel: RMEpisodeDetailsViewViewModelProtocol
 
     // MARK: - Init
     init(url: URL?) {
         self.viewModel = RMEpisodeDetailsViewViewModel(endpointURL: url)
+        self.collectionHandler = RMEpisodeDetailsCollectionHandler(viewModel: viewModel)
+        self.detailsView = RMEpisodeDetailsView(collectionHandler: collectionHandler)
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -26,7 +30,7 @@ final class RMEpisodeDetailsViewController: UIViewController {
 
     // MARK: - LifeCycle
     override func loadView() {
-        view = episodeDetailView
+        view = detailsView
     }
 
     override func viewDidLoad() {
@@ -39,13 +43,20 @@ final class RMEpisodeDetailsViewController: UIViewController {
 // MARK: - Setup
 extension RMEpisodeDetailsViewController {
     private func setupController() {
-        title = "Episode"
+        title = viewModel.title
 
-        episodeDetailView.delegate = self
+        detailsView.delegate = self
+        collectionHandler.delegate = self
+        setupViewModel()
+        addShareButton()
+    }
+
+    private func setupViewModel() {
         viewModel.delegate = self
-
         viewModel.fetchEpisodeData()
+    }
 
+    private func addShareButton() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .action,
             target: self,
@@ -73,22 +84,42 @@ extension RMEpisodeDetailsViewController {
     }
 }
 
-// MARK: - RMEpisodeDetailViewViewModelDelegate
-extension RMEpisodeDetailsViewController: RMEpisodeDetailsViewViewModelDelegate {
-    func didFetchEpisodeDetail() {
-        episodeDetailView.configure(with: viewModel)
+// MARK: - RMEpisodeDetailViewDelegate
+extension RMEpisodeDetailsViewController: RMEpisodeDetailsViewDelegate {
+    func rmEpisodeDetailsView(_ detailsView: RMEpisodeDetailsViewProtocol, createLayoutFor sectionIndex: Int) -> NSCollectionLayoutSection {
+        let sectionTypes = viewModel.sections
+        switch sectionTypes[sectionIndex] {
+        case .episodeInfo:
+            return detailsView.createInfoLayout()
+        case .characters:
+            return detailsView.createCharacterLayout()
+        default:
+            fatalError("Unacceptable section type!")
+        }
     }
 }
 
-// MARK: - RMEpisodeDetailViewDelegate
-extension RMEpisodeDetailsViewController: RMEpisodeDetailsViewDelegate {
-    func rmEpisodeDetailView(_ detailView: RMEpisodeDetailsView, didSelect character: RMCharacterProtocol) {
-        let viewController = RMCharacterDetailsViewController(
-            viewModel: RMCharacterDetailsViewViewModel(character: character)
-        )
-        viewController.title = character.name
-        viewController.navigationItem.largeTitleDisplayMode = .never
+// MARK: - RMEpisodeDetailsCollectionHandlerDelegate
+extension RMEpisodeDetailsViewController: RMEpisodeDetailsCollectionHandlerDelegate {
+    func didSelectItemAt(_ section: Int, _ index: Int) {
+        let sectionType = viewModel.sections[section]
+        if case .characters = sectionType {
+            guard let character = viewModel.character(at: index) else {
+                return
+            }
+            let characterVM = RMCharacterDetailsViewViewModel(character: character)
+            let characterVC = RMCharacterDetailsViewController(viewModel: characterVM)
+            characterVC.title = character.name
+            characterVC.navigationItem.largeTitleDisplayMode = .never
 
-        navigationController?.pushViewController(viewController, animated: true)
+            navigationController?.pushViewController(characterVC, animated: true)
+        }
+    }
+}
+
+extension RMEpisodeDetailsViewController: RMEpisodeDetailsViewViewModelDelegate {
+    func didFetchEpisodeDetails() {
+        detailsView.didFetchEpisodeDetails()
+        title = viewModel.title
     }
 }

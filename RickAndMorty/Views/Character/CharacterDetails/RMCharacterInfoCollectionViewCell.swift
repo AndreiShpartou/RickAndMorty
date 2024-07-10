@@ -50,16 +50,20 @@ extension RMCharacterInfoCollectionViewCell {
 extension RMCharacterInfoCollectionViewCell {
     private func setupView() {
         contentView.backgroundColor = .secondarySystemBackground
-        contentView.layer.cornerRadius = 8
-        contentView.layer.masksToBounds = true
-        contentView.addSubviews(valueLabel, iconImageView, titleContainerView)
+        setupLayer()
 
+        contentView.addSubviews(valueLabel, iconImageView, titleContainerView)
         titleContainerView.addSubviews(titleLabel)
 
         addConstraints()
     }
 
-    func resetView() {
+    private func setupLayer() {
+        contentView.layer.cornerRadius = 8
+        contentView.layer.masksToBounds = true
+    }
+
+    private func resetView() {
         valueLabel.text = nil
         titleLabel.text = nil
         iconImageView.image = nil
