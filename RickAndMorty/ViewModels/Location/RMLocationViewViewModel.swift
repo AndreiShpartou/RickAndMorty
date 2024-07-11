@@ -7,11 +7,9 @@
 
 import Foundation
 
-protocol RMLocationViewViewModelDelegate: AnyObject {
-    func didFetchInitialLocations()
-}
-
-final class RMLocationViewViewModel {
+// MARK: - ViewModel Implementation
+// View Model to handle location view logic
+final class RMLocationViewViewModel: RMLocationViewViewModelProtocol {
 
     weak var delegate: RMLocationViewViewModelDelegate?
 
@@ -19,16 +17,25 @@ final class RMLocationViewViewModel {
         return apiInfo?.next != nil
     }
 
-    var isLoadingMoreLocations = false
+    var nextUrlString: String? {
+        return apiInfo?.next
+    }
 
-    private(set) var cellViewModels: [RMLocationTableViewCellViewModel] = []
+    private(set) var cellViewModels: [RMLocationTableViewCellViewModelWrapper] = []
 
-    private var locations: [RMLocation] = [] {
+    private(set) var isLoadingMoreLocations = false
+
+    private var service: RMServiceProtocol
+
+    private var locations: [RMLocationProtocol] = [] {
         didSet {
             for location in locations {
-                let cellViewModel = RMLocationTableViewCellViewModel(
-                    location: location
+                let cellViewModel = RMLocationTableViewCellViewModelWrapper(
+                    RMLocationTableViewCellViewModel(
+                        location: location
+                    )
                 )
+
                 if !cellViewModels.contains(cellViewModel) {
                     cellViewModels.append(cellViewModel)
                 }
@@ -39,45 +46,20 @@ final class RMLocationViewViewModel {
     // Will contain next url, if present
     private var apiInfo: RMGetAllLocationsResponse.Info?
 
-    private var hasMoreResults: Bool {
-        return false
-    }
-
-    private var didLoadMoreLocationHandler: (() -> Void)?
-
     // MARK: - Init
-    init() {}
-}
-
-// MARK: - PublicMethods
-extension RMLocationViewViewModel {
-
-    func registerDidLoadMoreLocation(with block: @escaping () -> Void) {
-        didLoadMoreLocationHandler = block
+    init(service: RMServiceProtocol = RMService.shared) {
+        self.service = service
     }
 
-    func location(at index: Int) -> RMLocation? {
-        guard index < locations.count, index >= 0 else {
-            return nil
-        }
-
-        return locations[index]
-    }
-
+    // MARK: - Fetching locations
     func fetchLocations() {
-        RMService.shared.execute(
+        service.execute(
             .listLocationsRequests,
             expecting: RMGetAllLocationsResponse.self
-        ) {[weak self] result in
+        ) { [weak self] result in
             switch result {
-            case .success(let model):
-                self?.apiInfo = model.info
-                self?.locations = model.results
-
-                DispatchQueue.main.async {
-                    self?.delegate?.didFetchInitialLocations()
-                }
-
+            case .success(let responseModel):
+                self?.handleInitialFetchSuccess(responseModel)
             case .failure(let error):
                 NSLog("Failed to fetch initial locations: \(error.localizedDescription)")
             }
@@ -96,21 +78,13 @@ extension RMLocationViewViewModel {
             return
         }
 
-        RMService.shared.execute(
+        service.execute(
             request,
             expecting: RMGetAllLocationsResponse.self,
             completion: { [weak self] result in
                 switch result {
                 case .success(let responseModel):
-                    self?.apiInfo = responseModel.info
-
-                    self?.locations.append(contentsOf: responseModel.results)
-
-                    DispatchQueue.main.async {
-                        // Notify via callback
-                        self?.didLoadMoreLocationHandler?()
-                        self?.isLoadingMoreLocations = false
-                    }
+                    self?.handleAdditionalFetchSuccess(responseModel)
                 case .failure(let error):
                     NSLog("Failed to fetch additional locations: \(error.localizedDescription)")
                     self?.isLoadingMoreLocations = false
@@ -119,11 +93,36 @@ extension RMLocationViewViewModel {
         )
     }
 
+    func getLocation(at index: Int) -> RMLocationProtocol {
+        return locations[index]
+    }
+
     // MARK: - Delay
     func fetchAdditionalLocationsWithDelay(_ delay: TimeInterval) {
         isLoadingMoreLocations = true
         Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in
             self?.fetchAdditionalLocations()
+        }
+    }
+
+    // MARK: - PrivateMethods
+    private func handleInitialFetchSuccess(_ responseModel: RMGetAllLocationsResponse) {
+        apiInfo = responseModel.info
+        locations = responseModel.results
+
+        DispatchQueue.main.async {
+            self.delegate?.didLoadInitialLocations()
+        }
+    }
+
+    private func handleAdditionalFetchSuccess(_ responseModel: RMGetAllLocationsResponse) {
+        apiInfo = responseModel.info
+        locations.append(contentsOf: responseModel.results)
+
+        DispatchQueue.main.async {
+            // Notify via callback
+            self.delegate?.didLoadMoreLocations()
+            self.isLoadingMoreLocations = false
         }
     }
 }

@@ -7,35 +7,14 @@
 
 import UIKit
 
+// Single cell for a location
 class RMLocationTableViewCell: UITableViewCell {
 
     static let cellIdentifier = "RMLocationTableViewCell"
 
-    private let nameLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 20, weight: .medium)
-        label.adjustsFontSizeToFitWidth = true
-
-        return label
-    }()
-
-    private let typeLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 15, weight: .regular)
-        label.textColor = .secondaryLabel
-        label.adjustsFontSizeToFitWidth = true
-
-        return label
-    }()
-
-    private let dimensionLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 15, weight: .light)
-        label.textColor = .secondaryLabel
-        label.adjustsFontSizeToFitWidth = true
-
-        return label
-    }()
+    private let nameLabel: UILabel = .createLabel(fontSize: 20, weight: .medium)
+    private let typeLabel: UILabel = .createLabel(fontSize: 15, weight: .regular, textColor: .secondaryLabel)
+    private let dimensionLabel: UILabel = .createLabel(fontSize: 15, weight: .light, textColor: .secondaryLabel)
 
     // MARK: - Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -52,9 +31,16 @@ class RMLocationTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        nameLabel.text = nil
-        typeLabel.text = nil
-        dimensionLabel.text = nil
+        resetLabels()
+    }
+}
+
+// MARK: - PublicMethods
+extension RMLocationTableViewCell {
+    func configure(with viewModel: RMLocationTableViewCellViewModelWrapper) {
+        nameLabel.text = viewModel.name
+        typeLabel.text = viewModel.type
+        dimensionLabel.text = viewModel.dimension
     }
 }
 
@@ -66,14 +52,11 @@ extension RMLocationTableViewCell {
 
         addConstraints()
     }
-}
 
-// MARK: - PublicMethods
-extension RMLocationTableViewCell {
-    func configure(with viewModel: RMLocationTableViewCellViewModel) {
-        nameLabel.text = viewModel.name
-        typeLabel.text = viewModel.type
-        dimensionLabel.text = viewModel.dimension
+    private func resetLabels() {
+        nameLabel.text = nil
+        typeLabel.text = nil
+        dimensionLabel.text = nil
     }
 }
 

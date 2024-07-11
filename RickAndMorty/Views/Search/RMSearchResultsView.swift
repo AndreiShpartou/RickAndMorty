@@ -27,7 +27,7 @@ final class RMSearchResultsView: UIView {
     }
 
     // TableView ViewModels
-    private var locationTableViewCellViewModels: [RMLocationTableViewCellViewModel] = []
+    private var locationTableViewCellViewModels: [RMLocationTableViewCellViewModelWrapper] = []
     // CollectionView ViewModels
     private var collectionViewCellViewModels: [any Hashable] = []
 
@@ -120,7 +120,7 @@ extension RMSearchResultsView {
         collectionView.reloadData()
     }
 
-    private func setupTableView(with viewModels: [RMLocationTableViewCellViewModel]) {
+    private func setupTableView(with viewModels: [RMLocationTableViewCellViewModelWrapper]) {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.isHidden = false

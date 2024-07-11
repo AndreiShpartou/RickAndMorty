@@ -35,6 +35,7 @@ final class RMCharacterDetailsViewViewModel: RMCharacterDetailsViewViewModelProt
         return [getCharacterDescription()]
     }
 
+    // MARK: - DescriptionToShare
     private func getCharacterDescription() -> RMShareItem {
         let subject = "Character: \(character.name)"
         // Add character details

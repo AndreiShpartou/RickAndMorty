@@ -8,7 +8,7 @@
 import Foundation
 
 // Protocol defining the interface for character data
-protocol RMCharacterProtocol {
+protocol RMCharacterProtocol: Codable {
     var id: Int { get }
     var name: String { get }
     var status: RMCharacterStatus { get }

@@ -8,10 +8,25 @@
 import UIKit
 
 // Controller to show and search for Locations
+// MARK: - ViewController Implementation
 final class RMLocationViewController: UIViewController {
 
-    private let locationView = RMLocationView()
-    private let viewModel = RMLocationViewViewModel()
+    private let locationView: RMLocationViewProtocol
+    private let tableViewHandler: RMLocationTableViewHandler
+    private var viewModel: RMLocationViewViewModelProtocol
+
+    // MARK: - Init
+    init(viewModel: RMLocationViewViewModelProtocol = RMLocationViewViewModel()) {
+        self.tableViewHandler = RMLocationTableViewHandler(viewModel: viewModel)
+        self.locationView = RMLocationView(tableViewHandler: tableViewHandler)
+        self.viewModel = viewModel
+
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     // MARK: - LifeCycle
     override func loadView() {
@@ -49,12 +64,14 @@ final class RMLocationViewController: UIViewController {
 extension RMLocationViewController {
     private func setupController() {
         title = "Locations"
+        setupViewModel()
+        tableViewHandler.delegate = self
         addSearchButton()
         addChangeThemeButton()
+    }
 
-        locationView.delegate = self
+    private func setupViewModel() {
         viewModel.delegate = self
-
         viewModel.fetchLocations()
     }
 
@@ -115,19 +132,30 @@ extension RMLocationViewController {
     }
 }
 
-// MARK: - RMLocationViewDelegate
-extension RMLocationViewController: RMLocationViewDelegate {
-    func rmLocationView(_ locationView: RMLocationView, didSelect location: RMLocation) {
-        let viewController = RMLocationDetailsViewController(location: location)
-        viewController.navigationItem.largeTitleDisplayMode = .never
+// MARK: - RMLocationTableViewHandlerDelegate
+extension RMLocationViewController: RMLocationTableViewHandlerDelegate {
+    func didSelectItemAt(_ index: Int) {
+        // Open detail controller for location
+        let location = viewModel.getLocation(at: index)
+        let detailVC = RMLocationDetailsViewController(location: location)
+        detailVC.navigationItem.largeTitleDisplayMode = .never
 
-        navigationController?.pushViewController(viewController, animated: true)
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+
+    func showLoadingIndicator() {
+        locationView.showLoadingIndicator()
     }
 }
 
 // MARK: - RMLocationViewViewModelDelegate
 extension RMLocationViewController: RMLocationViewViewModelDelegate {
-    func didFetchInitialLocations() {
-        locationView.configure(with: viewModel)
+
+    func didLoadInitialLocations() {
+        locationView.didLoadInitialLocations()
+    }
+
+    func didLoadMoreLocations() {
+        locationView.didLoadMoreLocations()
     }
 }
