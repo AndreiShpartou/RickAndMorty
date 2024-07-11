@@ -30,6 +30,13 @@ final class RMFooterLoadingCollectionReusableView: UICollectionReusableView {
     }
 }
 
+// MARK: - PublicMethods
+extension RMFooterLoadingCollectionReusableView {
+    func startAnimating() {
+        spinner.startAnimating()
+    }
+}
+
 // MARK: - Setup
 extension RMFooterLoadingCollectionReusableView {
     private func setupView() {
@@ -37,13 +44,6 @@ extension RMFooterLoadingCollectionReusableView {
         addSubviews(spinner)
 
         addConstraints()
-    }
-}
-
-// MARK: - PublicMethods
-extension RMFooterLoadingCollectionReusableView {
-    func startAnimating() {
-        spinner.startAnimating()
     }
 }
 

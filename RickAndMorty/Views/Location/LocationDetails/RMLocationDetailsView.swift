@@ -7,36 +7,18 @@
 
 import UIKit
 
-protocol RMLocationDetailsViewDelegate: AnyObject {
-    func rmLocationDetailView(
-        _ detailView: RMLocationDetailsView,
-        didSelect character: RMCharacter
-    )
-}
-
 final class RMLocationDetailsView: UIView {
 
     weak var delegate: RMLocationDetailsViewDelegate?
-
-    private var viewModel: RMLocationDetailsViewViewModel? {
-        didSet {
-            spinner.stopAnimating()
-            self.collectionView.reloadData()
-            self.collectionView.isHidden = false
-            UIView.animate(
-                withDuration: 0.3
-            ) {
-                    self.collectionView.alpha = 1
-            }
-        }
-    }
+    private let collectionHandler: RMLocationDetailsCollectionHandler
 
     private lazy var collectionView: UICollectionView = createCollectionView()
     private lazy var spinner: UIActivityIndicatorView = createActivityIndicator()
 
     // MARK: - Init
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(collectionHandler: RMLocationDetailsCollectionHandler) {
+        self.collectionHandler = collectionHandler
+        super.init(frame: .zero)
 
         setupView()
     }
@@ -46,62 +28,21 @@ final class RMLocationDetailsView: UIView {
     }
 }
 
-// MARK: - Setup
-extension RMLocationDetailsView {
-    private func setupView() {
-        backgroundColor = .systemBackground
-
-        addSubviews(collectionView, spinner)
-        spinner.startAnimating()
-
-        addConstraints()
-    }
-
-    private func createActivityIndicator() -> UIActivityIndicatorView {
-        let spinner = UIActivityIndicatorView()
-        spinner.hidesWhenStopped = true
-
-        return spinner
-    }
-
-    private func createCollectionView() -> UICollectionView {
-        let layout = UICollectionViewCompositionalLayout { section, _ in
-            return self.createLayout(for: section)
-        }
-        let collectionView = UICollectionView(
-            frame: .zero,
-            collectionViewLayout: layout
-        )
-        collectionView.isHidden = true
-        collectionView.alpha = 0
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.register(
-            RMEpisodeInfoCollectionViewCell.self,
-            forCellWithReuseIdentifier: RMEpisodeInfoCollectionViewCell.cellIdentifier
-        )
-        collectionView.register(
-            RMCharacterCollectionViewCell.self,
-            forCellWithReuseIdentifier: RMCharacterCollectionViewCell.cellIdentifier
-        )
-
-        return collectionView
-    }
-
-    private func createLayout(for section: Int) -> NSCollectionLayoutSection {
-        guard let sections = viewModel?.cellViewModels else {
-            return createInfoLayout()
-        }
-
-        switch sections[section] {
-        case .information:
-            return createInfoLayout()
-        case .characters:
-            return createCharacterLayout()
+// MARK: - RMLocationDetailsViewProtocol
+extension RMLocationDetailsView: RMLocationDetailsViewProtocol {
+    func didFetchLocationDetails() {
+        spinner.stopAnimating()
+        self.collectionView.reloadData()
+        self.collectionView.isHidden = false
+        UIView.animate(
+            withDuration: 0.3
+        ) {
+            self.collectionView.alpha = 1
         }
     }
 
-    private func createInfoLayout() -> NSCollectionLayoutSection {
+    // MARK: - Layout
+    func createInfoLayout() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(
             layoutSize: .init(
                 widthDimension: .fractionalWidth(1),
@@ -124,7 +65,7 @@ extension RMLocationDetailsView {
         return section
     }
 
-    private func createCharacterLayout() -> NSCollectionLayoutSection {
+    func createCharacterLayout() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(
             layoutSize: .init(
                 widthDimension: .fractionalWidth(UIDevice.isPhone && !UIDevice.isLandscape ? 0.5 : 0.25),
@@ -148,87 +89,57 @@ extension RMLocationDetailsView {
     }
 }
 
-// MARK: - PublicMethods
+// MARK: - Setup
 extension RMLocationDetailsView {
-    func configure(with viewModel: RMLocationDetailsViewViewModel) {
-        self.viewModel = viewModel
+    private func setupView() {
+        backgroundColor = .systemBackground
+
+        addSubviews(collectionView, spinner)
+        spinner.startAnimating()
+        setupCollectionView()
+
+        addConstraints()
+    }
+
+    private func setupCollectionView() {
+        collectionView.dataSource = collectionHandler
+        collectionView.delegate = collectionHandler
     }
 }
 
-// MARK: - UICollectionViewDataSource
-extension RMLocationDetailsView: UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return viewModel?.cellViewModels.count ?? 0
+// MARK: - Helpers
+extension RMLocationDetailsView {
+    private func createActivityIndicator() -> UIActivityIndicatorView {
+        let spinner = UIActivityIndicatorView()
+        spinner.hidesWhenStopped = true
+
+        return spinner
     }
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let sections = viewModel?.cellViewModels else {
-            return Constants.zeroItemsInSection
-        }
-
-        let sectionType = sections[section]
-        switch sectionType {
-        case .information(let viewModels):
-            return viewModels.count
-        case .characters(let viewModels):
-            return viewModels.count
-        }
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
-        guard let sections = viewModel?.cellViewModels else {
-            fatalError("No viewModel")
-        }
-
-        let sectionType = sections[indexPath.section]
-        switch sectionType {
-        case .information(let viewModels):
-            let cellViewModel = viewModels[indexPath.row]
-            guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: RMEpisodeInfoCollectionViewCell.cellIdentifier,
-                for: indexPath
-            ) as? RMEpisodeInfoCollectionViewCell else {
-                fatalError("Unable to define cell for episode info")
+    private func createCollectionView() -> UICollectionView {
+        let layout = UICollectionViewCompositionalLayout { [weak self] sectionIndex, _ in
+            guard let strongSelf = self else {
+                return nil
             }
-            cell.configure(with: cellViewModel)
 
-            return cell
-        case .characters(let viewModels):
-            let cellViewModel = viewModels[indexPath.row]
-            guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: RMCharacterCollectionViewCell.cellIdentifier,
-                for: indexPath
-            ) as? RMCharacterCollectionViewCell else {
-                fatalError("Unable to define cell for character")
-            }
-            cell.configure(with: cellViewModel)
-
-            return cell
+            return strongSelf.delegate?.rmLocationDetailsView(strongSelf, createLayoutFor: sectionIndex)
         }
-    }
-}
+        let collectionView = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: layout
+        )
+        collectionView.isHidden = true
+        collectionView.alpha = 0
+        collectionView.register(
+            RMEpisodeInfoCollectionViewCell.self,
+            forCellWithReuseIdentifier: RMEpisodeInfoCollectionViewCell.cellIdentifier
+        )
+        collectionView.register(
+            RMCharacterCollectionViewCell.self,
+            forCellWithReuseIdentifier: RMCharacterCollectionViewCell.cellIdentifier
+        )
 
-// MARK: - UICollectionViewDelegate
-extension RMLocationDetailsView: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionView.deselectItem(at: indexPath, animated: true)
-
-        guard let viewModel = viewModel else {
-            return
-        }
-        let sections = viewModel.cellViewModels
-        let sectionType = sections[indexPath.section]
-
-        switch sectionType {
-        case .information:
-            break
-        case .characters:
-            guard let character = viewModel.character(at: indexPath.row) else {
-                return
-            }
-            delegate?.rmLocationDetailView(self, didSelect: character)
-        }
+        return collectionView
     }
 }
 

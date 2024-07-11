@@ -163,9 +163,11 @@ final class RMSearchViewViewModel {
             nextUrl = episodesResults.info.next
             self.searchResultModels = episodesResults.results
         } else if let locationsResults = model as? RMGetAllLocationsResponse {
-            resultsVM = .locations(locationsResults.results.map({
-                return RMLocationTableViewCellViewModel(location: $0)
-            }))
+            resultsVM = .locations(locationsResults.results.map {
+                RMLocationTableViewCellViewModelWrapper(
+                    RMLocationTableViewCellViewModel(location: $0)
+                )
+            })
             nextUrl = locationsResults.info.next
             self.searchResultModels = locationsResults.results
         }

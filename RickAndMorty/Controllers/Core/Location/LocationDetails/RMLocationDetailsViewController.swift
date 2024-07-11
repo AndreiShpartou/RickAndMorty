@@ -1,25 +1,26 @@
 //
-//  RMEpisodeDetailsViewController.swift
+//  RMLocationDetailsViewController.swift
 //  RickAndMorty
 //
-//  Created by Andrei Shpartou on 08/06/2024.
+//  Created by Andrei Shpartou on 12/06/2024.
 //
 
 import UIKit
 
-// View controller to show details about a single episode
+// View controller to show details about a single location
 // MARK: - ViewController Implementation
-final class RMEpisodeDetailsViewController: UIViewController {
+final class RMLocationDetailsViewController: UIViewController {
 
-    private let detailsView: RMEpisodeDetailsViewProtocol
-    private let collectionHandler: RMEpisodeDetailsCollectionHandler
-    private let viewModel: RMEpisodeDetailsViewViewModelProtocol
+    private let detailsView: RMLocationDetailsViewProtocol
+    private let collectionHandler: RMLocationDetailsCollectionHandler
+    private let viewModel: RMLocationDetailsViewViewModelProtocol
 
     // MARK: - Init
-    init(url: URL?) {
-        self.viewModel = RMEpisodeDetailsViewViewModel(endpointURL: url)
-        self.collectionHandler = RMEpisodeDetailsCollectionHandler(viewModel: viewModel)
-        self.detailsView = RMEpisodeDetailsView(collectionHandler: collectionHandler)
+    init(location: RMLocationProtocol) {
+        let url = URL(string: location.url)
+        self.viewModel = RMLocationDetailsViewViewModel(endpointURL: url)
+        self.collectionHandler = RMLocationDetailsCollectionHandler(viewModel: viewModel)
+        self.detailsView = RMLocationDetailsView(collectionHandler: collectionHandler)
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -41,9 +42,9 @@ final class RMEpisodeDetailsViewController: UIViewController {
 }
 
 // MARK: - Setup
-extension RMEpisodeDetailsViewController {
+extension RMLocationDetailsViewController {
     private func setupController() {
-        title = viewModel.title
+        title = "Location"
 
         detailsView.delegate = self
         collectionHandler.delegate = self
@@ -54,7 +55,7 @@ extension RMEpisodeDetailsViewController {
 
     private func setupViewModel() {
         viewModel.delegate = self
-        viewModel.fetchEpisodeData()
+        viewModel.fetchLocationData()
     }
 
     private func addShareButton() {
@@ -67,7 +68,7 @@ extension RMEpisodeDetailsViewController {
 }
 
 // MARK: - ActionMethods
-extension RMEpisodeDetailsViewController {
+extension RMLocationDetailsViewController {
     @objc
     private func didTapShare() {
         let itemsToShare = viewModel.getDataToShare()
@@ -85,12 +86,11 @@ extension RMEpisodeDetailsViewController {
     }
 }
 
-// MARK: - RMEpisodeDetailViewDelegate
-extension RMEpisodeDetailsViewController: RMEpisodeDetailsViewDelegate {
-    func rmEpisodeDetailsView(_ detailsView: RMEpisodeDetailsViewProtocol, createLayoutFor sectionIndex: Int) -> NSCollectionLayoutSection {
-        let sectionTypes = viewModel.sections
-        switch sectionTypes[sectionIndex] {
-        case .episodeInfo:
+// MARK: - RMLocationDetailViewDelegate
+extension RMLocationDetailsViewController: RMLocationDetailsViewDelegate {
+    func rmLocationDetailsView(_ detailsView: RMLocationDetailsViewProtocol, createLayoutFor sectionIndex: Int) -> NSCollectionLayoutSection {
+        switch viewModel.sections[sectionIndex] {
+        case .locationInfo:
             return detailsView.createInfoLayout()
         case .characters:
             return detailsView.createCharacterLayout()
@@ -100,8 +100,8 @@ extension RMEpisodeDetailsViewController: RMEpisodeDetailsViewDelegate {
     }
 }
 
-// MARK: - RMEpisodeDetailsCollectionHandlerDelegate
-extension RMEpisodeDetailsViewController: RMEpisodeDetailsCollectionHandlerDelegate {
+// MARK: - RMLocationDetailsCollectionHandlerDelegate
+extension RMLocationDetailsViewController: RMLocationDetailsCollectionHandlerDelegate {
     func didSelectItemAt(_ section: Int, _ index: Int) {
         let sectionType = viewModel.sections[section]
         if case .characters = sectionType {
@@ -118,9 +118,9 @@ extension RMEpisodeDetailsViewController: RMEpisodeDetailsCollectionHandlerDeleg
     }
 }
 
-extension RMEpisodeDetailsViewController: RMEpisodeDetailsViewViewModelDelegate {
-    func didFetchEpisodeDetails() {
-        detailsView.didFetchEpisodeDetails()
-        title = viewModel.title
+// MARK: - RMLocationDetailViewViewModelDelegate
+extension RMLocationDetailsViewController: RMLocationDetailsViewViewModelDelegate {
+    func didFetchLocationDetail() {
+        detailsView.didFetchLocationDetails()
     }
 }

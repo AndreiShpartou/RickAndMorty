@@ -10,7 +10,7 @@ import Foundation
 enum RMSearchResultType {
     case characters([RMCharacterCollectionViewCellViewModelWrapper])
     case episodes([RMEpisodeCollectionViewCellViewModelWrapper])
-    case locations([RMLocationTableViewCellViewModel])
+    case locations([RMLocationTableViewCellViewModelWrapper])
 }
 
 final class RMSearchResultViewViewModel {
@@ -122,7 +122,7 @@ final class RMSearchResultViewViewModel {
     }
 
     // MARK: - Fetch Locations
-    func fetchAdditionalLocations(completion: @escaping ([RMLocationTableViewCellViewModel]) -> Void) {
+    func fetchAdditionalLocations(completion: @escaping ([RMLocationTableViewCellViewModelWrapper]) -> Void) {
         isLoadingMoreResults = true
         guard let urlString = next,
               let url = URL(string: urlString),
@@ -143,10 +143,12 @@ final class RMSearchResultViewViewModel {
                     self?.loadPageHandler?(moreResults)
 
                     let additionalLocations = moreResults.compactMap {
-                        return RMLocationTableViewCellViewModel(location: $0)
+                        RMLocationTableViewCellViewModelWrapper(
+                            RMLocationTableViewCellViewModel(location: $0)
+                        )
                     }
 
-                    var newResults: [RMLocationTableViewCellViewModel] = []
+                    var newResults: [RMLocationTableViewCellViewModelWrapper] = []
                     switch self?.results {
                     case .locations(let existingLocations):
                         newResults = existingLocations + additionalLocations
@@ -180,7 +182,7 @@ final class RMSearchResultViewViewModel {
 
     func fetchAdditionalLocationsWithDelay(
         _ delay: TimeInterval,
-        completion: @escaping ([RMLocationTableViewCellViewModel]) -> Void
+        completion: @escaping ([RMLocationTableViewCellViewModelWrapper]) -> Void
     ) {
         isLoadingMoreResults = true
         Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in

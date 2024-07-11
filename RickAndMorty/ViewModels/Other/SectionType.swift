@@ -10,6 +10,7 @@ import Foundation
 enum SectionType {
     case photo(viewModel: RMCharacterPhotoCollectionViewCellViewModelProtocol)
     case characterInfo(viewModels: [RMCharacterInfoCollectionViewCellViewModelProtocol])
+    case locationInfo(viewModels: [RMEpisodeInfoCollectionViewCellViewModelProtocol])
     case episodeInfo(viewModels: [RMEpisodeInfoCollectionViewCellViewModelProtocol])
     case episodes(viewModels: [RMEpisodeCollectionViewCellViewModelWrapper])
     case characters(viewModels: [RMCharacterCollectionViewCellViewModelWrapper])
