@@ -7,47 +7,36 @@
 
 import Foundation
 
-protocol RMLocationDetailsViewViewModelDelegate: AnyObject {
-    func didFetchLocationDetail()
-}
-
-final class RMLocationDetailsViewViewModel {
+final class RMLocationDetailsViewViewModel: RMLocationDetailsViewViewModelProtocol {
 
     weak var delegate: RMLocationDetailsViewViewModelDelegate?
 
-    enum SectionType {
-        case information(viewModels: [RMEpisodeInfoCollectionViewCellViewModel])
-        case characters(viewModels: [RMCharacterCollectionViewCellViewModelWrapper])
-    }
-
-    private(set) var cellViewModels: [SectionType] = []
+    private(set) var sections: [SectionType] = []
 
     private let endpointURL: URL?
+    private let service: RMServiceProtocol
 
-    private var dataTuple: (location: RMLocation, characters: [RMCharacter])? {
+    private var dataTuple: (location: RMLocationProtocol, characters: [RMCharacterProtocol])? {
         didSet {
-            createCellViewModels()
+            setupSections()
             delegate?.didFetchLocationDetail()
         }
     }
 
     // MARK: - Init
-    init(endpointURL: URL?) {
+    init(endpointURL: URL?, service: RMServiceProtocol = RMService.shared) {
         self.endpointURL = endpointURL
+        self.service = service
     }
-}
 
-// MARK: - Public
-extension RMLocationDetailsViewViewModel {
-
-    // MARK: - Fetch location model
+    // MARK: - Public
     func fetchLocationData() {
         guard let url = endpointURL,
               let request = RMRequest(url: url) else {
             return
         }
 
-        RMService.shared.execute(
+        service.execute(
             request,
             expecting: RMLocation.self
         ) { [weak self] result in
@@ -60,22 +49,17 @@ extension RMLocationDetailsViewViewModel {
         }
     }
 
-    func character(at index: Int) -> RMCharacter? {
-        guard let dataTuple = dataTuple else {
-            return nil
-        }
-
-        return dataTuple.characters[index]
+    // Fetch character model
+    func character(at index: Int) -> RMCharacterProtocol? {
+        return dataTuple?.characters[index]
     }
 
     func getDataToShare() -> [Any] {
         return [getLocationDescription()]
     }
-}
 
-// MARK: - Private
-extension RMLocationDetailsViewViewModel {
-    private func fetchRelatedCharacters(location: RMLocation) {
+    // MARK: - Private
+    private func fetchRelatedCharacters(location: RMLocationProtocol) {
         let characterUrls = location.residents.compactMap {
             return URL(string: $0)
         }
@@ -87,11 +71,11 @@ extension RMLocationDetailsViewViewModel {
         // n numbers of parallel requests
         // Notified when all done
         let group = DispatchGroup()
-        var characters: [RMCharacter] = []
+        var characters: [RMCharacterProtocol] = []
 
         requests.forEach { request in
             group.enter()
-            RMService.shared.execute(
+            service.execute(
                 request,
                 expecting: RMCharacter.self
             ) { result in
@@ -116,34 +100,7 @@ extension RMLocationDetailsViewViewModel {
         }
     }
 
-    private func createCellViewModels() {
-        guard let dataTuple = dataTuple else {
-            return
-        }
-
-        let location = dataTuple.location
-        let characters = dataTuple.characters
-        let createdString = RMDateFormatterUtils.getShortFormattedString(from: location.created)
-
-        cellViewModels = [
-            .information(viewModels: [
-                .init(title: "Location Name", value: location.name),
-                .init(title: "Type", value: location.type),
-                .init(title: "Dimension", value: location.dimension),
-                .init(title: "Created", value: createdString)
-            ]),
-            .characters(viewModels: characters.compactMap {
-                RMCharacterCollectionViewCellViewModelWrapper(
-                    RMCharacterCollectionViewCellViewModel(
-                        characterName: $0.name,
-                        characterStatus: $0.status,
-                        characterImageUrl: URL(string: $0.image)
-                    )
-                )
-            })
-        ]
-    }
-
+    // MARK: - DescriptionToShare
     private func getLocationDescription() -> RMShareItem {
         guard let dataTuple = dataTuple else {
             let text = "No description"
@@ -162,5 +119,38 @@ extension RMLocationDetailsViewViewModel {
         """
 
         return RMShareItem(subject: subject, details: details)
+    }
+
+    // MARK: - SetupSections
+    private func setupSections() {
+        guard let dataTuple = dataTuple else {
+            return
+        }
+
+        let location = dataTuple.location
+        let characters = dataTuple.characters
+        let createdString = RMDateFormatterUtils.getShortFormattedString(from: location.created)
+
+        let infoViewModels = [
+            RMEpisodeInfoCollectionViewCellViewModel(title: "Location Name", value: location.name),
+            RMEpisodeInfoCollectionViewCellViewModel(title: "Type", value: location.type),
+            RMEpisodeInfoCollectionViewCellViewModel(title: "Dimension", value: location.dimension),
+            RMEpisodeInfoCollectionViewCellViewModel(title: "Created", value: createdString)
+        ]
+
+        let characterViewModels = characters.compactMap {
+            RMCharacterCollectionViewCellViewModelWrapper(
+                RMCharacterCollectionViewCellViewModel(
+                    characterName: $0.name,
+                    characterStatus: $0.status,
+                    characterImageUrl: URL(string: $0.image)
+                )
+            )
+        }
+
+        sections = [
+            .locationInfo(viewModels: infoViewModels),
+            .characters(viewModels: characterViewModels)
+        ]
     }
 }

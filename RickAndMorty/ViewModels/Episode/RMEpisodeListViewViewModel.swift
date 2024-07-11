@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - ViewModel Implementation
-/// View Model to handle episode list view logic
+// View Model to handle episode list view logic
 final class RMEpisodeListViewViewModel: RMEpisodeListViewViewModelProtocol {
 
     weak var delegate: RMEpisodeListViewViewModelDelegate?

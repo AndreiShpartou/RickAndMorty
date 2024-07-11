@@ -16,7 +16,7 @@ protocol RMEpisodeProtocol: RMEpisodeDataRenderProtocol {
 }
 
 // Protocol defining the interface for episode data rendering
-protocol RMEpisodeDataRenderProtocol {
+protocol RMEpisodeDataRenderProtocol: Codable {
     var episode: String { get }
     var name: String { get }
     var air_date: String { get }

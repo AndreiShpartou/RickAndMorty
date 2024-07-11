@@ -7,7 +7,8 @@
 
 import Foundation
 
-struct RMLocationTableViewCellViewModel {
+// MARK: - ViewModel Implementation
+struct RMLocationTableViewCellViewModel: RMLocationTableViewCellViewModelProtocol {
 
     var name: String {
         return location.name
@@ -21,14 +22,15 @@ struct RMLocationTableViewCellViewModel {
         return location.dimension
     }
 
-    private let location: RMLocation
+    private let location: RMLocationProtocol
 
     // MARK: - Init
-    init(location: RMLocation) {
+    init(location: RMLocationProtocol) {
         self.location = location
     }
 }
 
+// MARK: - Hashable
 extension RMLocationTableViewCellViewModel: Hashable {
     static func == (lhs: RMLocationTableViewCellViewModel, rhs: RMLocationTableViewCellViewModel) -> Bool {
         return lhs.hashValue == rhs.hashValue
