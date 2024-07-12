@@ -7,6 +7,7 @@
 
 import UIKit
 
+// MARK: - ViewModel Implementation
 struct RMSettingsCellViewViewModel: Identifiable {
     let id = UUID()
 

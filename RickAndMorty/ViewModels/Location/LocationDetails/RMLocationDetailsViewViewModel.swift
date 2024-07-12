@@ -11,7 +11,7 @@ final class RMLocationDetailsViewViewModel: RMLocationDetailsViewViewModelProtoc
 
     weak var delegate: RMLocationDetailsViewViewModelDelegate?
 
-    private(set) var sections: [SectionType] = []
+    private(set) var sections: [RMSectionType] = []
 
     private let endpointURL: URL?
     private let service: RMServiceProtocol

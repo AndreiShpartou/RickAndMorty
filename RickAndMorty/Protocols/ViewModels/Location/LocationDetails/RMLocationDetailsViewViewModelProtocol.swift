@@ -9,7 +9,7 @@ import Foundation
 
 protocol RMLocationDetailsViewViewModelProtocol: AnyObject {
     var delegate: RMLocationDetailsViewViewModelDelegate? { get set }
-    var sections: [SectionType] { get }
+    var sections: [RMSectionType] { get }
 
     func fetchLocationData()
     func character(at index: Int) -> RMCharacterProtocol?

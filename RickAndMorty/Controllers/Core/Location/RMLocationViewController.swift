@@ -116,7 +116,7 @@ extension RMLocationViewController {
 extension RMLocationViewController {
     @objc
     private func didTapSearch() {
-        let viewController = RMSearchViewController(config: .init(type: .location))
+        let viewController = RMSearchViewController(configType: .location)
         viewController.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(viewController, animated: true)
     }

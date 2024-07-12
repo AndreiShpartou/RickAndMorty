@@ -17,7 +17,7 @@ final class RMCharacterDetailsViewViewModel: RMCharacterDetailsViewViewModelProt
         character.episode
     }
 
-    private(set) var sections: [SectionType] = []
+    private(set) var sections: [RMSectionType] = []
 
     private let character: RMCharacterProtocol
 

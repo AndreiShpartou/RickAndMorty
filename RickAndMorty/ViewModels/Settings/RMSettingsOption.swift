@@ -7,6 +7,7 @@
 
 import UIKit
 
+// MARK: - ViewModel Implementation
 enum RMSettingsOption: CaseIterable {
     case rateApp
     case contactUs

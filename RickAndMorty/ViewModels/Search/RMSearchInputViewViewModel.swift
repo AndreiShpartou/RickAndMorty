@@ -7,38 +7,10 @@
 
 import Foundation
 
-final class RMSearchInputViewViewModel {
-
-    enum DynamicOption: String {
-        case status = "Status"
-        case gender = "Gender"
-        case locationType = "Location Type"
-
-        var queryArgument: String {
-            switch self {
-            case .status:
-                return "status"
-            case .gender:
-                return "gender"
-            case .locationType:
-                return "type"
-            }
-        }
-
-        var choices: [String] {
-            switch self {
-            case .status:
-                return ["alive", "dead", "unknown"]
-            case .gender:
-                return ["male", "female", "genderless", "unknown"]
-            case .locationType:
-                return ["cluster", "planet", "microverse"]
-            }
-        }
-    }
+final class RMSearchInputViewViewModel: RMSearchInputViewViewModelProtocol {
 
     var hasDynamicOptions: Bool {
-        switch type {
+        switch configType {
         case .character, .location:
             return true
         case .episode:
@@ -46,8 +18,8 @@ final class RMSearchInputViewViewModel {
         }
     }
 
-    var options: [DynamicOption] {
-        switch type {
+    var options: [RMDynamicOption] {
+        switch configType {
         case .character:
             return [.status, .gender]
         case .location:
@@ -58,7 +30,7 @@ final class RMSearchInputViewViewModel {
     }
 
     var searchPlaceHolderText: String {
-        switch type {
+        switch configType {
         case .character:
             return "Character Name"
         case .location:
@@ -68,11 +40,10 @@ final class RMSearchInputViewViewModel {
         }
     }
 
-    // MARK: - PrivateProperties
-    private let type: RMSearchViewController.Config.ConfigType
+    private let configType: RMConfigType
 
     // MARK: - Init
-    init(type: RMSearchViewController.Config.ConfigType) {
-        self.type = type
+    init(configType: RMConfigType) {
+        self.configType = configType
     }
 }

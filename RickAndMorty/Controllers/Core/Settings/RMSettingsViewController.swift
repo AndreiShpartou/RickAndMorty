@@ -52,13 +52,6 @@ extension RMSettingsViewController {
         settingsSwiftUIController.view.translatesAutoresizingMaskIntoConstraints = false
 
         self.settingsSwiftUIController = settingsSwiftUIController
-
-        NSLayoutConstraint.activate([
-            settingsSwiftUIController.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            settingsSwiftUIController.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            settingsSwiftUIController.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            settingsSwiftUIController.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        ])
     }
 
     private func handleTap(option: RMSettingsOption) {
@@ -76,5 +69,21 @@ extension RMSettingsViewController {
                 SKStoreReviewController.requestReview(in: windowScene)
             }
         }
+    }
+}
+
+// MARK: - Constraints
+extension RMSettingsViewController {
+    private func addConstraints() {
+        guard let settingsSwiftUIController = settingsSwiftUIController else {
+            return
+        }
+
+        NSLayoutConstraint.activate([
+            settingsSwiftUIController.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            settingsSwiftUIController.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            settingsSwiftUIController.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            settingsSwiftUIController.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
     }
 }
