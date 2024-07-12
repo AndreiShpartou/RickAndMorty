@@ -11,22 +11,8 @@ final class RMNoSearchResultsView: UIView {
 
     private let viewModel = RMNoSearchResultsViewViewModel()
 
-    private let iconView: UIImageView = {
-        let iconView = UIImageView()
-        iconView.contentMode = .scaleAspectFit
-        iconView.tintColor = .systemBlue
-
-        return iconView
-    }()
-
-    private let label: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.font = .systemFont(ofSize: 20, weight: .medium)
-        label.adjustsFontSizeToFitWidth = true
-
-        return label
-    }()
+    private lazy var iconView: UIImageView = createIconImageView()
+    private let label: UILabel = .createLabel(fontSize: 20, weight: .medium, textAlignment: .center)
 
     // MARK: - Init
     override init(frame: CGRect) {
@@ -53,6 +39,17 @@ extension RMNoSearchResultsView {
     private func configure() {
         label.text = viewModel.title
         iconView.image = viewModel.image
+    }
+}
+
+// MARK: - Helpers
+extension RMNoSearchResultsView {
+    private func createIconImageView() -> UIImageView {
+        let iconView = UIImageView()
+        iconView.contentMode = .scaleAspectFit
+        iconView.tintColor = .systemBlue
+
+        return iconView
     }
 }
 

@@ -1,5 +1,5 @@
 //
-//  SectionType.swift
+//  RMSectionType.swift
 //  RickAndMorty
 //
 //  Created by Andrei Shpartou on 07/07/2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum SectionType {
+enum RMSectionType {
     case photo(viewModel: RMCharacterPhotoCollectionViewCellViewModelProtocol)
     case characterInfo(viewModels: [RMCharacterInfoCollectionViewCellViewModelProtocol])
     case locationInfo(viewModels: [RMEpisodeInfoCollectionViewCellViewModelProtocol])

@@ -75,6 +75,10 @@ extension RMSettingsViewController {
 // MARK: - Constraints
 extension RMSettingsViewController {
     private func addConstraints() {
+        guard let settingsSwiftUIController = settingsSwiftUIController else {
+            return
+        }
+
         NSLayoutConstraint.activate([
             settingsSwiftUIController.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             settingsSwiftUIController.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),

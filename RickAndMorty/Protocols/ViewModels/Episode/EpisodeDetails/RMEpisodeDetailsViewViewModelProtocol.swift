@@ -9,7 +9,7 @@ import Foundation
 
 protocol RMEpisodeDetailsViewViewModelProtocol: AnyObject {
     var delegate: RMEpisodeDetailsViewViewModelDelegate? { get set }
-    var sections: [SectionType] { get }
+    var sections: [RMSectionType] { get }
 
     func fetchEpisodeData()
     func character(at index: Int) -> RMCharacterProtocol?

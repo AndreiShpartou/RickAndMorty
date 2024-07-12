@@ -12,7 +12,7 @@ final class RMEpisodeDetailsViewViewModel: RMEpisodeDetailsViewViewModelProtocol
 
     weak var delegate: RMEpisodeDetailsViewViewModelDelegate?
 
-    private(set) var sections: [SectionType] = []
+    private(set) var sections: [RMSectionType] = []
 
     private let endpointURL: URL?
     private let service: RMServiceProtocol

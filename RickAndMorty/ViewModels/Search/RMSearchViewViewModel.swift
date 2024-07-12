@@ -14,24 +14,24 @@ import Foundation
 
 final class RMSearchViewViewModel {
 
-    let config: RMSearchViewController.Config
+    let configType: RMConfigType
 
-    private var optionMapUpdateBlock: (((RMSearchInputViewViewModel.DynamicOption, String)) -> Void)?
-    private var searchResultHandler: ((RMSearchResultViewViewModel) -> Void)?
+    private var optionMapUpdateBlock: (((RMDynamicOption, String)) -> Void)?
+    private var searchResultHandler: ((RMSearchResultsViewViewModel) -> Void)?
     private var noResultsHandler: (() -> Void)?
     private var processSearchHandler: (() -> Void)?
 
-    private var optionMap: [RMSearchInputViewViewModel.DynamicOption: String] = [:]
+    private var optionMap: [RMDynamicOption: String] = [:]
     private var searchText: String = ""
     private var searchResultModels: [Codable] = []
 
     // MARK: - Init
-    init(config: RMSearchViewController.Config) {
-        self.config = config
+    init(configType: RMConfigType) {
+        self.configType = configType
     }
 
     // MARK: - Public
-    func set(value: String, for option: RMSearchInputViewViewModel.DynamicOption) {
+    func set(value: String, for option: RMDynamicOption) {
         optionMap[option] = value
         let tuple = (option, value)
         optionMapUpdateBlock?(tuple)
@@ -43,12 +43,12 @@ final class RMSearchViewViewModel {
 
     // MARK: - HandlerRegister
     func registerOptionChangeBlock(
-        _ block: @escaping ((RMSearchInputViewViewModel.DynamicOption, String)) -> Void
+        _ block: @escaping ((RMDynamicOption, String)) -> Void
     ) {
         self.optionMapUpdateBlock = block
     }
 
-    func registerSearchResultHandler(_ block: @escaping (RMSearchResultViewViewModel) -> Void) {
+    func registerSearchResultHandler(_ block: @escaping (RMSearchResultsViewViewModel) -> Void) {
         self.searchResultHandler = block
     }
 
@@ -80,11 +80,11 @@ final class RMSearchViewViewModel {
 
         // Create request
         let request = RMRequest(
-            endpoint: config.type.endpoint,
+            endpoint: configType.endpoint,
             queryParameters: queryParams
         )
 
-        switch config.type.endpoint {
+        switch configType.endpoint {
         case .character:
             makeSearchAPICall(RMGetAllCharactersResponse.self, request: request)
         case .episode:
@@ -138,7 +138,7 @@ final class RMSearchViewViewModel {
     }
 
     private func processSearchResults(model: Codable) {
-        var resultsVM: RMSearchResultType?
+        var resultsVM: RMSearchResultsType?
         var nextUrl: String?
         if let characterResults = model as? RMGetAllCharactersResponse {
             resultsVM = .characters(characterResults.results.map {
@@ -173,7 +173,7 @@ final class RMSearchViewViewModel {
         }
 
         if let results = resultsVM {
-            let viewModel = RMSearchResultViewViewModel(results: results, next: nextUrl)
+            let viewModel = RMSearchResultsViewViewModel(results: results, next: nextUrl)
             self.searchResultHandler?(viewModel)
             viewModel.registerLoadPageHandler { [weak self] moreResults in
 

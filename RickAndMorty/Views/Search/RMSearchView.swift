@@ -7,51 +7,40 @@
 
 import UIKit
 
-protocol RMSearchViewDelegate: AnyObject {
-    func rmSearchView(
-        _ searchView: RMSearchView,
-        didSelectOption option: RMSearchInputViewViewModel.DynamicOption
-    )
-
-    func rmSearchView(
-        _ searchView: RMSearchView,
-        didSelectLocation location: RMLocation
-    )
-
-    func rmSearchView(
-        _ searchView: RMSearchView,
-        didSelectCharacter character: RMCharacter
-    )
-
-    func rmSearchView(
-        _ searchView: RMSearchView,
-        didSelectEpisode episode: RMEpisode
-    )
-}
-
+// MARK: - View Implementation
 final class RMSearchView: UIView {
 
-    weak var delegate: RMSearchViewDelegate?
-    let viewModel: RMSearchViewViewModel
+    weak var delegate: RMSearchViewDelegate? {
+        didSet {
+            searchInputView.delegate = delegate
+            resultsView.delegate = delegate
+        }
+    }
 
-    private let spinner: UIActivityIndicatorView = {
-        let spinner = UIActivityIndicatorView(style: .large)
-        spinner.hidesWhenStopped = true
-        return spinner
-    }()
+    private let viewModel: RMSearchViewViewModel
+
+    private lazy var spinner: UIActivityIndicatorView = createSpinner()
 
     // SearchInputView(bar, selection buttons)
-    private let searchInputView = RMSearchInputView()
+    private let searchInputView: RMSearchInputViewProtocol
     // No results view
-    private let noResultsView = RMNoSearchResultsView()
+    private let noResultsView: RMNoSearchResultsView
     // Results collectionView / TableView
-    private let resultsView = RMSearchResultsView()
+    private var resultsView: RMSearchResultsViewProtocol
 
     // MARK: - Init
-    init(frame: CGRect, viewModel: RMSearchViewViewModel) {
+    init(
+        viewModel: RMSearchViewViewModel,
+        resultsView: RMSearchResultsViewProtocol,
+        searchInputView: RMSearchInputViewProtocol = RMSearchInputView(),
+        noResultsView: RMNoSearchResultsView = RMNoSearchResultsView()
+    ) {
         self.viewModel = viewModel
+        self.searchInputView = searchInputView
+        self.noResultsView = noResultsView
+        self.resultsView = resultsView
 
-        super.init(frame: frame)
+        super.init(frame: .zero)
 
         setupView()
     }
@@ -61,53 +50,8 @@ final class RMSearchView: UIView {
     }
 }
 
-// MARK: - Setup
-extension RMSearchView {
-    private func setupView() {
-        backgroundColor = .systemBackground
-
-        addSubviews(noResultsView, searchInputView, resultsView, spinner)
-
-        searchInputView.configure(
-            with: RMSearchInputViewViewModel(type: viewModel.config.type)
-        )
-        searchInputView.delegate = self
-        resultsView.delegate = self
-
-        setupHandlers()
-        addConstraints()
-    }
-
-    private func setupHandlers() {
-        viewModel.registerProcessSearchHandler { [weak self] in
-            self?.spinner.startAnimating()
-        }
-
-        viewModel.registerOptionChangeBlock { [weak self] tuple in
-            self?.searchInputView.update(option: tuple.0, value: tuple.1)
-        }
-
-        viewModel.registerSearchResultHandler { [weak self] result in
-            DispatchQueue.main.async {
-                self?.resultsView.configure(with: result)
-                self?.noResultsView.isHidden = true
-                self?.resultsView.isHidden = false
-                self?.spinner.stopAnimating()
-            }
-        }
-
-        viewModel.registerNoResultsHandler { [weak self] in
-            DispatchQueue.main.async {
-                self?.noResultsView.isHidden = false
-                self?.resultsView.isHidden = true
-                self?.spinner.stopAnimating()
-            }
-        }
-    }
-}
-
-// MARK: - PublicMethods
-extension RMSearchView {
+// MARK: - RMSearchViewProtocol
+extension RMSearchView: RMSearchViewProtocol {
     func presentKeyboard() {
         searchInputView.presentKeyboard()
     }
@@ -115,67 +59,55 @@ extension RMSearchView {
     func hideKeyboard() {
         searchInputView.hideKeyboard()
     }
+
+    func orientationDidChange(_ notification: Notification) {
+        resultsView.orientationDidChange(notification)
+    }
+
+    func beginSearchProcess() {
+        spinner.startAnimating()
+    }
+
+    func optionBlockDidChange(with tuple: (RMDynamicOption, String)) {
+        searchInputView.update(option: tuple.0, value: tuple.1)
+    }
+
+    func showSearchResults(for: RMSearchResultsViewViewModel) {
+        noResultsView.isHidden = true
+        resultsView.isHidden = false
+        spinner.stopAnimating()
+    }
+
+    func showNoResults() {
+        noResultsView.isHidden = false
+        resultsView.isHidden = true
+        spinner.stopAnimating()
+    }
 }
 
-// MARK: - RMSearchInputViewDelegate
-extension RMSearchView: RMSearchInputViewDelegate {
-    func rmSearchInputViewDidTapSearchKeyboardButton(_ inputView: RMSearchInputView) {
-        viewModel.executeSearch()
+// MARK: - Setup
+extension RMSearchView {
+    private func setupView() {
+        backgroundColor = .systemBackground
+
+        addSubviews(noResultsView, searchInputView, resultsView, spinner)
+        setupSubViews()
+        addConstraints()
     }
 
-    func rmSearchInputView(_ inputView: RMSearchInputView, didChangeSearchText text: String) {
-        viewModel.set(query: text)
-    }
-
-    func rmSearchInputView(_ inputView: RMSearchInputView, didSelectOption option: RMSearchInputViewViewModel.DynamicOption) {
-        delegate?.rmSearchView(self, didSelectOption: option)
+    private func setupSubViews() {
+        searchInputView.configure(
+            with: RMSearchInputViewViewModel(configType: viewModel.configType)
+        )
     }
 }
 
-// MARK: - UICollectionViewDataSource
-// extension RMSearchView: UICollectionViewDataSource {
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        return Constants.numberOfItemsInSection
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-//
-//        return cell
-//    }
-// }
-//
-// MARK: - UICollectionViewDelegate
-// extension RMSearchView: UICollectionViewDelegate {
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        collectionView.deselectItem(at: indexPath, animated: true)
-//    }
-// }
-
-// MARK: - RMSearchResultsViewDelegate
-extension RMSearchView: RMSearchResultsViewDelegate {
-    func rmSearchResultsView(_ resultsView: RMSearchResultsView, didTapLocationAt index: Int) {
-        guard let locationModel = viewModel.locationSearchResult(at: index) else {
-            return
-        }
-
-        delegate?.rmSearchView(self, didSelectLocation: locationModel)
-    }
-
-    func rmSearchResultsView(_ resultsView: RMSearchResultsView, didTapCharacterAt index: Int) {
-        guard let characterModel = viewModel.characterSearchResult(at: index) else {
-            return
-        }
-
-        delegate?.rmSearchView(self, didSelectCharacter: characterModel)
-    }
-
-    func rmSearchResultsView(_ resultsView: RMSearchResultsView, didTapEpisodeAt index: Int) {
-        guard let episodeModel = viewModel.episodeSearchResult(at: index) else {
-            return
-        }
-
-        delegate?.rmSearchView(self, didSelectEpisode: episodeModel)
+// MARK: - Helpers
+extension RMSearchView {
+    private func createSpinner() -> UIActivityIndicatorView {
+        let spinner = UIActivityIndicatorView(style: .large)
+        spinner.hidesWhenStopped = true
+        return spinner
     }
 }
 
@@ -188,7 +120,7 @@ extension RMSearchView {
             searchInputView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             searchInputView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             searchInputView.heightAnchor.constraint(
-                equalToConstant: viewModel.config.type == .episode ? 55 : 100
+                equalToConstant: viewModel.configType == .episode ? 55 : 100
             ),
 
             // No results
