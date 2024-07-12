@@ -43,7 +43,7 @@ final class RMEpisodeDetailsViewController: UIViewController {
 // MARK: - Setup
 extension RMEpisodeDetailsViewController {
     private func setupController() {
-        title = viewModel.title
+        title = "Episode"
 
         detailsView.delegate = self
         collectionHandler.delegate = self
@@ -121,6 +121,5 @@ extension RMEpisodeDetailsViewController: RMEpisodeDetailsCollectionHandlerDeleg
 extension RMEpisodeDetailsViewController: RMEpisodeDetailsViewViewModelDelegate {
     func didFetchEpisodeDetails() {
         detailsView.didFetchEpisodeDetails()
-        title = viewModel.title
     }
 }

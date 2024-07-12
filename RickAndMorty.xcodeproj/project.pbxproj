@@ -319,8 +319,8 @@
 		6C65ECC22C3FF506009FE3A0 /* Location */ = {
 			isa = PBXGroup;
 			children = (
-				6C65ECCD2C4022DA009FE3A0 /* RMLocationTableViewHandler.swift */,
 				6CAA56EE2C0DC8BD00BCEB29 /* RMLocationViewController.swift */,
+				6C65ECCD2C4022DA009FE3A0 /* RMLocationTableViewHandler.swift */,
 				6C65ECC32C3FF50A009FE3A0 /* LocationDetails */,
 			);
 			path = Location;
@@ -475,13 +475,6 @@
 			children = (
 				6C95DE372C1EBF2C00BC0FB6 /* RMTableLoadingFooterView.swift */,
 				6C7A21F82C11A701001E4C81 /* RMFooterLoadingCollectionReusableView.swift */,
-			);
-			path = Other;
-			sourceTree = "<group>";
-		};
-		6C7A21F12C119BB2001E4C81 /* Other */ = {
-			isa = PBXGroup;
-			children = (
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -654,7 +647,6 @@
 				6CAA56CC2C0DC00A00BCEB29 /* RMTabViewController.swift */,
 				6C82543D2C1B0E390017C887 /* Search */,
 				6CAA56EB2C0DC88200BCEB29 /* Core */,
-				6C7A21F12C119BB2001E4C81 /* Other */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";

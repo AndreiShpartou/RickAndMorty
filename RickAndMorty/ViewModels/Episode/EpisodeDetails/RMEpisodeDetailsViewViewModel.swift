@@ -12,10 +12,6 @@ final class RMEpisodeDetailsViewViewModel: RMEpisodeDetailsViewViewModelProtocol
 
     weak var delegate: RMEpisodeDetailsViewViewModelDelegate?
 
-    var title: String {
-        "Episode: \(dataTuple?.episode.episode.uppercased() ?? "")"
-    }
-
     private(set) var sections: [SectionType] = []
 
     private let endpointURL: URL?
