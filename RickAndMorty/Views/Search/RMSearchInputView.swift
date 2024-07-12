@@ -7,44 +7,16 @@
 
 import UIKit
 
-protocol RMSearchInputViewDelegate: AnyObject {
-    func rmSearchInputView(
-        _ inputView: RMSearchInputView,
-        didSelectOption option: RMSearchInputViewViewModel.DynamicOption
-    )
-
-    func rmSearchInputView(
-        _ inputView: RMSearchInputView,
-        didChangeSearchText text: String
-    )
-
-    func rmSearchInputViewDidTapSearchKeyboardButton(_ inputView: RMSearchInputView)
-}
-
 // View for top part of screen with search bar
+// MARK: - View Implementation
 final class RMSearchInputView: UIView {
 
     weak var delegate: RMSearchInputViewDelegate?
 
-    private let searchBar: UISearchBar = {
-        let searchBar = UISearchBar()
-        searchBar.placeholder = "Search"
-
-        return searchBar
-    }()
-
+    private lazy var searchBar: UISearchBar = createSearchBar()
     private var stackView: UIStackView?
 
-    private var viewModel: RMSearchInputViewViewModel? {
-        didSet {
-            guard let viewModel = viewModel, viewModel.hasDynamicOptions else {
-                return
-            }
-
-            let options = viewModel.options
-            createOptionSelectionViews(options: options)
-        }
-    }
+    private var options: [RMDynamicOption]?
 
     // MARK: - Init
     override init(frame: CGRect) {
@@ -58,6 +30,54 @@ final class RMSearchInputView: UIView {
     }
 }
 
+// MARK: - RMSearchInputViewProtocol
+extension RMSearchInputView: RMSearchInputViewProtocol {
+    func configure(with viewModel: RMSearchInputViewViewModelProtocol) {
+        guard viewModel.hasDynamicOptions else {
+            return
+        }
+
+        createOptionSelectionViews(options: viewModel.options)
+        self.options = viewModel.options
+
+        searchBar.placeholder = viewModel.searchPlaceHolderText
+    }
+
+    func presentKeyboard() {
+        if let inputText = searchBar.text,
+           inputText.isEmpty {
+            searchBar.becomeFirstResponder()
+        }
+    }
+
+    func hideKeyboard() {
+        if let inputText = searchBar.text,
+           !inputText.isEmpty {
+            searchBar.resignFirstResponder()
+        }
+    }
+
+    func update(option: RMDynamicOption, value: String) {
+        // Update options
+        guard let buttons = stackView?.arrangedSubviews as? [UIButton],
+              let options = options,
+              let index = options.firstIndex(of: option) else {
+            return
+        }
+
+        buttons[index].setAttributedTitle(
+            NSAttributedString(
+                string: value.uppercased(),
+                attributes: [
+                    .font: UIFont.systemFont(ofSize: 18, weight: .medium),
+                    .foregroundColor: UIColor.link
+                ]
+            ),
+            for: .normal
+        )
+    }
+}
+
 // MARK: - Setup
 extension RMSearchInputView {
     private func setupView() {
@@ -67,6 +87,57 @@ extension RMSearchInputView {
         searchBar.delegate = self
 
         addConstraints()
+    }
+
+    private func createOptionSelectionViews(options: [RMDynamicOption]) {
+        let stackView = createOptionStackView()
+        self.stackView = stackView
+
+        for index in 0..<options.count {
+            let option = options[index]
+            let button = createButton(with: option, tag: index)
+            stackView.addArrangedSubview(button)
+        }
+    }
+}
+
+// MARK: - ActionMethods
+extension RMSearchInputView {
+    @objc
+    private func didTapButton(_ sender: UIButton) {
+        guard let options = options else {
+            return
+        }
+
+        let tag = sender.tag
+        let selected = options[tag]
+
+        delegate?.rmSearchInputView(self, didSelectOption: selected)
+    }
+}
+
+// MARK: - UISearchBarDelegate
+extension RMSearchInputView: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // Notify delegate of change text
+        delegate?.rmSearchInputView(self, didChangeSearchText: searchText)
+    }
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        // Notify that search button was tapped
+        searchBar.resignFirstResponder()
+
+        delegate?.rmSearchInputViewDidTapSearchKeyboardButton(self)
+    }
+}
+
+// MARK: - Helpers
+extension RMSearchInputView {
+    private func createSearchBar() -> UISearchBar {
+        let searchBar = UISearchBar()
+        searchBar.placeholder = "Search"
+
+        return searchBar
     }
 
     private func createOptionStackView() -> UIStackView {
@@ -82,7 +153,7 @@ extension RMSearchInputView {
     }
 
     private func createButton(
-        with option: RMSearchInputViewViewModel.DynamicOption,
+        with option: RMDynamicOption,
         tag: Int
     ) -> UIButton {
         let button = UIButton()
@@ -102,89 +173,6 @@ extension RMSearchInputView {
         button.addTarget(self, action: #selector(didTapButton(_:)), for: .touchUpInside)
 
         return button
-    }
-
-    private func createOptionSelectionViews(options: [RMSearchInputViewViewModel.DynamicOption]) {
-        let stackView = createOptionStackView()
-        self.stackView = stackView
-
-        for index in 0..<options.count {
-            let option = options[index]
-            let button = createButton(with: option, tag: index)
-            stackView.addArrangedSubview(button)
-        }
-    }
-}
-
-// MARK: - ActionMethods
-extension RMSearchInputView {
-    @objc
-    private func didTapButton(_ sender: UIButton) {
-        guard let options = viewModel?.options else {
-            return
-        }
-
-        let tag = sender.tag
-        let selected = options[tag]
-
-        delegate?.rmSearchInputView(self, didSelectOption: selected)
-    }
-}
-
-// MARK: - PublicMethods
-extension RMSearchInputView {
-    func configure(with viewModel: RMSearchInputViewViewModel) {
-        searchBar.placeholder = viewModel.searchPlaceHolderText
-        self.viewModel = viewModel
-    }
-
-    func presentKeyboard() {
-        if let inputText = searchBar.text,
-           inputText.isEmpty {
-            searchBar.becomeFirstResponder()
-        }
-    }
-
-    func hideKeyboard() {
-        if let inputText = searchBar.text,
-           !inputText.isEmpty {
-            searchBar.resignFirstResponder()
-        }
-    }
-
-    func update(option: RMSearchInputViewViewModel.DynamicOption, value: String) {
-        // Update options
-        guard let buttons = stackView?.arrangedSubviews as? [UIButton],
-              let options = viewModel?.options,
-              let index = options.firstIndex(of: option) else {
-            return
-        }
-
-        buttons[index].setAttributedTitle(
-            NSAttributedString(
-                string: value.uppercased(),
-                attributes: [
-                    .font: UIFont.systemFont(ofSize: 18, weight: .medium),
-                    .foregroundColor: UIColor.link
-                ]
-            ),
-            for: .normal
-        )
-    }
-}
-
-// MARK: - UISearchBarDelegate
-extension RMSearchInputView: UISearchBarDelegate {
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        // Notify delegate of change text
-        delegate?.rmSearchInputView(self, didChangeSearchText: searchText)
-    }
-
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        // Notify that search button was tapped
-        searchBar.resignFirstResponder()
-
-        delegate?.rmSearchInputViewDidTapSearchKeyboardButton(self)
     }
 }
 

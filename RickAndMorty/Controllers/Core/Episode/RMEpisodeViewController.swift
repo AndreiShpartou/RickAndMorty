@@ -132,7 +132,7 @@ extension RMEpisodeViewController {
 // MARK: - ActionMethods
 extension RMEpisodeViewController {
     @objc private func didTapSearch() {
-        let viewController = RMSearchViewController(config: .init(type: .episode))
+        let viewController = RMSearchViewController(configType: .episode)
         viewController.navigationItem.largeTitleDisplayMode = .never
 
         navigationController?.pushViewController(viewController, animated: true)

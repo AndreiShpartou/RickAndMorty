@@ -133,7 +133,7 @@ extension RMCharacterViewController {
 extension RMCharacterViewController {
     @objc
     private func didTapSearch() {
-        let viewController = RMSearchViewController(config: .init(type: .character))
+        let viewController = RMSearchViewController(configType: .character)
         viewController.navigationItem.largeTitleDisplayMode = .never
 
         navigationController?.pushViewController(viewController, animated: true)

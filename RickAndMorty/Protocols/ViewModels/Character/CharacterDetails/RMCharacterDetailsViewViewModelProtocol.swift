@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 protocol RMCharacterDetailsViewViewModelProtocol: AnyObject {
-    var sections: [SectionType] { get }
+    var sections: [RMSectionType] { get }
     var title: String { get }
     var episodes: [String] { get }
     func getDataToShare() -> [Any]

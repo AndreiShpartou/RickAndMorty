@@ -7,25 +7,25 @@
 
 import Foundation
 
-enum RMSearchResultType {
+enum RMSearchResultsType {
     case characters([RMCharacterCollectionViewCellViewModelWrapper])
     case episodes([RMEpisodeCollectionViewCellViewModelWrapper])
     case locations([RMLocationTableViewCellViewModelWrapper])
 }
 
-final class RMSearchResultViewViewModel {
+final class RMSearchResultsViewViewModel {
 
     var shouldShowLoadMoreIndicator: Bool {
         return next != nil
     }
 
     private(set) var isLoadingMoreResults = false
-    private(set) var results: RMSearchResultType
+    private(set) var results: RMSearchResultsType
     private var next: String?
     private var loadPageHandler: (([Codable]) -> Void)?
 
     // MARK: - Init
-    init(results: RMSearchResultType, next: String? = nil) {
+    init(results: RMSearchResultsType, next: String? = nil) {
         self.results = results
         self.next = next
     }
