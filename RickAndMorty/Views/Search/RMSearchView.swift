@@ -10,17 +10,9 @@ import UIKit
 // MARK: - View Implementation
 final class RMSearchView: UIView {
 
-    weak var delegate: RMSearchViewDelegate? {
-        didSet {
-            searchInputView.delegate = delegate
-            resultsView.delegate = delegate
-        }
-    }
-
-    private let viewModel: RMSearchViewViewModel
+    private let configType: RMConfigType
 
     private lazy var spinner: UIActivityIndicatorView = createSpinner()
-
     // SearchInputView(bar, selection buttons)
     private let searchInputView: RMSearchInputViewProtocol
     // No results view
@@ -30,12 +22,12 @@ final class RMSearchView: UIView {
 
     // MARK: - Init
     init(
-        viewModel: RMSearchViewViewModel,
+        configType: RMConfigType,
+        searchInputView: RMSearchInputViewProtocol,
         resultsView: RMSearchResultsViewProtocol,
-        searchInputView: RMSearchInputViewProtocol = RMSearchInputView(),
         noResultsView: RMNoSearchResultsView = RMNoSearchResultsView()
     ) {
-        self.viewModel = viewModel
+        self.configType = configType
         self.searchInputView = searchInputView
         self.noResultsView = noResultsView
         self.resultsView = resultsView
@@ -52,27 +44,11 @@ final class RMSearchView: UIView {
 
 // MARK: - RMSearchViewProtocol
 extension RMSearchView: RMSearchViewProtocol {
-    func presentKeyboard() {
-        searchInputView.presentKeyboard()
-    }
-
-    func hideKeyboard() {
-        searchInputView.hideKeyboard()
-    }
-
-    func orientationDidChange(_ notification: Notification) {
-        resultsView.orientationDidChange(notification)
-    }
-
     func beginSearchProcess() {
         spinner.startAnimating()
     }
 
-    func optionBlockDidChange(with tuple: (RMDynamicOption, String)) {
-        searchInputView.update(option: tuple.0, value: tuple.1)
-    }
-
-    func showSearchResults(for: RMSearchResultsViewViewModel) {
+    func showSearchResults() {
         noResultsView.isHidden = true
         resultsView.isHidden = false
         spinner.stopAnimating()
@@ -91,14 +67,7 @@ extension RMSearchView {
         backgroundColor = .systemBackground
 
         addSubviews(noResultsView, searchInputView, resultsView, spinner)
-        setupSubViews()
         addConstraints()
-    }
-
-    private func setupSubViews() {
-        searchInputView.configure(
-            with: RMSearchInputViewViewModel(configType: viewModel.configType)
-        )
     }
 }
 
@@ -120,7 +89,7 @@ extension RMSearchView {
             searchInputView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             searchInputView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             searchInputView.heightAnchor.constraint(
-                equalToConstant: viewModel.configType == .episode ? 55 : 100
+                equalToConstant: configType == .episode ? 55 : 100
             ),
 
             // No results

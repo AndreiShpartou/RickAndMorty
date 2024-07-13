@@ -44,7 +44,7 @@ final class RMLocationViewViewModel: RMLocationViewViewModelProtocol {
     }
     // Location response info
     // Will contain next url, if present
-    private var apiInfo: RMGetAllLocationsResponse.Info?
+    private var apiInfo: RMResponseInfo?
 
     // MARK: - Init
     init(service: RMServiceProtocol = RMService.shared) {

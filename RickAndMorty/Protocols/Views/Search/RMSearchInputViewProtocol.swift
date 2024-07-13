@@ -9,7 +9,6 @@ import UIKit
 
 protocol RMSearchInputViewProtocol: UIView {
     var delegate: RMSearchInputViewDelegate? { get set }
-    func configure(with viewModel: RMSearchInputViewViewModelProtocol)
     func presentKeyboard()
     func hideKeyboard()
     func update(option: RMDynamicOption, value: String)
