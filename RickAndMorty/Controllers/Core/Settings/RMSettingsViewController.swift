@@ -30,6 +30,7 @@ extension RMSettingsViewController {
         view.backgroundColor = .systemBackground
 
         addSwiftUIController()
+        addConstraints()
     }
 
     private func addSwiftUIController() {

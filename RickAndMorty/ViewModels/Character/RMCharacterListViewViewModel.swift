@@ -45,7 +45,7 @@ final class RMCharacterListViewViewModel: RMCharacterListViewViewModelProtocol {
         }
     }
 
-    private var apiInfo: RMGetAllCharactersResponse.Info?
+    private var apiInfo: RMResponseInfo?
 
     // MARK: - Init
     init(service: RMServiceProtocol = RMService.shared) {

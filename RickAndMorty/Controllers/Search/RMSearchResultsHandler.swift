@@ -7,37 +7,36 @@
 import UIKit
 
 protocol RMSearchResultsHandlerDelegate: AnyObject {
+    func didTapLocationAt(index: Int)
+    func didTapCharacterAt(index: Int)
+    func didTapEpisodeAt(index: Int)
+    func didLoadMoreResults(with newIndexPath: [IndexPath]?)
+    func showLoadingIndicator()
 }
 
 final class RMSearchResultsHandler: NSObject {
 
     weak var delegate: RMSearchResultsHandlerDelegate?
 
-    private var viewModel: RMSearchResultsViewViewModel? {
-        didSet {
-            guard let viewModel = viewModel else {
-                return
-            }
-
-            switch viewModel.results {
-            case .characters(let array):
-                collectionViewCellViewModels = array
-            case .episodes(let array):
-                collectionViewCellViewModels = array
-            case .locations(let array):
-                locationTableViewCellViewModels = array
-            }
-        }
-    }
+    private var viewModel: RMSearchResultsViewViewModelProtocol?
     // TableView ViewModels
-    private var locationTableViewCellViewModels: [RMLocationTableViewCellViewModelWrapper] = []
+    private var locationTableViewCellViewModels: [any Hashable] = []
     // CollectionView ViewModels
     private var collectionViewCellViewModels: [any Hashable] = []
 }
 
 extension RMSearchResultsHandler {
-    func configure(with viewModel: RMSearchResultsViewViewModel) {
+    func configure(with viewModel: RMSearchResultsViewViewModelProtocol) {
         self.viewModel = viewModel
+
+        switch viewModel.results {
+        case .characters(let array):
+            collectionViewCellViewModels = array
+        case .episodes(let array):
+            collectionViewCellViewModels = array
+        case .locations(let array):
+            locationTableViewCellViewModels = array
+        }
     }
 }
 
@@ -48,13 +47,16 @@ extension RMSearchResultsHandler: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(
+        let viewModel = locationTableViewCellViewModels[indexPath.row]
+        guard let locationModel = viewModel as? RMLocationTableViewCellViewModelWrapper,
+            let cell = tableView.dequeueReusableCell(
             withIdentifier: RMLocationTableViewCell.cellIdentifier,
             for: indexPath
         ) as? RMLocationTableViewCell else {
             fatalError("Failed to dequeue RMLocationTableViewCell")
         }
-        cell.configure(with: locationTableViewCellViewModels[indexPath.row])
+
+        cell.configure(with: locationModel)
 
         return cell
     }
@@ -65,7 +67,7 @@ extension RMSearchResultsHandler: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
 
-//        delegate?.rmSearchResultsView(self, didTapLocationAt: indexPath.row)
+        delegate?.didTapLocationAt(index: indexPath.row)
     }
 }
 
@@ -144,14 +146,14 @@ extension RMSearchResultsHandler: UICollectionViewDelegate {
         guard let viewModel = viewModel else {
             return
         }
-//        switch viewModel.results {
-//        case .characters:
-//            delegate?.rmSearchResultsView(self, didTapCharacterAt: indexPath.row)
-//        case .episodes:
-//            delegate?.rmSearchResultsView(self, didTapEpisodeAt: indexPath.row)
-//        case .locations:
-//            break
-//        }
+        switch viewModel.results {
+        case .characters:
+            delegate?.didTapCharacterAt(index: indexPath.row)
+        case .episodes:
+            delegate?.didTapEpisodeAt(index: indexPath.row)
+        case .locations:
+            break
+        }
     }
 }
 
@@ -204,21 +206,19 @@ extension RMSearchResultsHandler: UIScrollViewDelegate {
         let totalScrollViewFixedHeight = scrollView.frame.size.height
 
         if totalContentHeight != 0, offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
-//            viewModel.fetchAdditionalResultsWithDelay(0.1) { [weak self] newResults in
-//                guard let strongSelf = self else {
-//                    return
-//                }
-//
-//                let originalCount = strongSelf.collectionViewCellViewModels.count
-//                let newCount = (newResults.count - originalCount)
-//                let total = originalCount + newCount
-//                let startingIndex = total - newCount
-//                let indexPathsToAdd: [IndexPath] = Array(startingIndex..<(startingIndex + newCount)).compactMap {
-//                    return IndexPath(row: $0, section: 0)
-//                }
-//                strongSelf.collectionViewCellViewModels = newResults
-//                strongSelf.collectionView.insertItems(at: indexPathsToAdd)
-//            }
+            viewModel.fetchAdditionalResultsWithDelay(0.1) { [weak self] newResults in
+                guard let strongSelf = self else {
+                    return
+                }
+
+                let startingIndex = strongSelf.collectionViewCellViewModels.count
+                let newCount = newResults.count
+                let indexPathsToAdd: [IndexPath] = Array(startingIndex..<(startingIndex + newCount)).compactMap {
+                    return IndexPath(row: $0, section: 0)
+                }
+                strongSelf.collectionViewCellViewModels.append(contentsOf: newResults)
+                strongSelf.delegate?.didLoadMoreResults(with: indexPathsToAdd)
+            }
         }
     }
 
@@ -235,17 +235,15 @@ extension RMSearchResultsHandler: UIScrollViewDelegate {
         let totalScrollViewFixedHeight = scrollView.frame.size.height
 
         if totalContentHeight != 0, offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
-//            showTableLoadingIndicator()
-//            viewModel.fetchAdditionalLocationsWithDelay(0.1) { [weak self] newResults in
-//                self?.tableView.tableFooterView = nil
-//                self?.locationTableViewCellViewModels = newResults
-//                self?.tableView.reloadData()
-//            }
+            showTableLoadingIndicator()
+            viewModel.fetchAdditionalResultsWithDelay(0.1) { [weak self] newResults in
+                self?.locationTableViewCellViewModels.append(contentsOf: newResults)
+                self?.delegate?.didLoadMoreResults(with: nil)
+            }
         }
     }
 
     private func showTableLoadingIndicator() {
-        let footerView = RMTableLoadingFooterView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
-//        tableView.tableFooterView = footerView
+        delegate?.showLoadingIndicator()
     }
 }

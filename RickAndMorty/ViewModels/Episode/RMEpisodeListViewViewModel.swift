@@ -44,7 +44,7 @@ final class RMEpisodeListViewViewModel: RMEpisodeListViewViewModelProtocol {
         }
     }
 
-    private var apiInfo: RMGetAllEpisodesResponse.Info?
+    private var apiInfo: RMResponseInfo?
 
     private let borderColors: [UIColor] = [
         .systemCyan,

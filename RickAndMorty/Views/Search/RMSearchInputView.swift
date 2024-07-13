@@ -13,14 +13,16 @@ final class RMSearchInputView: UIView {
 
     weak var delegate: RMSearchInputViewDelegate?
 
+    private var options: [RMDynamicOption]?
+    private let viewModel: RMSearchInputViewViewModelProtocol
+
     private lazy var searchBar: UISearchBar = createSearchBar()
     private var stackView: UIStackView?
 
-    private var options: [RMDynamicOption]?
-
     // MARK: - Init
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(configType: RMConfigType) {
+        self.viewModel = RMSearchInputViewViewModel(configType: configType)
+        super.init(frame: .zero)
 
         setupView()
     }
@@ -32,17 +34,6 @@ final class RMSearchInputView: UIView {
 
 // MARK: - RMSearchInputViewProtocol
 extension RMSearchInputView: RMSearchInputViewProtocol {
-    func configure(with viewModel: RMSearchInputViewViewModelProtocol) {
-        guard viewModel.hasDynamicOptions else {
-            return
-        }
-
-        createOptionSelectionViews(options: viewModel.options)
-        self.options = viewModel.options
-
-        searchBar.placeholder = viewModel.searchPlaceHolderText
-    }
-
     func presentKeyboard() {
         if let inputText = searchBar.text,
            inputText.isEmpty {
@@ -85,8 +76,20 @@ extension RMSearchInputView {
 
         addSubviews(searchBar)
         searchBar.delegate = self
+        setupOptions()
 
         addConstraints()
+    }
+
+    private func setupOptions() {
+        guard viewModel.hasDynamicOptions else {
+            return
+        }
+
+        createOptionSelectionViews(options: viewModel.options)
+        self.options = viewModel.options
+
+        searchBar.placeholder = viewModel.searchPlaceHolderText
     }
 
     private func createOptionSelectionViews(options: [RMDynamicOption]) {
