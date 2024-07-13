@@ -12,29 +12,35 @@ import Foundation
 // - Show no results view
 // - Kick off API requests
 
-final class RMSearchViewViewModel {
+final class RMSearchViewViewModel: RMSearchViewViewModelProtocol {
 
-    let configType: RMConfigType
+    private let service: RMServiceProtocol
+    private(set) var configType: RMConfigType
 
+    // Handler properties
     private var optionMapUpdateBlock: (((RMDynamicOption, String)) -> Void)?
-    private var searchResultHandler: ((RMSearchResultsViewViewModel) -> Void)?
+    private var searchResultHandler: ((RMSearchResultsViewViewModelProtocol) -> Void)?
     private var noResultsHandler: (() -> Void)?
     private var processSearchHandler: (() -> Void)?
-
+    // Search options
     private var optionMap: [RMDynamicOption: String] = [:]
     private var searchText: String = ""
+    // Results
     private var searchResultModels: [Codable] = []
 
     // MARK: - Init
-    init(configType: RMConfigType) {
+    init(
+        configType: RMConfigType,
+        service: RMServiceProtocol = RMService.shared
+    ) {
         self.configType = configType
+        self.service = service
     }
 
     // MARK: - Public
     func set(value: String, for option: RMDynamicOption) {
         optionMap[option] = value
-        let tuple = (option, value)
-        optionMapUpdateBlock?(tuple)
+        optionMapUpdateBlock?((option, value))
     }
 
     func set(query text: String) {
@@ -48,7 +54,7 @@ final class RMSearchViewViewModel {
         self.optionMapUpdateBlock = block
     }
 
-    func registerSearchResultHandler(_ block: @escaping (RMSearchResultsViewViewModel) -> Void) {
+    func registerSearchResultHandler(_ block: @escaping (RMSearchResultsViewViewModelProtocol) -> Void) {
         self.searchResultHandler = block
     }
 
@@ -94,24 +100,24 @@ final class RMSearchViewViewModel {
         }
     }
     // MARK: - Seeking for models
-    func locationSearchResult(at index: Int) -> RMLocation? {
-        guard let searchModels = searchResultModels as? [RMLocation] else {
+    func locationSearchResult(at index: Int) -> RMLocationProtocol? {
+        guard let searchModels = searchResultModels as? [RMLocationProtocol] else {
             return nil
         }
 
         return searchModels[index]
     }
 
-    func characterSearchResult(at index: Int) -> RMCharacter? {
-        guard let searchModels = searchResultModels as? [RMCharacter] else {
+    func characterSearchResult(at index: Int) -> RMCharacterProtocol? {
+        guard let searchModels = searchResultModels as? [RMCharacterProtocol] else {
             return nil
         }
 
         return searchModels[index]
     }
 
-    func episodeSearchResult(at index: Int) -> RMEpisode? {
-        guard let searchModels = searchResultModels as? [RMEpisode] else {
+    func episodeSearchResult(at index: Int) -> RMEpisodeProtocol? {
+        guard let searchModels = searchResultModels as? [RMEpisodeProtocol] else {
             return nil
         }
 
@@ -121,18 +127,18 @@ final class RMSearchViewViewModel {
     // MARK: - Private
     private func makeSearchAPICall<T: Codable>(_ type: T.Type, request: RMRequest) {
         processSearchHandler?()
-        RMService.shared.execute(
+        service.execute(
             request,
             expecting: type
-        ) { result in
+        ) { [weak self] result in
                 // Notify view of results, no results, or error
                 switch result {
                 case .success(let model):
                     // Episodes and characters: CollectionView; Location: TableView
-                    self.processSearchResults(model: model)
+                    self?.processSearchResults(model: model)
                 case .failure(let error):
                     NSLog("Failed to make search API call: \(error.localizedDescription)")
-                    self.handleNoResults()
+                    self?.handleNoResults()
                 }
         }
     }
@@ -140,6 +146,7 @@ final class RMSearchViewViewModel {
     private func processSearchResults(model: Codable) {
         var resultsVM: RMSearchResultsType?
         var nextUrl: String?
+
         if let characterResults = model as? RMGetAllCharactersResponse {
             resultsVM = .characters(characterResults.results.map {
                 return RMCharacterCollectionViewCellViewModelWrapper(
@@ -176,7 +183,6 @@ final class RMSearchViewViewModel {
             let viewModel = RMSearchResultsViewViewModel(results: results, next: nextUrl)
             self.searchResultHandler?(viewModel)
             viewModel.registerLoadPageHandler { [weak self] moreResults in
-
                 self?.searchResultModels.append(contentsOf: moreResults)
             }
         } else {

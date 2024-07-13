@@ -13,21 +13,30 @@ import UIKit
 // Searching / API
 
 // Configurable controller to search
+// MARK: - VC Implementation
 final class RMSearchViewController: UIViewController {
+    // Views
+    private let searchView: RMSearchViewProtocol
+    private let searchInputView: RMSearchInputViewProtocol
+    private let resultsView: RMSearchResultsViewProtocol
 
     private let configType: RMConfigType
-    private let searchView: RMSearchView
-    private let searchViewModel: RMSearchViewViewModel
     private let resultsHandler: RMSearchResultsHandler
+    private let searchViewModel: RMSearchViewViewModelProtocol
 
     // MARK: - Init
     init(configType: RMConfigType) {
         self.configType = configType
+        self.resultsHandler = RMSearchResultsHandler()
         self.searchViewModel = RMSearchViewViewModel(configType: configType)
 
-        self.resultsHandler = RMSearchResultsHandler()
-        let resultsView = RMSearchResultsView(resultsHandler: resultsHandler)
-        self.searchView = RMSearchView(viewModel: searchViewModel, resultsView: resultsView)
+        self.resultsView = RMSearchResultsView(resultsHandler: resultsHandler)
+        self.searchInputView = RMSearchInputView(configType: configType)
+        self.searchView = RMSearchView(
+            configType: configType,
+            searchInputView: searchInputView,
+            resultsView: resultsView
+        )
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -56,7 +65,7 @@ final class RMSearchViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        searchView.presentKeyboard()
+        searchInputView.presentKeyboard()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -71,8 +80,9 @@ extension RMSearchViewController {
     private func setupController() {
         title = searchViewModel.configType.title
 
-        searchView.delegate = self
+        searchInputView.delegate = self
         resultsHandler.delegate = self
+
         setupHandlers()
         addSearchButton()
     }
@@ -83,13 +93,14 @@ extension RMSearchViewController {
         }
 
         searchViewModel.registerOptionChangeBlock { [weak self] tuple in
-            self?.searchView.optionBlockDidChange(with: tuple)
+            self?.searchInputView.update(option: tuple.0, value: tuple.1)
         }
 
         searchViewModel.registerSearchResultHandler { [weak self] result in
             DispatchQueue.main.async {
                 self?.resultsHandler.configure(with: result)
-                self?.searchView.showSearchResults(for: result)
+                self?.resultsView.configure(with: result)
+                self?.searchView.showSearchResults()
             }
         }
 
@@ -128,12 +139,12 @@ extension RMSearchViewController {
     @objc
     private func didTapExecuteSearch() {
         searchViewModel.executeSearch()
-        searchView.hideKeyboard()
+        searchInputView.hideKeyboard()
     }
 
     @objc
     private func orientationDidChange(_ notification: Notification) {
-        searchView.orientationDidChange(notification)
+        resultsView.orientationDidChange(notification)
     }
 }
 
@@ -160,9 +171,10 @@ extension RMSearchViewController: RMSearchInputViewDelegate {
     }
 }
 
-// MARK: - RMSearchResultsViewDelegate
-extension RMSearchViewController: RMSearchResultsViewDelegate {
-    func rmSearchResultsView(_ resultsView: RMSearchResultsView, didTapLocationAt index: Int) {
+// MARK: - RMSearchResultsHandlerDelegate
+extension RMSearchViewController: RMSearchResultsHandlerDelegate {
+
+    func didTapLocationAt(index: Int) {
         guard let locationModel = searchViewModel.locationSearchResult(at: index) else {
             return
         }
@@ -173,7 +185,7 @@ extension RMSearchViewController: RMSearchResultsViewDelegate {
         navigationController?.pushViewController(viewController, animated: true)
     }
 
-    func rmSearchResultsView(_ resultsView: RMSearchResultsView, didTapCharacterAt index: Int) {
+    func didTapCharacterAt(index: Int) {
         guard let characterModel = searchViewModel.characterSearchResult(at: index) else {
             return
         }
@@ -184,7 +196,7 @@ extension RMSearchViewController: RMSearchResultsViewDelegate {
         navigationController?.pushViewController(viewController, animated: true)
     }
 
-    func rmSearchResultsView(_ resultsView: RMSearchResultsView, didTapEpisodeAt index: Int) {
+    func didTapEpisodeAt(index: Int) {
         guard let episodeModel = searchViewModel.episodeSearchResult(at: index) else {
             return
         }
@@ -195,12 +207,12 @@ extension RMSearchViewController: RMSearchResultsViewDelegate {
 
         navigationController?.pushViewController(viewController, animated: true)
     }
-}
 
-// MARK: - RMSearchResultsHandlerDelegate
-extension RMSearchViewController: RMSearchResultsHandlerDelegate {
-}
+    func didLoadMoreResults(with newIndexPath: [IndexPath]?) {
+        resultsView.didLoadMoreResults(with: newIndexPath)
+    }
 
-// MARK: - RMSearchViewDelegate
-extension RMSearchViewController: RMSearchViewDelegate {
+    func showLoadingIndicator() {
+        resultsView.showLoadingIndicator()
+    }
 }

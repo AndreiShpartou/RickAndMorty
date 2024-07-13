@@ -5,19 +5,10 @@
 //  Created by Andrei Shpartou on 12/07/2024.
 //
 
-import Foundation
+import UIKit
 
-protocol RMSearchViewProtocol {
-    var delegate: RMSearchViewDelegate? { get set }
-
-    func presentKeyboard()
-    func hideKeyboard()
-    func orientationDidChange(_ notification: Notification)
+protocol RMSearchViewProtocol: UIView {
     func beginSearchProcess()
-    func optionBlockDidChange(with tuple: (RMDynamicOption, String))
-    func showSearchResults(for: RMSearchResultsViewViewModel)
+    func showSearchResults()
     func showNoResults()
-}
-
-protocol RMSearchViewDelegate: AnyObject, RMSearchInputViewDelegate, RMSearchResultsViewDelegate {
 }

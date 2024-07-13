@@ -11,9 +11,7 @@ import UIKit
 // MARK: - View Implementation
 final class RMSearchResultsView: UIView {
 
-    weak var delegate: RMSearchResultsViewDelegate?
-
-    private var resultsHandler: RMSearchResultsHandler
+    private let resultsHandler: RMSearchResultsHandler
     private lazy var tableView: UITableView = createTableView()
     private lazy var collectionView: UICollectionView = createCollectionView()
 
@@ -32,7 +30,7 @@ final class RMSearchResultsView: UIView {
 
 // MARK: - Public
 extension RMSearchResultsView: RMSearchResultsViewProtocol {
-    func configure(with viewModel: RMSearchResultsViewViewModel) {
+    func configure(with viewModel: RMSearchResultsViewViewModelProtocol) {
         switch viewModel.results {
         case .characters:
             setupCollectionView()
@@ -46,6 +44,24 @@ extension RMSearchResultsView: RMSearchResultsViewProtocol {
     func orientationDidChange(_ notification: Notification) {
         collectionView.collectionViewLayout.invalidateLayout()
     }
+
+    func didLoadMoreResults(with newIndexPath: [IndexPath]?) {
+        guard let newIndexPath = newIndexPath else {
+            tableView.tableFooterView = nil
+            tableView.reloadData()
+
+            return
+        }
+
+        collectionView.performBatchUpdates { [weak self] in
+            self?.collectionView.insertItems(at: newIndexPath)
+        }
+    }
+
+    func showLoadingIndicator() {
+        let footerView = RMTableLoadingFooterView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        tableView.tableFooterView = footerView
+    }
 }
 
 // MARK: - Setup
@@ -54,7 +70,9 @@ extension RMSearchResultsView {
         isHidden = true
         backgroundColor = .systemBackground
         collectionView.delegate = resultsHandler
+        collectionView.dataSource = resultsHandler
         tableView.delegate = resultsHandler
+        tableView.dataSource = resultsHandler
         addSubviews(tableView, collectionView)
 
         addConstraints()
