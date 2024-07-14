@@ -45,22 +45,26 @@ extension RMSearchResultsView: RMSearchResultsViewProtocol {
         collectionView.collectionViewLayout.invalidateLayout()
     }
 
-    func didLoadMoreResults(with newIndexPath: [IndexPath]?) {
-        guard let newIndexPath = newIndexPath else {
+    func didLoadMoreResults(with newIndexPath: [IndexPath]) {
+        if !tableView.isHidden {
             tableView.tableFooterView = nil
-            tableView.reloadData()
-
-            return
+            tableView.performBatchUpdates { [weak self] in
+                self?.tableView.insertRows(at: newIndexPath, with: .automatic)
+            }
         }
 
-        collectionView.performBatchUpdates { [weak self] in
-            self?.collectionView.insertItems(at: newIndexPath)
+        if !collectionView.isHidden {
+            collectionView.performBatchUpdates { [weak self] in
+                self?.collectionView.insertItems(at: newIndexPath)
+            }
         }
     }
 
     func showLoadingIndicator() {
-        let footerView = RMTableLoadingFooterView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
-        tableView.tableFooterView = footerView
+        if !tableView.isHidden {
+            let footerView = RMTableLoadingFooterView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+            tableView.tableFooterView = footerView
+        }
     }
 }
 
