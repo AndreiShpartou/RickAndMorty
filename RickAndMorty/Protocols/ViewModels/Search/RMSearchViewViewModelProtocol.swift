@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol RMSearchViewViewModelProtocol {
+protocol RMSearchViewViewModelProtocol: AnyObject {
     var configType: RMConfigType { get }
 
     func set(value: String, for option: RMDynamicOption)

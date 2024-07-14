@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol RMLocationViewViewModelProtocol {
+protocol RMLocationViewViewModelProtocol: AnyObject {
     var delegate: RMLocationViewViewModelDelegate? { get set }
     var shouldShowLoadMoreIndicator: Bool { get }
     var nextUrlString: String? { get }

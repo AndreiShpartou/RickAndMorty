@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol RMSearchResultsViewViewModelProtocol {
+protocol RMSearchResultsViewViewModelProtocol: AnyObject {
     var shouldShowLoadMoreIndicator: Bool { get }
     var isLoadingMoreResults: Bool { get }
     var results: RMSearchResultsType { get }

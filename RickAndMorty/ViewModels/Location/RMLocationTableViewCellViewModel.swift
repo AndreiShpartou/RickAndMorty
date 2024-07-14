@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - ViewModel Implementation
-struct RMLocationTableViewCellViewModel: RMLocationTableViewCellViewModelProtocol {
+final class RMLocationTableViewCellViewModel: RMLocationTableViewCellViewModelProtocol {
 
     var name: String {
         return location.name

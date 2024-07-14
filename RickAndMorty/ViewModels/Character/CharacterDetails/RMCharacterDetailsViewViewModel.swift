@@ -9,6 +9,8 @@ import UIKit
 // MARK: - ViewModel Implementation
 final class RMCharacterDetailsViewViewModel: RMCharacterDetailsViewViewModelProtocol {
 
+    weak var delegate: RMCharacterDetailsViewViewModelDelegate?
+
     var title: String {
         character.name.uppercased()
     }
@@ -29,6 +31,7 @@ final class RMCharacterDetailsViewViewModel: RMCharacterDetailsViewViewModelProt
     init(character: RMCharacterProtocol) {
         self.character = character
         setupSections()
+        delegate?.didFetchCharacterDetails()
     }
 
     func getDataToShare() -> [Any] {

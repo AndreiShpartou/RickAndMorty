@@ -31,6 +31,17 @@ final class RMCharacterDetailsView: UIView {
 
 // MARK: - RMCharacterDetailsViewProtocol
 extension RMCharacterDetailsView: RMCharacterDetailsViewProtocol {
+    func didFetchCharactersDetails() {
+        spinner.stopAnimating()
+        collectionView.reloadData()
+        collectionView.isHidden = false
+        UIView.animate(
+            withDuration: 0.3
+        ) {
+            self.collectionView.alpha = 1
+        }
+    }
+
     // MARK: - Layout
     func createPhotoSectionLayout() -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(
@@ -121,6 +132,7 @@ extension RMCharacterDetailsView {
         backgroundColor = .systemBackground
 
         addSubviews(collectionView, spinner)
+        spinner.startAnimating()
         setupCollectionView()
 
         addConstraints()
