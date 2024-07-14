@@ -40,8 +40,8 @@ extension RMCharacterListView: RMCharacterListViewProtocol {
     }
 
     func didLoadInitialCharacters() {
-        self.spinner.stopAnimating()
-        self.collectionView.isHidden = false
+        spinner.stopAnimating()
+        collectionView.isHidden = false
         collectionView.reloadData() // Initial fetch of characters
         UIView.animate(withDuration: 0.4) {
             self.collectionView.alpha = 1

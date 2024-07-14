@@ -7,15 +7,15 @@
 
 import Foundation
 
-protocol RMSearchResultsViewViewModelProtocol {
+protocol RMSearchResultsViewViewModelProtocol: AnyObject {
     var shouldShowLoadMoreIndicator: Bool { get }
     var isLoadingMoreResults: Bool { get }
     var results: RMSearchResultsType { get }
 
     func registerLoadPageHandler(handler: @escaping ([Codable]) -> Void)
-    func fetchAdditionalResults(completion: @escaping ([any Hashable]) -> Void)
+    func fetchAdditionalResults(completion: @escaping ([Any]) -> Void)
     func fetchAdditionalResultsWithDelay(
         _ delay: TimeInterval,
-        completion: @escaping ([any Hashable]) -> Void
+        completion: @escaping ([Any]) -> Void
     )
 }

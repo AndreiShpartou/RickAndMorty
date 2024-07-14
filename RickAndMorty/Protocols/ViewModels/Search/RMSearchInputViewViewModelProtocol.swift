@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol RMSearchInputViewViewModelProtocol {
+protocol RMSearchInputViewViewModelProtocol: AnyObject {
     var hasDynamicOptions: Bool { get }
     var options: [RMDynamicOption] { get }
     var searchPlaceHolderText: String { get }

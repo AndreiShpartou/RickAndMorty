@@ -38,19 +38,12 @@ final class RMSearchResultsViewViewModel: RMSearchResultsViewViewModelProtocol {
     }
 
     // MARK: - FetchResults
-    func fetchAdditionalResults(completion: @escaping ([any Hashable]) -> Void) {
-        switch results {
-        case .characters:
-            fetchResults(completion: completion, handler: processFetchedCharacters)
-        case .episodes:
-            fetchResults(completion: completion, handler: processFetchedEpisodes)
-        case .locations:
-            fetchResults(completion: completion, handler: processFetchedLocations)
-        }
+    func fetchAdditionalResults(completion: @escaping ([Any]) -> Void) {
+        fetchResults(completion: completion, expecting: getResponseType())
     }
 
     // MARK: - Delay
-    func fetchAdditionalResultsWithDelay(_ delay: TimeInterval, completion: @escaping ([any Hashable]) -> Void) {
+    func fetchAdditionalResultsWithDelay(_ delay: TimeInterval, completion: @escaping ([Any]) -> Void) {
         isLoadingMoreResults = true
         Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in
             self?.fetchAdditionalResults(completion: completion)
@@ -58,9 +51,20 @@ final class RMSearchResultsViewViewModel: RMSearchResultsViewViewModelProtocol {
     }
 
     // MARK: - Private
-    private func fetchResults<T: Codable, U>(
-        completion: @escaping ([U]) -> Void,
-        handler: @escaping (Result<T, Error>, @escaping ([U]) -> Void) -> Void
+    private func getResponseType() -> any RMPagedResponseProtocol.Type {
+        switch results {
+        case .characters:
+            return RMGetAllCharactersResponse.self
+        case .episodes:
+            return RMGetAllEpisodesResponse.self
+        case .locations:
+            return RMGetAllLocationsResponse.self
+        }
+    }
+
+    private func fetchResults<T: RMPagedResponseProtocol>(
+        completion: @escaping ([Any]) -> Void,
+        expecting: T.Type
     ) {
         isLoadingMoreResults = true
         guard let urlString = next,
@@ -70,21 +74,36 @@ final class RMSearchResultsViewViewModel: RMSearchResultsViewViewModelProtocol {
             return
         }
 
-        service.execute(request, expecting: T.self) { result in
-            handler(result, completion)
+        service.execute(request, expecting: expecting) { [weak self] result in
+            self?.processFetchedResults(result: result, completion: completion)
         }
     }
 
-    private func processFetchedCharacters(
-        result: Result<RMGetAllCharactersResponse, Error>,
-        completion: @escaping ([RMCharacterCollectionViewCellViewModelWrapper]) -> Void
-    ) {
+    private func processFetchedResults<T: Codable>(
+        result: Result<T, Error>,
+        completion: @escaping ([Any]) -> Void
+    ) where T: RMPagedResponseProtocol {
         switch result {
         case .success(let responseModel):
             let moreResults = responseModel.results
             self.next = responseModel.info.next
             self.loadPageHandler?(moreResults)
-            let additionalResults = moreResults.map {
+            let additionalResults = convertResults(results: moreResults)
+            updateResults(with: additionalResults)
+            DispatchQueue.main.async {
+                self.isLoadingMoreResults = false
+                completion(additionalResults)
+            }
+        case .failure(let error):
+            NSLog("Failed to fetch additional results: \(error.localizedDescription)")
+            self.isLoadingMoreResults = false
+        }
+    }
+
+    // MARK: - ConvertResults
+    private func convertResults<T: Codable>(results: [T]) -> [Any] {
+        if let characters = results as? [RMCharacter] {
+            return characters.map {
                 RMCharacterCollectionViewCellViewModelWrapper(
                     RMCharacterCollectionViewCellViewModel(
                         characterName: $0.name,
@@ -93,66 +112,22 @@ final class RMSearchResultsViewViewModel: RMSearchResultsViewViewModelProtocol {
                     )
                 )
             }
-            updateResults(with: additionalResults)
-            DispatchQueue.main.async {
-                self.isLoadingMoreResults = false
-                completion(additionalResults)
-            }
-        case .failure(let error):
-            NSLog("Failed to fetch additional results: \(error.localizedDescription)")
-            self.isLoadingMoreResults = false
-        }
-    }
-
-    private func processFetchedLocations(
-        result: Result<RMGetAllLocationsResponse, Error>,
-        completion: @escaping ([RMLocationTableViewCellViewModelWrapper]) -> Void
-    ) {
-        switch result {
-        case .success(let responseModel):
-            let moreResults = responseModel.results
-            self.next = responseModel.info.next
-            self.loadPageHandler?(moreResults)
-            let additionalResults = moreResults.map {
-                RMLocationTableViewCellViewModelWrapper(
-                    RMLocationTableViewCellViewModel(location: $0)
-                )
-            }
-            updateResults(with: additionalResults)
-            DispatchQueue.main.async {
-                completion(additionalResults)
-                self.isLoadingMoreResults = false
-            }
-        case .failure(let error):
-            NSLog("Failed to fetch additional locations search results: \(error.localizedDescription)")
-            self.isLoadingMoreResults = false
-        }
-    }
-
-    private func processFetchedEpisodes(
-        result: Result<RMGetAllEpisodesResponse, Error>,
-        completion: @escaping ([RMEpisodeCollectionViewCellViewModelWrapper]) -> Void
-    ) {
-        switch result {
-        case .success(let responseModel):
-            let moreResults = responseModel.results
-            self.next = responseModel.info.next
-            self.loadPageHandler?(moreResults)
-            let additionalResults = moreResults.map {
+        } else if let episodes = results as? [RMEpisode] {
+            return episodes.map {
                 RMEpisodeCollectionViewCellViewModelWrapper(
                     RMEpisodeCollectionViewCellViewModel(
                         episodeDataUrl: URL(string: $0.url)
                     )
                 )
             }
-            updateResults(with: additionalResults)
-            DispatchQueue.main.async {
-                self.isLoadingMoreResults = false
-                completion(additionalResults)
+        } else if let locations = results as? [RMLocation] {
+            return locations.map {
+                RMLocationTableViewCellViewModelWrapper(
+                    RMLocationTableViewCellViewModel(location: $0)
+                )
             }
-        case .failure(let error):
-            NSLog("Failed to fetch additional results: \(error.localizedDescription)")
-            self.isLoadingMoreResults = false
+        } else {
+            return []
         }
     }
 

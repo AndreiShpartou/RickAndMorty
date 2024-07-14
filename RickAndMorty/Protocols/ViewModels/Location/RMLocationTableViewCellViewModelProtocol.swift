@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol RMLocationTableViewCellViewModelProtocol: Hashable {
+protocol RMLocationTableViewCellViewModelProtocol: AnyObject, Hashable {
     var name: String { get }
     var type: String { get }
     var dimension: String { get }

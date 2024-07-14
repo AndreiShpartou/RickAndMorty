@@ -50,6 +50,11 @@ extension RMCharacterDetailsViewController {
         addShareButton()
     }
 
+    private func setupViewModel() {
+        viewModel.delegate = self
+//        viewModel.fetchCharacterData()
+    }
+
     private func addShareButton() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .action,
@@ -104,5 +109,12 @@ extension RMCharacterDetailsViewController: RMCharacterDetailsCollectionHandlerD
             let episodeVC = RMEpisodeDetailsViewController(url: URL(string: episodeStringURL))
             navigationController?.pushViewController(episodeVC, animated: true)
         }
+    }
+}
+
+// MARK: - RMCharacterDetailsViewViewModelDelegate
+extension RMCharacterDetailsViewController: RMCharacterDetailsViewViewModelDelegate {
+    func didFetchCharacterDetails() {
+        detailsView.didFetchCharactersDetails()
     }
 }

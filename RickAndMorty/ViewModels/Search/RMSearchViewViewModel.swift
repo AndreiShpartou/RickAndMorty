@@ -90,14 +90,7 @@ final class RMSearchViewViewModel: RMSearchViewViewModelProtocol {
             queryParameters: queryParams
         )
 
-        switch configType.endpoint {
-        case .character:
-            makeSearchAPICall(RMGetAllCharactersResponse.self, request: request)
-        case .episode:
-            makeSearchAPICall(RMGetAllEpisodesResponse.self, request: request)
-        case .location:
-            makeSearchAPICall(RMGetAllLocationsResponse.self, request: request)
-        }
+        makeSearchAPICall(getResponseType(), request: request)
     }
     // MARK: - Seeking for models
     func locationSearchResult(at index: Int) -> RMLocationProtocol? {
@@ -125,6 +118,17 @@ final class RMSearchViewViewModel: RMSearchViewViewModelProtocol {
     }
 
     // MARK: - Private
+    private func getResponseType() -> any RMPagedResponseProtocol.Type {
+        switch configType.endpoint {
+        case .character:
+            return RMGetAllCharactersResponse.self
+        case .location:
+            return RMGetAllLocationsResponse.self
+        case .episode:
+            return RMGetAllEpisodesResponse.self
+        }
+    }
+
     private func makeSearchAPICall<T: Codable>(_ type: T.Type, request: RMRequest) {
         processSearchHandler?()
         service.execute(

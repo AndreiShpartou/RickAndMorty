@@ -159,7 +159,8 @@ extension RMEpisodeViewController: RMEpisodeCollectionHandlerDelegate {
     func didSelectItemAt(_ index: Int) {
         // Open detail controller for episode
         let episode = viewModel.getEpisode(at: index)
-        let detailVC = RMEpisodeDetailsViewController(url: URL(string: episode.url))
+        let viewModel = RMEpisodeDetailsViewViewModel(episode: episode)
+        let detailVC = RMEpisodeDetailsViewController(viewModel: viewModel)
         detailVC.navigationItem.largeTitleDisplayMode = .never
 
         navigationController?.pushViewController(detailVC, animated: true)

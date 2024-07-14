@@ -15,6 +15,7 @@ final class RMEpisodeDetailsViewViewModel: RMEpisodeDetailsViewViewModelProtocol
     private(set) var sections: [RMSectionType] = []
 
     private let endpointURL: URL?
+    private let episode: RMEpisodeProtocol?
     private let service: RMServiceProtocol
 
     private var dataTuple: (episode: RMEpisodeProtocol, characters: [RMCharacterProtocol])? {
@@ -27,13 +28,24 @@ final class RMEpisodeDetailsViewViewModel: RMEpisodeDetailsViewViewModelProtocol
     // MARK: - Init
     init(endpointURL: URL?, service: RMServiceProtocol = RMService.shared) {
         self.endpointURL = endpointURL
+        self.episode = nil
         self.service = service
+    }
+
+    init(episode: RMEpisodeProtocol, service: RMServiceProtocol = RMService.shared) {
+        self.service = service
+        self.endpointURL = nil
+        self.episode = episode
     }
 
     // MARK: - Public
     func fetchEpisodeData() {
         guard let url = endpointURL,
               let request = RMRequest(url: url) else {
+            if let episode = episode {
+                fetchRelatedCharacters(for: episode)
+            }
+
             return
         }
 

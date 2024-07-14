@@ -30,10 +30,12 @@ final class RMEpisodeCollectionViewCellViewModel: RMEpisodeCollectionViewCellVie
     init(
         episodeDataUrl: URL?,
         borderColor: UIColor = .systemBlue,
+        episode: RMEpisodeProtocol? = nil,
         service: RMServiceProtocol = RMService.shared
     ) {
         self.episodeDataUrl = episodeDataUrl
         self.borderColor = borderColor
+        self.episode = episode
         self.service = service
     }
 
@@ -45,11 +47,14 @@ final class RMEpisodeCollectionViewCellViewModel: RMEpisodeCollectionViewCellVie
     // MARK: - FetchData
     // Fetch the episode data
     func fetchEpisode() {
-        guard !isFetching else {
-            if let model = episode {
-                dataBlock?(model)
-            }
 
+        if let model = episode {
+            dataBlock?(model)
+
+            return
+        }
+
+        guard !isFetching else {
             return
         }
 
