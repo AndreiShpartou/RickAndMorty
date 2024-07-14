@@ -10,7 +10,7 @@ protocol RMSearchResultsHandlerDelegate: AnyObject {
     func didTapLocationAt(index: Int)
     func didTapCharacterAt(index: Int)
     func didTapEpisodeAt(index: Int)
-    func didLoadMoreResults(with newIndexPath: [IndexPath]?)
+    func didLoadMoreResults(with newIndexPath: [IndexPath])
     func showLoadingIndicator()
 }
 
@@ -19,35 +19,34 @@ final class RMSearchResultsHandler: NSObject {
     weak var delegate: RMSearchResultsHandlerDelegate?
 
     private var viewModel: RMSearchResultsViewViewModelProtocol?
-    // TableView ViewModels
-    private var locationTableViewCellViewModels: [any Hashable] = []
-    // CollectionView ViewModels
-    private var collectionViewCellViewModels: [any Hashable] = []
+    private var cellViewModels: [Any] = []
 }
 
 extension RMSearchResultsHandler {
     func configure(with viewModel: RMSearchResultsViewViewModelProtocol) {
         self.viewModel = viewModel
 
-        switch viewModel.results {
-        case .characters(let array):
-            collectionViewCellViewModels = array
-        case .episodes(let array):
-            collectionViewCellViewModels = array
-        case .locations(let array):
-            locationTableViewCellViewModels = array
-        }
+        cellViewModels = {
+            switch viewModel.results {
+            case .characters(let array):
+                return array
+            case .episodes(let array):
+                return array
+            case .locations(let array):
+                return array
+            }
+        }()
     }
 }
 
 // MARK: - UITableViewDataSource
 extension RMSearchResultsHandler: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return locationTableViewCellViewModels.count
+        return cellViewModels.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let viewModel = locationTableViewCellViewModels[indexPath.row]
+        let viewModel = cellViewModels[indexPath.row]
         guard let locationModel = viewModel as? RMLocationTableViewCellViewModelWrapper,
             let cell = tableView.dequeueReusableCell(
             withIdentifier: RMLocationTableViewCell.cellIdentifier,
@@ -74,12 +73,12 @@ extension RMSearchResultsHandler: UITableViewDelegate {
 // MARK: - UICollectionViewDataSource
 extension RMSearchResultsHandler: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return collectionViewCellViewModels.count
+        return cellViewModels.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         // Character | Episode
-        let viewModel = collectionViewCellViewModels[indexPath.row]
+        let viewModel = cellViewModels[indexPath.row]
         if let characterViewModel = viewModel as? RMCharacterCollectionViewCellViewModelWrapper {
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: RMCharacterCollectionViewCell.cellIdentifier,
@@ -161,7 +160,7 @@ extension RMSearchResultsHandler: UICollectionViewDelegate {
 extension RMSearchResultsHandler: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         // Character | Episode
-        let viewModel = collectionViewCellViewModels[indexPath.row]
+        let viewModel = cellViewModels[indexPath.row]
         let bounds = collectionView.bounds
         let isLandscapeMultiplier = UIDevice.isLandscape ? 0.45 : 1
         if viewModel is RMCharacterCollectionViewCellViewModelWrapper {
@@ -185,19 +184,10 @@ extension RMSearchResultsHandler: UICollectionViewDelegateFlowLayout {
 // MARK: - UIScrollViewDelegate
 extension RMSearchResultsHandler: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if !locationTableViewCellViewModels.isEmpty {
-            handleLocationPagination(scrollView)
-        } else if !collectionViewCellViewModels.isEmpty {
-            handleCharacterOrEpisodePagination(scrollView)
-        }
-    }
-
-    // MARK: - Pagination
-    private func handleCharacterOrEpisodePagination(_ scrollView: UIScrollView) {
+        // Pagination
         guard let viewModel = viewModel,
               viewModel.shouldShowLoadMoreIndicator,
-              !viewModel.isLoadingMoreResults
-        else {
+              !viewModel.isLoadingMoreResults else {
             return
         }
 
@@ -206,44 +196,19 @@ extension RMSearchResultsHandler: UIScrollViewDelegate {
         let totalScrollViewFixedHeight = scrollView.frame.size.height
 
         if totalContentHeight != 0, offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
+            delegate?.showLoadingIndicator()
             viewModel.fetchAdditionalResultsWithDelay(0.1) { [weak self] newResults in
-                guard let strongSelf = self else {
-                    return
-                }
-
-                let startingIndex = strongSelf.collectionViewCellViewModels.count
-                let newCount = newResults.count
-                let indexPathsToAdd: [IndexPath] = Array(startingIndex..<(startingIndex + newCount)).compactMap {
-                    return IndexPath(row: $0, section: 0)
-                }
-                strongSelf.collectionViewCellViewModels.append(contentsOf: newResults)
-                strongSelf.delegate?.didLoadMoreResults(with: indexPathsToAdd)
+                self?.handlePagination(with: newResults)
             }
         }
     }
 
-    private func handleLocationPagination(_ scrollView: UIScrollView) {
-        guard let viewModel = viewModel,
-              viewModel.shouldShowLoadMoreIndicator,
-              !viewModel.isLoadingMoreResults
-        else {
-            return
+    private func handlePagination(with newResults: [Any]) {
+        let startingIndex = cellViewModels.count
+        cellViewModels.append(contentsOf: newResults)
+        let indexPathsToAdd = (startingIndex..<cellViewModels.count).map {
+            return IndexPath(row: $0, section: 0)
         }
-
-        let offset = scrollView.contentOffset.y
-        let totalContentHeight = scrollView.contentSize.height
-        let totalScrollViewFixedHeight = scrollView.frame.size.height
-
-        if totalContentHeight != 0, offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
-            showTableLoadingIndicator()
-            viewModel.fetchAdditionalResultsWithDelay(0.1) { [weak self] newResults in
-                self?.locationTableViewCellViewModels.append(contentsOf: newResults)
-                self?.delegate?.didLoadMoreResults(with: nil)
-            }
-        }
-    }
-
-    private func showTableLoadingIndicator() {
-        delegate?.showLoadingIndicator()
+        delegate?.didLoadMoreResults(with: indexPathsToAdd)
     }
 }

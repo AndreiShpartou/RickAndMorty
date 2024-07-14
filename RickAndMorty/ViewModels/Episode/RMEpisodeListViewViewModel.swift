@@ -33,7 +33,8 @@ final class RMEpisodeListViewViewModel: RMEpisodeListViewViewModelProtocol {
                 let viewModel = RMEpisodeCollectionViewCellViewModelWrapper(
                     RMEpisodeCollectionViewCellViewModel(
                         episodeDataUrl: URL(string: episode.url),
-                        borderColor: borderColors.randomElement() ?? .systemBlue
+                        borderColor: borderColors.randomElement() ?? .systemBlue,
+                        episode: episode
                     )
                 )
 

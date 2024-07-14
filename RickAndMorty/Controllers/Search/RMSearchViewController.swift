@@ -208,7 +208,7 @@ extension RMSearchViewController: RMSearchResultsHandlerDelegate {
         navigationController?.pushViewController(viewController, animated: true)
     }
 
-    func didLoadMoreResults(with newIndexPath: [IndexPath]?) {
+    func didLoadMoreResults(with newIndexPath: [IndexPath]) {
         resultsView.didLoadMoreResults(with: newIndexPath)
     }
 

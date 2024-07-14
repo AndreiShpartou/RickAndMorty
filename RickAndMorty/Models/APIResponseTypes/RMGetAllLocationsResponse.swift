@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RMGetAllLocationsResponse: Codable {
+struct RMGetAllLocationsResponse: Codable, RMPagedResponseProtocol {
     let info: RMResponseInfo
     let results: [RMLocation]
 }

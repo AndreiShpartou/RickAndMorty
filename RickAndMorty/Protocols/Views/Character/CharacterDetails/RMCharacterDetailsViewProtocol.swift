@@ -10,6 +10,7 @@ import UIKit
 protocol RMCharacterDetailsViewProtocol: UIView {
     var delegate: RMCharacterDetailsViewDelegate? { get set }
 
+    func didFetchCharactersDetails()
     func createPhotoSectionLayout() -> NSCollectionLayoutSection
     func createInfoSectionLayout() -> NSCollectionLayoutSection
     func createEpisodeSectionLayout() -> NSCollectionLayoutSection

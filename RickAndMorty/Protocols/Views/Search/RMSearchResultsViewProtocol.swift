@@ -9,6 +9,6 @@ import UIKit
 protocol RMSearchResultsViewProtocol: UIView {
     func orientationDidChange(_ notification: Notification)
     func configure(with viewModel: RMSearchResultsViewViewModelProtocol)
-    func didLoadMoreResults(with newIndexPath: [IndexPath]?)
+    func didLoadMoreResults(with newIndexPath: [IndexPath])
     func showLoadingIndicator()
 }

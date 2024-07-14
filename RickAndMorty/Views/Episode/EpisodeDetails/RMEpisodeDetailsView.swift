@@ -33,8 +33,8 @@ final class RMEpisodeDetailsView: UIView {
 extension RMEpisodeDetailsView: RMEpisodeDetailsViewProtocol {
     func didFetchEpisodeDetails() {
         spinner.stopAnimating()
-        self.collectionView.reloadData()
-        self.collectionView.isHidden = false
+        collectionView.reloadData()
+        collectionView.isHidden = false
         UIView.animate(
             withDuration: 0.3
         ) {
