@@ -16,14 +16,6 @@ final class RMEpisodeDetailsViewController: UIViewController {
     private let viewModel: RMEpisodeDetailsViewViewModelProtocol
 
     // MARK: - Init
-    init(url: URL?) {
-        self.viewModel = RMEpisodeDetailsViewViewModel(endpointURL: url)
-        self.collectionHandler = RMEpisodeDetailsCollectionHandler(viewModel: viewModel)
-        self.detailsView = RMEpisodeDetailsView(collectionHandler: collectionHandler)
-
-        super.init(nibName: nil, bundle: nil)
-    }
-
     init(viewModel: RMEpisodeDetailsViewViewModelProtocol) {
         self.viewModel = viewModel
         self.collectionHandler = RMEpisodeDetailsCollectionHandler(viewModel: viewModel)

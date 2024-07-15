@@ -32,9 +32,11 @@ final class RMEpisodeListViewViewModel: RMEpisodeListViewViewModelProtocol {
             for episode in episodes {
                 let viewModel = RMEpisodeCollectionViewCellViewModelWrapper(
                     RMEpisodeCollectionViewCellViewModel(
-                        episodeDataUrl: URL(string: episode.url),
-                        borderColor: borderColors.randomElement() ?? .systemBlue,
-                        episode: episode
+                        name: episode.name,
+                        air_date: episode.air_date,
+                        episode: episode.episode,
+                        borderColor: RMBorderColors.randomColor(),
+                        episodeStringUrl: episode.url
                     )
                 )
 
@@ -46,18 +48,6 @@ final class RMEpisodeListViewViewModel: RMEpisodeListViewViewModelProtocol {
     }
 
     private var apiInfo: RMResponseInfo?
-
-    private let borderColors: [UIColor] = [
-        .systemCyan,
-        .systemRed,
-        .systemBlue,
-        .systemPink,
-        .systemTeal,
-        .systemYellow,
-        .systemBrown,
-        .systemMint,
-        .systemIndigo
-    ]
 
     // MARK: - Init
     init(service: RMServiceProtocol = RMService.shared) {

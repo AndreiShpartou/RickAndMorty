@@ -14,6 +14,7 @@ final class RMCharacterCollectionViewCell: UICollectionViewCell {
 
     private let commonView = UIView()
     private let imageView: UIImageView = .createImageView(contentMode: .scaleAspectFill, clipsToBounds: true)
+    private let spinner: UIActivityIndicatorView = .createSpinner()
     private let nameLabel: UILabel = .createLabel(fontSize: 18, weight: .medium, textColor: .label)
     private let statusLabel: UILabel = .createLabel(fontSize: 16, weight: .regular, textColor: .secondaryLabel)
     private var characterImageUrl: URL?
@@ -50,6 +51,7 @@ extension RMCharacterCollectionViewCell {
         statusLabel.text = viewModel.characterStatusText
         characterImageUrl = viewModel.characterImageUrl
 
+        spinner.startAnimating()
         viewModel.fetchImage { [weak self] result, url in
             switch result {
             case .success(let data):
@@ -61,6 +63,7 @@ extension RMCharacterCollectionViewCell {
 
                 DispatchQueue.main.async {
                     self?.imageView.image = UIImage(data: data)
+                    self?.spinner.stopAnimating()
                 }
             case .failure(let error):
                 NSLog("Failed to fetch character image: \(error.localizedDescription)")
@@ -75,7 +78,7 @@ extension RMCharacterCollectionViewCell {
         contentView.backgroundColor = .secondarySystemBackground
         contentView.addSubviews(commonView)
 
-        commonView.addSubviews(imageView, nameLabel, statusLabel)
+        commonView.addSubviews(imageView, nameLabel, statusLabel, spinner)
 
         setupLayer()
         addConstraints()
@@ -121,7 +124,12 @@ extension RMCharacterCollectionViewCell {
             imageView.leadingAnchor.constraint(equalTo: commonView.leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: commonView.trailingAnchor),
             imageView.topAnchor.constraint(equalTo: commonView.topAnchor),
-            imageView.bottomAnchor.constraint(equalTo: nameLabel.topAnchor, constant: -3)
+            imageView.bottomAnchor.constraint(equalTo: nameLabel.topAnchor, constant: -3),
+
+            spinner.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
+            spinner.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
+            spinner.widthAnchor.constraint(equalToConstant: 50),
+            spinner.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
 }

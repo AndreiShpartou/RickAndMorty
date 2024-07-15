@@ -14,6 +14,7 @@ final class RMSearchOptionPickerViewController: UIViewController {
 
     private let tableView: UITableView = {
         let table = UITableView()
+        table.showsVerticalScrollIndicator = false
         table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
 
         return table

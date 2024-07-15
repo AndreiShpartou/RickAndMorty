@@ -14,7 +14,7 @@ final class RMCharacterDetailsView: UIView {
     private let collectionHandler: RMCharacterDetailsCollectionHandler
 
     private lazy var collectionView: UICollectionView = createCollectionView()
-    private lazy var spinner: UIActivityIndicatorView = createSpinner()
+    private lazy var spinner: UIActivityIndicatorView = .createSpinner()
 
     // MARK: - Init
     init(collectionHandler: RMCharacterDetailsCollectionHandler) {
@@ -159,6 +159,7 @@ extension RMCharacterDetailsView {
             frame: .zero,
             collectionViewLayout: layout
         )
+        collectionView.showsVerticalScrollIndicator = false
 
         collectionView.register(
             RMCharacterPhotoCollectionViewCell.self,
@@ -174,13 +175,6 @@ extension RMCharacterDetailsView {
         )
 
         return collectionView
-    }
-
-    private func createSpinner() -> UIActivityIndicatorView {
-        let spinner = UIActivityIndicatorView(style: .large)
-        spinner.hidesWhenStopped = true
-
-        return spinner
     }
 }
 

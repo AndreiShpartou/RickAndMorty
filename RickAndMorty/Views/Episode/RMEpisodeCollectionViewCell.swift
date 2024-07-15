@@ -38,12 +38,9 @@ final class RMEpisodeCollectionViewCell: UICollectionViewCell {
 // MARK: - Public Methods
 extension RMEpisodeCollectionViewCell {
     func configure(with viewModel: RMEpisodeCollectionViewCellViewModelWrapper) {
-        viewModel.registerForData { [weak self] data in
-            self?.seasonLabel.text = "Episode \(data.episode)"
-            self?.nameLabel.text = data.name
-            self?.airDateLabel.text = "Aired on \(data.air_date)"
-        }
-        viewModel.fetchEpisode()
+        seasonLabel.text = "Episode \(viewModel.episode)"
+        nameLabel.text = viewModel.name
+        airDateLabel.text = "Aired on \(viewModel.air_date)"
         contentView.layer.borderColor = viewModel.borderColor.cgColor
     }
 }

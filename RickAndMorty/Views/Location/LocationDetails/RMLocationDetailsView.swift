@@ -128,6 +128,7 @@ extension RMLocationDetailsView {
             frame: .zero,
             collectionViewLayout: layout
         )
+        collectionView.showsVerticalScrollIndicator = false
         collectionView.isHidden = true
         collectionView.alpha = 0
         collectionView.register(
