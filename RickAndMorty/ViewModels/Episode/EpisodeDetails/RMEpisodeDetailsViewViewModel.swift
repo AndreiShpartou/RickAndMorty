@@ -13,58 +13,28 @@ final class RMEpisodeDetailsViewViewModel: RMEpisodeDetailsViewViewModelProtocol
     weak var delegate: RMEpisodeDetailsViewViewModelDelegate?
 
     private(set) var sections: [RMSectionType] = []
-
-    private let endpointURL: URL?
-    private let episode: RMEpisodeProtocol?
+    private let episode: RMEpisodeProtocol
     private let service: RMServiceProtocol
 
-    private var dataTuple: (episode: RMEpisodeProtocol, characters: [RMCharacterProtocol])? {
-        didSet {
-            setupSections()
-            delegate?.didFetchEpisodeDetails()
-        }
-    }
+    private var characters: [RMCharacterProtocol]?
 
     // MARK: - Init
-    init(endpointURL: URL?, service: RMServiceProtocol = RMService.shared) {
-        self.endpointURL = endpointURL
-        self.episode = nil
-        self.service = service
-    }
-
-    init(episode: RMEpisodeProtocol, service: RMServiceProtocol = RMService.shared) {
-        self.service = service
-        self.endpointURL = nil
+    init(
+        episode: RMEpisodeProtocol,
+        service: RMServiceProtocol = RMService.shared
+    ) {
         self.episode = episode
+        self.service = service
     }
 
     // MARK: - Public
     func fetchEpisodeData() {
-        guard let url = endpointURL,
-              let request = RMRequest(url: url) else {
-            if let episode = episode {
-                fetchRelatedCharacters(for: episode)
-            }
-
-            return
-        }
-
-        service.execute(
-            request,
-            expecting: RMEpisode.self
-        ) { [weak self] result in
-            switch result {
-            case .success(let model):
-                self?.fetchRelatedCharacters(for: model)
-            case .failure(let error):
-                NSLog("Failed to fetch episode detail: \(error.localizedDescription)")
-            }
-        }
+        fetchRelatedCharacters(for: episode)
     }
 
     // Fetch character model
     func character(at index: Int) -> RMCharacterProtocol? {
-        return dataTuple?.characters[index]
+        return characters?[index]
     }
 
     func getDataToShare() -> [Any] {
@@ -103,19 +73,16 @@ final class RMEpisodeDetailsViewViewModel: RMEpisodeDetailsViewViewModelProtocol
             }
         }
 
-        group.notify(queue: .main) {
-            self.dataTuple = (episode: episode, characters: characters)
+        group.notify(queue: .main) { [weak self] in
+            self?.characters = characters
+            self?.setupSections()
+            self?.delegate?.didFetchEpisodeDetails()
         }
     }
 
     // MARK: - DescriptionToShare
     private func getEpisodeDescription() -> RMShareItem {
-        guard let dataTuple = dataTuple else {
-            let text = "No description"
-            return RMShareItem(subject: text, details: text)
-        }
 
-        let episode = dataTuple.episode
         let createdString = RMDateFormatterUtils.getShortFormattedString(from: episode.created)
 
         let subject = "Episode: \(episode.name)"
@@ -131,12 +98,10 @@ final class RMEpisodeDetailsViewViewModel: RMEpisodeDetailsViewViewModelProtocol
 
     // MARK: - SetupSections
     private func setupSections() {
-        guard let dataTuple = dataTuple else {
+        guard let characters = characters else {
             return
         }
 
-        let episode = dataTuple.episode
-        let characters = dataTuple.characters
         let createdString = RMDateFormatterUtils.getShortFormattedString(from: episode.created)
 
         let infoViewModels = [
