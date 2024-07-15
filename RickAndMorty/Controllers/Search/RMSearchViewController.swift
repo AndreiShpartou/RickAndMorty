@@ -201,8 +201,8 @@ extension RMSearchViewController: RMSearchResultsHandlerDelegate {
             return
         }
 
-        let episodeURL = URL(string: episodeModel.url)
-        let viewController = RMEpisodeDetailsViewController(url: episodeURL)
+        let viewModel = RMEpisodeDetailsViewViewModel(episode: episodeModel)
+        let viewController = RMEpisodeDetailsViewController(viewModel: viewModel)
         navigationItem.largeTitleDisplayMode = .never
 
         navigationController?.pushViewController(viewController, animated: true)

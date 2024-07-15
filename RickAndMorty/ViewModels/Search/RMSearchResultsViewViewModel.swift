@@ -116,7 +116,11 @@ final class RMSearchResultsViewViewModel: RMSearchResultsViewViewModelProtocol {
             return episodes.map {
                 RMEpisodeCollectionViewCellViewModelWrapper(
                     RMEpisodeCollectionViewCellViewModel(
-                        episodeDataUrl: URL(string: $0.url)
+                        name: $0.name,
+                        air_date: $0.air_date,
+                        episode: $0.episode,
+                        borderColor: RMBorderColors.randomColor(),
+                        episodeStringUrl: $0.url
                     )
                 )
             }

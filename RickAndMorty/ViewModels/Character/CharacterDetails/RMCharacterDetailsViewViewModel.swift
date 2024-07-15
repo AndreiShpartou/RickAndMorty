@@ -15,27 +15,72 @@ final class RMCharacterDetailsViewViewModel: RMCharacterDetailsViewViewModelProt
         character.name.uppercased()
     }
 
-    var episodes: [String] {
-        character.episode
-    }
-
     private(set) var sections: [RMSectionType] = []
-
     private let character: RMCharacterProtocol
-
-    private var requestUrl: URL? {
-        return URL(string: character.url)
-    }
+    private let service: RMServiceProtocol
+    // related episodes
+    private var episodes: [RMEpisodeProtocol]?
 
     // MARK: - Init
-    init(character: RMCharacterProtocol) {
+    init(
+        character: RMCharacterProtocol,
+        service: RMServiceProtocol = RMService.shared
+    ) {
         self.character = character
-        setupSections()
-        delegate?.didFetchCharacterDetails()
+        self.service = service
+    }
+
+    // MARK: - Public
+    func fetchCharacterData() {
+        fetchRelatedEpisodes(for: character)
+    }
+
+    // Fetch episode model
+    func getEpisode(at index: Int) -> RMEpisodeProtocol? {
+        return episodes?[index]
     }
 
     func getDataToShare() -> [Any] {
         return [getCharacterDescription()]
+    }
+
+    // MARK: - Private
+    private func fetchRelatedEpisodes(for character: RMCharacterProtocol) {
+        let episodeUrls = character.episode.compactMap {
+            return URL(string: $0)
+        }
+        let requests = episodeUrls.compactMap {
+            return RMRequest(url: $0)
+        }
+
+        // Notified when all done
+        let group = DispatchGroup()
+        var episodes: [RMEpisodeProtocol] = []
+
+        requests.forEach { request in
+            group.enter()
+            service.execute(
+                request,
+                expecting: RMEpisode.self
+            ) { result in
+                defer {
+                    group.leave()
+                }
+
+                switch result {
+                case .success(let model):
+                    episodes.append(model)
+                case .failure(let error):
+                    NSLog("Failed to fetch episode related characters: \(error.localizedDescription)")
+                }
+            }
+        }
+
+        group.notify(queue: .main) { [weak self] in
+            self?.episodes = episodes
+            self?.setupSections()
+            self?.delegate?.didFetchCharacterDetails()
+        }
     }
 
     // MARK: - DescriptionToShare
@@ -55,6 +100,10 @@ final class RMCharacterDetailsViewViewModel: RMCharacterDetailsViewViewModelProt
 
     // MARK: - SetupSections
     private func setupSections() {
+        guard let episodes = episodes else {
+            return
+        }
+
         let photoViewModel = RMCharacterPhotoCollectionViewCellViewModel(imageURL: URL(string: character.image))
 
         let infoViewModels = [
@@ -68,9 +117,15 @@ final class RMCharacterDetailsViewViewModel: RMCharacterDetailsViewViewModelProt
             RMCharacterInfoCollectionViewCellViewModel(type: .episodeCount, value: "\(character.episode.count)")
         ]
 
-        let episodeViewModels = character.episode.compactMap {
+        let episodeViewModels = episodes.compactMap {
             return RMEpisodeCollectionViewCellViewModelWrapper(
-                RMEpisodeCollectionViewCellViewModel(episodeDataUrl: URL(string: $0))
+                RMEpisodeCollectionViewCellViewModel(
+                    name: $0.name,
+                    air_date: $0.air_date,
+                    episode: $0.episode,
+                    borderColor: RMBorderColors.randomColor(),
+                    episodeStringUrl: $0.url
+                )
             )
         }
 

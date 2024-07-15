@@ -47,12 +47,13 @@ extension RMCharacterDetailsViewController {
 
         detailsView.delegate = self
         collectionHandler.delegate = self
+        setupViewModel()
         addShareButton()
     }
 
     private func setupViewModel() {
         viewModel.delegate = self
-//        viewModel.fetchCharacterData()
+        viewModel.fetchCharacterData()
     }
 
     private func addShareButton() {
@@ -105,8 +106,12 @@ extension RMCharacterDetailsViewController: RMCharacterDetailsCollectionHandlerD
     func didSelectItemAt(_ section: Int, _ index: Int) {
         let sectionType = viewModel.sections[section]
         if case .episodes = sectionType {
-            let episodeStringURL = viewModel.episodes[index]
-            let episodeVC = RMEpisodeDetailsViewController(url: URL(string: episodeStringURL))
+            let episode = viewModel.getEpisode(at: index)
+            guard let episode = episode else {
+                return
+            }
+            let viewModel = RMEpisodeDetailsViewViewModel(episode: episode)
+            let episodeVC = RMEpisodeDetailsViewController(viewModel: viewModel)
             navigationController?.pushViewController(episodeVC, animated: true)
         }
     }

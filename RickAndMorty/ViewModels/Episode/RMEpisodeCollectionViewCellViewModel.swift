@@ -10,91 +10,23 @@ import UIKit
 // MARK: - ViewModel Implementation
 final class RMEpisodeCollectionViewCellViewModel: RMEpisodeCollectionViewCellViewModelProtocol {
 
-    let borderColor: UIColor
-
-    private let episodeDataUrl: URL?
-    private var isFetching = false
-    private var dataBlock: ((RMEpisodeDataRenderProtocol) -> Void)?
-    private let service: RMServiceProtocol
-
-    private var episode: RMEpisodeProtocol? {
-        didSet {
-            guard let model = episode else {
-                return
-            }
-            dataBlock?(model)
-        }
+    var name: String
+    var air_date: String {
+        return RMDateFormatterUtils.getShortFormattedString(from: air_dateRaw)
     }
+    var episode: String
+    var borderColor: UIColor
+
+    private let episodeStringUrl: String
+    private let air_dateRaw: String
 
     // MARK: - Init
-    init(
-        episodeDataUrl: URL?,
-        borderColor: UIColor = .systemBlue,
-        episode: RMEpisodeProtocol? = nil,
-        service: RMServiceProtocol = RMService.shared
-    ) {
-        self.episodeDataUrl = episodeDataUrl
-        self.borderColor = borderColor
+    init(name: String, air_date: String, episode: String, borderColor: UIColor, episodeStringUrl: String) {
+        self.name = name
+        self.air_dateRaw = air_date
         self.episode = episode
-        self.service = service
-    }
-
-    // Register a data block to be called when episode data is available
-    func registerForData(_ block: @escaping (RMEpisodeDataRenderProtocol) -> Void) {
-        self.dataBlock = block
-    }
-
-    // MARK: - FetchData
-    // Fetch the episode data
-    func fetchEpisode() {
-
-        if let model = episode {
-            dataBlock?(model)
-
-            return
-        }
-
-        guard !isFetching else {
-            return
-        }
-
-        guard let url = episodeDataUrl else {
-            NSLog(RMServiceError.invalidURL.localizedDescription)
-
-            return
-        }
-
-        guard let request = createRequest(from: url) else {
-            NSLog(RMServiceError.failedToCreateRequest.localizedDescription)
-
-            return
-        }
-
-        isFetching = true
-        service.execute(
-            request,
-            expecting: RMEpisode.self
-        ) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.handleResult(result)
-            }
-        }
-    }
-
-    // Create a request from the given URL
-    private func createRequest(from url: URL) -> RMRequest? {
-        return RMRequest(url: url)
-    }
-
-    // Handle the result of the network request
-    private func handleResult(_ result: Result<RMEpisode, Error>) {
-        switch result {
-        case .success(let model):
-            episode = model
-        case .failure(let error):
-            NSLog("Failed to fetch character related episodes: \(error.localizedDescription)")
-        }
-        isFetching = false
+        self.borderColor = borderColor
+        self.episodeStringUrl = episodeStringUrl
     }
 }
 
@@ -102,7 +34,7 @@ final class RMEpisodeCollectionViewCellViewModel: RMEpisodeCollectionViewCellVie
 extension RMEpisodeCollectionViewCellViewModel: Hashable {
 
     func hash(into hasher: inout Hasher) {
-        hasher.combine(self.episodeDataUrl?.absoluteString ?? "")
+        hasher.combine(self.episodeStringUrl)
     }
 
     static func == (lhs: RMEpisodeCollectionViewCellViewModel, rhs: RMEpisodeCollectionViewCellViewModel) -> Bool {
