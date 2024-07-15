@@ -179,7 +179,8 @@ extension RMSearchViewController: RMSearchResultsHandlerDelegate {
             return
         }
 
-        let viewController = RMLocationDetailsViewController(location: locationModel)
+        let viewModel = RMLocationDetailsViewViewModel(location: locationModel)
+        let viewController = RMLocationDetailsViewController(viewModel: viewModel)
         navigationItem.largeTitleDisplayMode = .never
 
         navigationController?.pushViewController(viewController, animated: true)
@@ -190,7 +191,8 @@ extension RMSearchViewController: RMSearchResultsHandlerDelegate {
             return
         }
 
-        let viewController = RMCharacterDetailsViewController(viewModel: RMCharacterDetailsViewViewModel(character: characterModel))
+        let viewModel = RMCharacterDetailsViewViewModel(character: characterModel)
+        let viewController = RMCharacterDetailsViewController(viewModel: viewModel)
         navigationItem.largeTitleDisplayMode = .never
 
         navigationController?.pushViewController(viewController, animated: true)

@@ -127,7 +127,12 @@ final class RMSearchResultsViewViewModel: RMSearchResultsViewViewModelProtocol {
         } else if let locations = results as? [RMLocation] {
             return locations.map {
                 RMLocationTableViewCellViewModelWrapper(
-                    RMLocationTableViewCellViewModel(location: $0)
+                    RMLocationTableViewCellViewModel(
+                        name: $0.name,
+                        type: $0.type,
+                        dimension: $0.dimension,
+                        id: $0.id
+                    )
                 )
             }
         } else {

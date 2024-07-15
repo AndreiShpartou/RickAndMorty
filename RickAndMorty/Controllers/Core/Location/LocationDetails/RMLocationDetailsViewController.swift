@@ -16,9 +16,8 @@ final class RMLocationDetailsViewController: UIViewController {
     private let viewModel: RMLocationDetailsViewViewModelProtocol
 
     // MARK: - Init
-    init(location: RMLocationProtocol) {
-        let url = URL(string: location.url)
-        self.viewModel = RMLocationDetailsViewViewModel(endpointURL: url)
+    init(viewModel: RMLocationDetailsViewViewModelProtocol) {
+        self.viewModel = viewModel
         self.collectionHandler = RMLocationDetailsCollectionHandler(viewModel: viewModel)
         self.detailsView = RMLocationDetailsView(collectionHandler: collectionHandler)
 

@@ -180,7 +180,12 @@ final class RMSearchViewViewModel: RMSearchViewViewModelProtocol {
         } else if let locationsResults = model as? RMGetAllLocationsResponse {
             resultsVM = .locations(locationsResults.results.map {
                 RMLocationTableViewCellViewModelWrapper(
-                    RMLocationTableViewCellViewModel(location: $0)
+                    RMLocationTableViewCellViewModel(
+                        name: $0.name,
+                        type: $0.type,
+                        dimension: $0.dimension,
+                        id: $0.id
+                    )
                 )
             })
             nextUrl = locationsResults.info.next
