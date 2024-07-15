@@ -32,7 +32,10 @@ final class RMLocationViewViewModel: RMLocationViewViewModelProtocol {
             for location in locations {
                 let cellViewModel = RMLocationTableViewCellViewModelWrapper(
                     RMLocationTableViewCellViewModel(
-                        location: location
+                        name: location.name,
+                        type: location.type,
+                        dimension: location.dimension,
+                        id: location.id
                     )
                 )
 

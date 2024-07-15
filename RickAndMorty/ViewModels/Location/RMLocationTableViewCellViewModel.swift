@@ -10,23 +10,23 @@ import Foundation
 // MARK: - ViewModel Implementation
 final class RMLocationTableViewCellViewModel: RMLocationTableViewCellViewModelProtocol {
 
-    var name: String {
-        return location.name
-    }
+    var name: String
+    var type: String
+    var dimension: String
 
-    var type: String {
-        return "Type: " + location.type
-    }
-
-    var dimension: String {
-        return location.dimension
-    }
-
-    private let location: RMLocationProtocol
+    private let id: Int
 
     // MARK: - Init
-    init(location: RMLocationProtocol) {
-        self.location = location
+    init(
+        name: String,
+        type: String,
+        dimension: String,
+        id: Int
+    ) {
+        self.name = name
+        self.type = "Type: \(type)"
+        self.dimension = dimension
+        self.id = id
     }
 }
 
@@ -38,7 +38,7 @@ extension RMLocationTableViewCellViewModel: Hashable {
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(name)
-        hasher.combine(location.id)
+        hasher.combine(id)
         hasher.combine(dimension)
         hasher.combine(type)
     }

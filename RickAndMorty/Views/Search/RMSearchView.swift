@@ -12,7 +12,7 @@ final class RMSearchView: UIView {
 
     private let configType: RMConfigType
 
-    private lazy var spinner: UIActivityIndicatorView = createSpinner()
+    private lazy var spinner: UIActivityIndicatorView = .createSpinner()
     // SearchInputView(bar, selection buttons)
     private let searchInputView: RMSearchInputViewProtocol
     // No results view
@@ -68,15 +68,6 @@ extension RMSearchView {
 
         addSubviews(noResultsView, searchInputView, resultsView, spinner)
         addConstraints()
-    }
-}
-
-// MARK: - Helpers
-extension RMSearchView {
-    private func createSpinner() -> UIActivityIndicatorView {
-        let spinner = UIActivityIndicatorView(style: .large)
-        spinner.hidesWhenStopped = true
-        return spinner
     }
 }
 

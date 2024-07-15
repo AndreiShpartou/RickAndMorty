@@ -8,14 +8,27 @@
 import UIKit
 
 protocol RMEpisodeCollectionViewCellViewModelProtocol: AnyObject, Hashable {
+    var name: String { get }
+    var air_date: String { get }
+    var episode: String { get }
     var borderColor: UIColor { get }
-    func registerForData(_ block: @escaping (RMEpisodeDataRenderProtocol) -> Void)
-    func fetchEpisode()
 }
 
 // To use this protocol without needing any keyword and suffering performance issues, create a type-erased wrapper.
 // This wrapper hides the concrete type of the wrapped instance while preserving its `Hashable` conformance
 final class RMEpisodeCollectionViewCellViewModelWrapper: RMEpisodeCollectionViewCellViewModelProtocol {
+
+    var name: String {
+        return _name()
+    }
+
+    var air_date: String {
+        return _air_date()
+    }
+
+    var episode: String {
+        return _episode()
+    }
 
     var borderColor: UIColor {
         return _borderColor()
@@ -24,25 +37,29 @@ final class RMEpisodeCollectionViewCellViewModelWrapper: RMEpisodeCollectionView
     // AnyHashable to store the base object for hashable conformance
     private let _base: AnyHashable
     // Closures to pass the protocol requirements to the wrapped instance
+    private let _name: () -> String
+    private let _air_date: () -> String
+    private let _episode: () -> String
     private let _borderColor: () -> UIColor
-    private let _registerForData: (@escaping (RMEpisodeDataRenderProtocol) -> Void) -> Void
-    private let _fetchEpisode: () -> Void
 
     init<T: RMEpisodeCollectionViewCellViewModelProtocol>(_ base: T) {
         _base = AnyHashable(base)
+
+        _name = {
+            base.name
+        }
+
+        _air_date = {
+            base.air_date
+        }
+
+        _episode = {
+            base.episode
+        }
+
         _borderColor = {
             base.borderColor
         }
-        _registerForData = base.registerForData
-        _fetchEpisode = base.fetchEpisode
-    }
-
-    func registerForData(_ block: @escaping (RMEpisodeDataRenderProtocol) -> Void) {
-        _registerForData(block)
-    }
-
-    func fetchEpisode() {
-        _fetchEpisode()
     }
 
     func hash(into hasher: inout Hasher) {

@@ -7,51 +7,34 @@
 
 import Foundation
 
+// MARK: - ViewModel Implementation
 final class RMLocationDetailsViewViewModel: RMLocationDetailsViewViewModelProtocol {
 
     weak var delegate: RMLocationDetailsViewViewModelDelegate?
 
     private(set) var sections: [RMSectionType] = []
-
-    private let endpointURL: URL?
+    private let location: RMLocationProtocol
     private let service: RMServiceProtocol
 
-    private var dataTuple: (location: RMLocationProtocol, characters: [RMCharacterProtocol])? {
-        didSet {
-            setupSections()
-            delegate?.didFetchLocationDetail()
-        }
-    }
+    private var characters: [RMCharacterProtocol]?
 
     // MARK: - Init
-    init(endpointURL: URL?, service: RMServiceProtocol = RMService.shared) {
-        self.endpointURL = endpointURL
+    init(
+        location: RMLocationProtocol,
+        service: RMServiceProtocol = RMService.shared
+    ) {
+        self.location = location
         self.service = service
     }
 
     // MARK: - Public
     func fetchLocationData() {
-        guard let url = endpointURL,
-              let request = RMRequest(url: url) else {
-            return
-        }
-
-        service.execute(
-            request,
-            expecting: RMLocation.self
-        ) { [weak self] result in
-                switch result {
-                case .success(let model):
-                    self?.fetchRelatedCharacters(location: model)
-                case .failure(let error):
-                    NSLog("Failed to fetch location detail \(error.localizedDescription)")
-                }
-        }
+        fetchRelatedCharacters(location: location)
     }
 
     // Fetch character model
     func character(at index: Int) -> RMCharacterProtocol? {
-        return dataTuple?.characters[index]
+        return characters?[index]
     }
 
     func getDataToShare() -> [Any] {
@@ -92,22 +75,15 @@ final class RMLocationDetailsViewViewModel: RMLocationDetailsViewViewModelProtoc
             }
         }
 
-        group.notify(queue: .main) {
-            self.dataTuple = (
-                location: location,
-                characters: characters
-            )
+        group.notify(queue: .main) { [weak self] in
+            self?.characters = characters
+            self?.setupSections()
+            self?.delegate?.didFetchLocationDetail()
         }
     }
 
     // MARK: - DescriptionToShare
     private func getLocationDescription() -> RMShareItem {
-        guard let dataTuple = dataTuple else {
-            let text = "No description"
-            return RMShareItem(subject: text, details: text)
-        }
-
-        let location = dataTuple.location
         let createdString = RMDateFormatterUtils.getShortFormattedString(from: location.created)
 
         let subject = "Location: \(location.name)"
@@ -123,12 +99,10 @@ final class RMLocationDetailsViewViewModel: RMLocationDetailsViewViewModelProtoc
 
     // MARK: - SetupSections
     private func setupSections() {
-        guard let dataTuple = dataTuple else {
+        guard let characters = characters else {
             return
         }
 
-        let location = dataTuple.location
-        let characters = dataTuple.characters
         let createdString = RMDateFormatterUtils.getShortFormattedString(from: location.created)
 
         let infoViewModels = [

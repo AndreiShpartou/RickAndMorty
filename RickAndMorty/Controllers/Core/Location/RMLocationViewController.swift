@@ -64,8 +64,8 @@ final class RMLocationViewController: UIViewController {
 extension RMLocationViewController {
     private func setupController() {
         title = "Locations"
-        setupViewModel()
         tableViewHandler.delegate = self
+        setupViewModel()
         addSearchButton()
         addChangeThemeButton()
     }
@@ -137,7 +137,8 @@ extension RMLocationViewController: RMLocationTableViewHandlerDelegate {
     func didSelectItemAt(_ index: Int) {
         // Open detail controller for location
         let location = viewModel.getLocation(at: index)
-        let detailVC = RMLocationDetailsViewController(location: location)
+        let viewModel = RMLocationDetailsViewViewModel(location: location)
+        let detailVC = RMLocationDetailsViewController(viewModel: viewModel)
         detailVC.navigationItem.largeTitleDisplayMode = .never
 
         navigationController?.pushViewController(detailVC, animated: true)

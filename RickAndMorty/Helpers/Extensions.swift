@@ -59,3 +59,12 @@ extension UIImageView {
         return imageView
     }
 }
+
+extension UIActivityIndicatorView {
+    static func createSpinner() -> UIActivityIndicatorView {
+        let spinner = UIActivityIndicatorView(style: .large)
+        spinner.hidesWhenStopped = true
+
+        return spinner
+    }
+}
