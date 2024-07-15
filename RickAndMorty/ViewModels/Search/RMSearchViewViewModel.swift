@@ -147,47 +147,62 @@ final class RMSearchViewViewModel: RMSearchViewViewModelProtocol {
         }
     }
 
+    private func mapCharacterResults(_ response: RMGetAllCharactersResponse) -> RMSearchResultsType {
+        self.searchResultModels = response.results
+        return .characters(response.results.map {
+            RMCharacterCollectionViewCellViewModelWrapper(
+                RMCharacterCollectionViewCellViewModel(
+                    characterName: $0.name,
+                    characterStatus: $0.status,
+                    characterImageUrl: URL(string: $0.image)
+                )
+            )
+        })
+    }
+
+    private func mapEpisodeResults(_ response: RMGetAllEpisodesResponse) -> RMSearchResultsType {
+        self.searchResultModels = response.results
+        return .episodes(response.results.map {
+            RMEpisodeCollectionViewCellViewModelWrapper(
+                RMEpisodeCollectionViewCellViewModel(
+                    name: $0.name,
+                    air_date: $0.air_date,
+                    episode: $0.episode,
+                    borderColor: RMBorderColors.randomColor(),
+                    episodeStringUrl: $0.url
+                )
+            )
+        })
+    }
+
+    private func mapLocationResults(_ response: RMGetAllLocationsResponse) -> RMSearchResultsType {
+        self.searchResultModels = response.results
+        return .locations(response.results.map {
+            RMLocationTableViewCellViewModelWrapper(
+                RMLocationTableViewCellViewModel(
+                    name: $0.name,
+                    type: $0.type,
+                    dimension: $0.dimension,
+                    id: $0.id
+                )
+            )
+        })
+    }
+
     private func processSearchResults(model: Codable) {
         var resultsVM: RMSearchResultsType?
         var nextUrl: String?
 
         if let characterResults = model as? RMGetAllCharactersResponse {
-            resultsVM = .characters(characterResults.results.map {
-                return RMCharacterCollectionViewCellViewModelWrapper(
-                    RMCharacterCollectionViewCellViewModel(
-                        characterName: $0.name,
-                        characterStatus: $0.status,
-                        characterImageUrl: URL(string: $0.image)
-                    )
-                )
-            })
+            resultsVM = mapCharacterResults(characterResults)
             nextUrl = characterResults.info.next
             self.searchResultModels = characterResults.results
         } else if let episodesResults = model as? RMGetAllEpisodesResponse {
-            resultsVM = .episodes(episodesResults.results.map {
-                return RMEpisodeCollectionViewCellViewModelWrapper(
-                    RMEpisodeCollectionViewCellViewModel(
-                        name: $0.name,
-                        air_date: $0.air_date,
-                        episode: $0.episode,
-                        borderColor: RMBorderColors.randomColor(),
-                        episodeStringUrl: $0.url
-                    )
-                )
-            })
+            resultsVM = mapEpisodeResults(episodesResults)
             nextUrl = episodesResults.info.next
             self.searchResultModels = episodesResults.results
         } else if let locationsResults = model as? RMGetAllLocationsResponse {
-            resultsVM = .locations(locationsResults.results.map {
-                RMLocationTableViewCellViewModelWrapper(
-                    RMLocationTableViewCellViewModel(
-                        name: $0.name,
-                        type: $0.type,
-                        dimension: $0.dimension,
-                        id: $0.id
-                    )
-                )
-            })
+            resultsVM = mapLocationResults(locationsResults)
             nextUrl = locationsResults.info.next
             self.searchResultModels = locationsResults.results
         }

@@ -99,6 +99,7 @@ extension RMSearchResultsView {
 extension RMSearchResultsView {
     private func createTableView() -> UITableView {
         let table = UITableView()
+        table.showsVerticalScrollIndicator = false
         table.register(
             RMLocationTableViewCell.self,
             forCellReuseIdentifier: RMLocationTableViewCell.cellIdentifier
@@ -113,6 +114,7 @@ extension RMSearchResultsView {
         layout.scrollDirection = .vertical
         layout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 10, right: 10)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.showsVerticalScrollIndicator = false
         collectionView.isHidden = true
         collectionView.register(
             RMCharacterCollectionViewCell.self,

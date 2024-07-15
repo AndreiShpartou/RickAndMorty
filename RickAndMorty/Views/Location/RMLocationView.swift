@@ -88,6 +88,7 @@ extension RMLocationView {
 
     private func createTableView() -> UITableView {
         let table = UITableView(frame: .zero, style: .grouped)
+        table.showsVerticalScrollIndicator = false
         table.alpha = 0
         table.isHidden = true
         table.register(

@@ -159,6 +159,7 @@ extension RMCharacterDetailsView {
             frame: .zero,
             collectionViewLayout: layout
         )
+        collectionView.showsVerticalScrollIndicator = false
 
         collectionView.register(
             RMCharacterPhotoCollectionViewCell.self,
