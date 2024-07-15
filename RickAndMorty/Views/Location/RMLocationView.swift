@@ -13,7 +13,7 @@ final class RMLocationView: UIView {
 
     private let tableViewHandler: RMLocationTableViewHandler
 
-    private lazy var spinner: UIActivityIndicatorView = createSpinner()
+    private lazy var spinner: UIActivityIndicatorView = .createSpinner()
     private lazy var tableView: UITableView = createTableView()
 
     // MARK: - Init
@@ -79,13 +79,6 @@ extension RMLocationView {
 
 // MARK: - Helpers
 extension RMLocationView {
-    private func createSpinner() -> UIActivityIndicatorView {
-        let spinner = UIActivityIndicatorView()
-        spinner.hidesWhenStopped = true
-
-        return spinner
-    }
-
     private func createTableView() -> UITableView {
         let table = UITableView(frame: .zero, style: .grouped)
         table.showsVerticalScrollIndicator = false

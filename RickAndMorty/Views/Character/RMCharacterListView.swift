@@ -13,7 +13,7 @@ final class RMCharacterListView: UIView {
 
     private let collectionHandler: RMCharacterCollectionHandler
 
-    private lazy var spinner: UIActivityIndicatorView = createSpinner()
+    private lazy var spinner: UIActivityIndicatorView = .createSpinner()
     private lazy var collectionView: UICollectionView = createCollectionView()
 
     // MARK: - Init
@@ -79,13 +79,6 @@ extension RMCharacterListView {
 
 // MARK: - Helpers
 extension RMCharacterListView {
-    private func createSpinner() -> UIActivityIndicatorView {
-        let spinner = UIActivityIndicatorView(style: .large)
-        spinner.hidesWhenStopped = true
-
-        return spinner
-    }
-
     private func createCollectionView() -> UICollectionView {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical

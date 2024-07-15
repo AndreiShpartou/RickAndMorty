@@ -13,7 +13,7 @@ final class RMEpisodeDetailsView: UIView {
     weak var delegate: RMEpisodeDetailsViewDelegate?
     private let collectionHandler: RMEpisodeDetailsCollectionHandler
 
-    private lazy var spinner: UIActivityIndicatorView = createSpinner()
+    private lazy var spinner: UIActivityIndicatorView = .createSpinner()
     private lazy var collectionView: UICollectionView = createCollectionView()
 
     // MARK: - Init
@@ -110,13 +110,6 @@ extension RMEpisodeDetailsView {
 
 // MARK: - Helpers
 extension RMEpisodeDetailsView {
-    private func createSpinner() -> UIActivityIndicatorView {
-        let spinner = UIActivityIndicatorView()
-        spinner.hidesWhenStopped = true
-
-        return spinner
-    }
-
     private func createCollectionView() -> UICollectionView {
         let layout = UICollectionViewCompositionalLayout { [weak self] sectionIndex, _ in
             guard let strongSelf = self else {
