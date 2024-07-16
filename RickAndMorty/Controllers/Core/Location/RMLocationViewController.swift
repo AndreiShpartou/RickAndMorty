@@ -11,6 +11,8 @@ import UIKit
 // MARK: - ViewController Implementation
 final class RMLocationViewController: UIViewController {
 
+    weak var coordinator: RMLocationCoordinator?
+
     private let locationView: RMLocationViewProtocol
     private let tableViewHandler: RMLocationTableViewHandler
     private var viewModel: RMLocationViewViewModelProtocol
@@ -137,11 +139,7 @@ extension RMLocationViewController: RMLocationTableViewHandlerDelegate {
     func didSelectItemAt(_ index: Int) {
         // Open detail controller for location
         let location = viewModel.getLocation(at: index)
-        let viewModel = RMLocationDetailsViewViewModel(location: location)
-        let detailVC = RMLocationDetailsViewController(viewModel: viewModel)
-        detailVC.navigationItem.largeTitleDisplayMode = .never
-
-        navigationController?.pushViewController(detailVC, animated: true)
+        coordinator?.showLocationDetails(for: location)
     }
 
     func showLoadingIndicator() {

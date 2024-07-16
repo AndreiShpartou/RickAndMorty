@@ -11,6 +11,8 @@ import UIKit
 // MARK: - ViewController Implementation
 final class RMCharacterViewController: UIViewController {
 
+    weak var coordinator: RMCharacterCoordinator?
+
     private let characterListView: RMCharacterListViewProtocol
     private let collectionHandler: RMCharacterCollectionHandler
     private let viewModel: RMCharacterListViewViewModelProtocol
@@ -160,11 +162,7 @@ extension RMCharacterViewController: RMCharacterCollectionHandlerDelegate {
     func didSelectItemAt(_ index: Int) {
         // Open detail controller for that character
         let character = viewModel.getCharacter(at: index)
-        let viewModel = RMCharacterDetailsViewViewModel(character: character)
-        let detailVC = RMCharacterDetailsViewController(viewModel: viewModel)
-        detailVC.navigationItem.largeTitleDisplayMode = .never
-
-        navigationController?.pushViewController(detailVC, animated: true)
+        coordinator?.showCharacterDetails(for: character)
     }
 }
 

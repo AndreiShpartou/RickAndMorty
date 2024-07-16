@@ -7,9 +7,15 @@
 
 import UIKit
 
+protocol RMCharacterDetailsViewControllerDelegate: AnyObject {
+    func didSelectEpisode(_ episode: RMEpisodeProtocol)
+}
+
 // View controller to show details about a single character
 // MARK: - ViewController Implementation
 final class RMCharacterDetailsViewController: UIViewController {
+
+    weak var delegate: RMCharacterDetailsViewControllerDelegate?
 
     private let detailsView: RMCharacterDetailsViewProtocol
     private let collectionHandler: RMCharacterDetailsCollectionHandler
@@ -110,9 +116,8 @@ extension RMCharacterDetailsViewController: RMCharacterDetailsCollectionHandlerD
             guard let episode = episode else {
                 return
             }
-            let viewModel = RMEpisodeDetailsViewViewModel(episode: episode)
-            let episodeVC = RMEpisodeDetailsViewController(viewModel: viewModel)
-            navigationController?.pushViewController(episodeVC, animated: true)
+
+            delegate?.didSelectEpisode(episode)
         }
     }
 }

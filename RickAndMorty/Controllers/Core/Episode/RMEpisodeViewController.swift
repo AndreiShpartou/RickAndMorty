@@ -11,6 +11,8 @@ import UIKit
 // MARK: - ViewController Implementation
 final class RMEpisodeViewController: UIViewController {
 
+    weak var coordinator: RMEpisodeCoordinator?
+
     private let episodeListView: RMEpisodeListViewProtocol
     private let collectionHandler: RMEpisodeCollectionHandler
     private let viewModel: RMEpisodeListViewViewModelProtocol
@@ -159,11 +161,8 @@ extension RMEpisodeViewController: RMEpisodeCollectionHandlerDelegate {
     func didSelectItemAt(_ index: Int) {
         // Open detail controller for episode
         let episode = viewModel.getEpisode(at: index)
-        let viewModel = RMEpisodeDetailsViewViewModel(episode: episode)
-        let detailVC = RMEpisodeDetailsViewController(viewModel: viewModel)
-        detailVC.navigationItem.largeTitleDisplayMode = .never
 
-        navigationController?.pushViewController(detailVC, animated: true)
+        coordinator?.showEpisodeDetails(for: episode)
     }
 }
 

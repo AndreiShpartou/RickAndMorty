@@ -10,17 +10,24 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-
+    var appCoordinator: RMAppCoordinator?
     private var previousNavigationController: UINavigationController?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
-        let mainVC = RMTabViewController()
-        mainVC.delegate = self
+        let navigationController = UINavigationController()
+        appCoordinator = RMAppCoordinator(navigationController: navigationController)
+        appCoordinator?.start()
+
+        guard let tabBarViewController = appCoordinator?.tabBarViewController else {
+            return
+        }
+        tabBarViewController.delegate = self
+        previousNavigationController = tabBarViewController.viewControllers?.first as? UINavigationController
+
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = mainVC
-        previousNavigationController = mainVC.viewControllers?.first as? UINavigationController
+        window.rootViewController = navigationController
         window.makeKeyAndVisible()
 
         self.window = window
