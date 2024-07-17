@@ -10,21 +10,36 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-
+    var appCoordinator: RMAppCoordinator?
     private var previousNavigationController: UINavigationController?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
-        let mainVC = RMTabViewController()
-        mainVC.delegate = self
+        let navigationController = UINavigationController()
+        setupCoordination(with: navigationController)
+
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = mainVC
-        previousNavigationController = mainVC.viewControllers?.first as? UINavigationController
+        window.rootViewController = navigationController
         window.makeKeyAndVisible()
 
         self.window = window
-        RMThemeManager.shared.applyCurrentTheme()
+
+        // Apply Dark/Light mode
+        RMThemeManager().applyCurrentTheme()
+    }
+}
+
+// MARK: - SetupCoordination
+extension SceneDelegate {
+    private func setupCoordination(with navController: UINavigationController) {
+        appCoordinator = RMAppCoordinator(navigationController: navController)
+        appCoordinator?.start()
+
+        // Settings for double tap scrolling
+        let tabBarViewController = appCoordinator?.tabBarViewController
+        tabBarViewController?.delegate = self
+        previousNavigationController = tabBarViewController?.viewControllers?.first as? UINavigationController
     }
 }
 

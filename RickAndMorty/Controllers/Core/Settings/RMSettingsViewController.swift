@@ -13,6 +13,8 @@ import StoreKit
 // Controller to show various app options and settings
 final class RMSettingsViewController: UIViewController {
 
+    weak var coordinator: RMSettingsCoordinator?
+
     private var settingsSwiftUIController: UIHostingController<RMSettingsView>?
 
     // MARK: - LifeCycle
