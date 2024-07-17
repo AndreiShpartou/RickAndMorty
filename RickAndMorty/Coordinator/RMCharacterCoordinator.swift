@@ -55,3 +55,15 @@ extension RMCharacterCoordinator: RMDetailsCoordinator {
         parentCoordinator?.showLocationDetails(for: location, from: self)
     }
 }
+
+// MARK: - RMSearchCoordinator
+extension RMCharacterCoordinator: RMSearchCoordinator {
+
+    func showSearchScene() {
+        let searchVC = RMSearchViewController(configType: .character)
+        searchVC.coordinator = self
+        searchVC.navigationItem.largeTitleDisplayMode = .never
+
+        navigationController.pushViewController(searchVC, animated: true)
+    }
+}

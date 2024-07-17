@@ -32,6 +32,7 @@ class RMAppCoordinator: RMBaseCoordinator {
     }
 
     func showLocationDetails(for location: RMLocationProtocol, from coordinator: RMDetailsCoordinator) {
+        locationCoordinator?.showLocationDetails(for: location, from: coordinator)
     }
 
     func showEpisodeDetails(for episode: RMEpisodeProtocol, from coordinator: RMDetailsCoordinator) {

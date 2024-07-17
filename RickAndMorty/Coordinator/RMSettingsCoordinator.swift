@@ -8,7 +8,6 @@
 import Foundation
 
 class RMSettingsCoordinator: RMBaseCoordinator {
-
     override func start() {
         let settingsVC = RMSettingsViewController()
         settingsVC.coordinator = self

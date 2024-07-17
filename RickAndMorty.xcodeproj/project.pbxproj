@@ -28,7 +28,6 @@
 		6C4A53EE2C4651BC00E47829 /* RMLocationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4A53ED2C4651BC00E47829 /* RMLocationCoordinator.swift */; };
 		6C4A53F02C4651C900E47829 /* RMEpisodeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4A53EF2C4651C900E47829 /* RMEpisodeCoordinator.swift */; };
 		6C4A53F22C4651D400E47829 /* RMSettingsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4A53F12C4651D400E47829 /* RMSettingsCoordinator.swift */; };
-		6C4A53F42C4651DD00E47829 /* RMSearchCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4A53F32C4651DD00E47829 /* RMSearchCoordinator.swift */; };
 		6C595D102C2EB10000FD08E4 /* RMThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C595D0F2C2EB10000FD08E4 /* RMThemeManager.swift */; };
 		6C65ECB92C3FD4B2009FE3A0 /* RMLocationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C65ECB82C3FD4B2009FE3A0 /* RMLocationProtocol.swift */; };
 		6C65ECBD2C3FD63B009FE3A0 /* RMLocationDetailsViewViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C65ECBC2C3FD63B009FE3A0 /* RMLocationDetailsViewViewModelProtocol.swift */; };
@@ -157,7 +156,6 @@
 		6C4A53ED2C4651BC00E47829 /* RMLocationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMLocationCoordinator.swift; sourceTree = "<group>"; };
 		6C4A53EF2C4651C900E47829 /* RMEpisodeCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMEpisodeCoordinator.swift; sourceTree = "<group>"; };
 		6C4A53F12C4651D400E47829 /* RMSettingsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMSettingsCoordinator.swift; sourceTree = "<group>"; };
-		6C4A53F32C4651DD00E47829 /* RMSearchCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMSearchCoordinator.swift; sourceTree = "<group>"; };
 		6C595D0F2C2EB10000FD08E4 /* RMThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMThemeManager.swift; sourceTree = "<group>"; };
 		6C65ECB82C3FD4B2009FE3A0 /* RMLocationProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMLocationProtocol.swift; sourceTree = "<group>"; };
 		6C65ECBC2C3FD63B009FE3A0 /* RMLocationDetailsViewViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMLocationDetailsViewViewModelProtocol.swift; sourceTree = "<group>"; };
@@ -340,7 +338,6 @@
 				6C4A53ED2C4651BC00E47829 /* RMLocationCoordinator.swift */,
 				6C4A53EF2C4651C900E47829 /* RMEpisodeCoordinator.swift */,
 				6C4A53F12C4651D400E47829 /* RMSettingsCoordinator.swift */,
-				6C4A53F32C4651DD00E47829 /* RMSearchCoordinator.swift */,
 			);
 			path = Coordinator;
 			sourceTree = "<group>";
@@ -1016,7 +1013,6 @@
 				6C66371F2C3698C6007A2640 /* RMCharacterListViewViewModelProtocol.swift in Sources */,
 				6CB6CAFB2C0F06840079ADE1 /* RMOriginLocation.swift in Sources */,
 				6C899BE92C411F94002E40E0 /* RMConfigType.swift in Sources */,
-				6C4A53F42C4651DD00E47829 /* RMSearchCoordinator.swift in Sources */,
 				6C65ECCC2C40208B009FE3A0 /* RMLocationViewProtocol.swift in Sources */,
 				6C497EF12C17429100775F3F /* RMSettingsViewViewModel.swift in Sources */,
 				6C8254312C1AC2E80017C887 /* RMSearchViewViewModel.swift in Sources */,

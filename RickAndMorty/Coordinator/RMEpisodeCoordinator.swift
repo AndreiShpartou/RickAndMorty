@@ -43,6 +43,7 @@ class RMEpisodeCoordinator: RMBaseCoordinator {
     }
 }
 
+// MARK: - RMDetailsCoordinator
 extension RMEpisodeCoordinator: RMDetailsCoordinator {
     func showCharacterDetails(for character: RMCharacterProtocol) {
         parentCoordinator?.showCharacterDetails(for: character, from: self)
@@ -50,5 +51,16 @@ extension RMEpisodeCoordinator: RMDetailsCoordinator {
 
     func showLocationDetails(for location: RMLocationProtocol) {
         parentCoordinator?.showLocationDetails(for: location, from: self)
+    }
+}
+
+// MARK: - RMSearchCoordinator
+extension RMEpisodeCoordinator: RMSearchCoordinator {
+    func showSearchScene() {
+        let searchVC = RMSearchViewController(configType: .episode)
+        searchVC.coordinator = self
+        searchVC.navigationItem.largeTitleDisplayMode = .never
+
+        navigationController.pushViewController(searchVC, animated: true)
     }
 }

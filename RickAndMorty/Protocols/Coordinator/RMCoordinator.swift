@@ -18,3 +18,7 @@ protocol RMDetailsCoordinator: RMCoordinator {
     func showEpisodeDetails(for episode: RMEpisodeProtocol)
     func showLocationDetails(for location: RMLocationProtocol)
 }
+
+protocol RMSearchCoordinator: RMDetailsCoordinator {
+    func showSearchScene()
+}

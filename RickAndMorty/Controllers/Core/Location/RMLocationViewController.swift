@@ -118,14 +118,12 @@ extension RMLocationViewController {
 extension RMLocationViewController {
     @objc
     private func didTapSearch() {
-        let viewController = RMSearchViewController(configType: .location)
-        viewController.navigationItem.largeTitleDisplayMode = .never
-        navigationController?.pushViewController(viewController, animated: true)
+        coordinator?.showSearchScene()
     }
 
     @objc
     private func didTapChangeTheme() {
-        RMThemeManager.shared.toggleTheme()
+        RMThemeManager().toggleTheme()
     }
 
     @objc
