@@ -7,15 +7,11 @@
 
 import UIKit
 
-protocol RMLocationDetailsViewControllerDelegate: AnyObject {
-    func didSelectCharacter(_ character: RMCharacterProtocol)
-}
-
 // View controller to show details about a single location
 // MARK: - ViewController Implementation
 final class RMLocationDetailsViewController: UIViewController {
 
-    weak var delegate: RMLocationDetailsViewControllerDelegate?
+    weak var coordinator: RMDetailsCoordinator?
 
     private let detailsView: RMLocationDetailsViewProtocol
     private let collectionHandler: RMLocationDetailsCollectionHandler
@@ -114,7 +110,7 @@ extension RMLocationDetailsViewController: RMLocationDetailsCollectionHandlerDel
                 return
             }
 
-            delegate?.didSelectCharacter(character)
+            coordinator?.showCharacterDetails(for: character)
         }
     }
 }

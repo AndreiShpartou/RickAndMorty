@@ -5,9 +5,10 @@
 //  Created by Andrei Shpartou on 16/07/2024.
 //
 
-import Foundation
-
 class RMEpisodeCoordinator: RMBaseCoordinator {
+
+    weak var parentCoordinator: RMAppCoordinator?
+
     override func start() {
         let episodeVC = RMEpisodeViewController()
         episodeVC.coordinator = self
@@ -15,27 +16,39 @@ class RMEpisodeCoordinator: RMBaseCoordinator {
         navigationController.pushViewController(episodeVC, animated: false)
     }
 
+    // MARK: - Public
+    // Direct navigation
     func showEpisodeDetails(for episode: RMEpisodeProtocol) {
-        let viewModel = RMEpisodeDetailsViewViewModel(episode: episode)
-        let detailsVC = RMEpisodeDetailsViewController(viewModel: viewModel)
-        detailsVC.delegate = self
-        detailsVC.navigationItem.largeTitleDisplayMode = .never
+        let detailsVC = createVC(for: episode)
+        detailsVC.coordinator = self
 
         navigationController.pushViewController(detailsVC, animated: true)
     }
 
-    func showCharacterDetails(for character: RMCharacterProtocol) {
-        let viewModel = RMCharacterDetailsViewViewModel(character: character)
-        let detailsVC = RMCharacterDetailsViewController(viewModel: viewModel)
-        detailsVC.title = character.name
+    // Head over from another detail VC
+    func showEpisodeDetails(for episode: RMEpisodeProtocol, from coordinator: RMDetailsCoordinator) {
+        let detailsVC = createVC(for: episode)
+        detailsVC.coordinator = coordinator
+
+        coordinator.navigationController.pushViewController(detailsVC, animated: true)
+    }
+
+    // MARK: - Private
+    private func createVC(for episode: RMEpisodeProtocol) -> RMEpisodeDetailsViewController {
+        let viewModel = RMEpisodeDetailsViewViewModel(episode: episode)
+        let detailsVC = RMEpisodeDetailsViewController(viewModel: viewModel)
         detailsVC.navigationItem.largeTitleDisplayMode = .never
 
-        navigationController.pushViewController(detailsVC, animated: true)
+        return detailsVC
     }
 }
 
-extension RMEpisodeCoordinator: RMEpisodeDetailsViewControllerDelegate {
-    func didSelectCharacter(_ character: RMCharacterProtocol) {
-        showCharacterDetails(for: character)
+extension RMEpisodeCoordinator: RMDetailsCoordinator {
+    func showCharacterDetails(for character: RMCharacterProtocol) {
+        parentCoordinator?.showCharacterDetails(for: character, from: self)
+    }
+
+    func showLocationDetails(for location: RMLocationProtocol) {
+        parentCoordinator?.showLocationDetails(for: location, from: self)
     }
 }

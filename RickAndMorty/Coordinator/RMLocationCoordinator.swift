@@ -9,6 +9,8 @@ import Foundation
 
 class RMLocationCoordinator: RMBaseCoordinator {
 
+    weak var parentCoordinator: RMAppCoordinator?
+
     override func start() {
         let locationVC = RMLocationViewController()
         locationVC.coordinator = self
@@ -16,27 +18,39 @@ class RMLocationCoordinator: RMBaseCoordinator {
         navigationController.pushViewController(locationVC, animated: false)
     }
 
+    // MARK: - Public
+    // Direct navigation
     func showLocationDetails(for location: RMLocationProtocol) {
-        let viewModel = RMLocationDetailsViewViewModel(location: location)
-        let detailsVC = RMLocationDetailsViewController(viewModel: viewModel)
-        detailsVC.delegate = self
-        detailsVC.navigationItem.largeTitleDisplayMode = .never
+        let detailsVC = getLocationVC(for: location)
+        detailsVC.coordinator = self
 
         navigationController.pushViewController(detailsVC, animated: true)
     }
 
-    func showCharacterDetails(for character: RMCharacterProtocol) {
-        let viewModel = RMCharacterDetailsViewViewModel(character: character)
-        let detailsVC = RMCharacterDetailsViewController(viewModel: viewModel)
-        detailsVC.title = character.name
+    // Head over from other coordinators
+    func showLocationDetails(for location: RMLocationProtocol, from coordinator: RMDetailsCoordinator) {
+        let detailsVC = getLocationVC(for: location)
+        detailsVC.coordinator = coordinator
+
+        coordinator.navigationController.pushViewController(detailsVC, animated: true)
+    }
+
+    // MARK: - Private
+    private func getLocationVC(for location: RMLocationProtocol) -> RMLocationDetailsViewController {
+        let viewModel = RMLocationDetailsViewViewModel(location: location)
+        let detailsVC = RMLocationDetailsViewController(viewModel: viewModel)
         detailsVC.navigationItem.largeTitleDisplayMode = .never
 
-        navigationController.pushViewController(detailsVC, animated: true)
+        return detailsVC
     }
 }
 
-extension RMLocationCoordinator: RMLocationDetailsViewControllerDelegate {
-    func didSelectCharacter(_ character: RMCharacterProtocol) {
-        showCharacterDetails(for: character)
+extension RMLocationCoordinator: RMDetailsCoordinator {
+    func showCharacterDetails(for character: RMCharacterProtocol) {
+        parentCoordinator?.showCharacterDetails(for: character, from: self)
+    }
+
+    func showEpisodeDetails(for episode: RMEpisodeProtocol) {
+        parentCoordinator?.showEpisodeDetails(for: episode, from: self)
     }
 }

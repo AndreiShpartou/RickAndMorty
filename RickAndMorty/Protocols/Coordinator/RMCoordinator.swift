@@ -7,9 +7,14 @@
 import UIKit
 
 protocol RMCoordinator: AnyObject {
-    var parentCoordinator: RMCoordinator? { get set }
-    var childCoordinators: [RMCoordinator] { get set }
     var navigationController: UINavigationController { get set }
+    var childCoordinators: [RMCoordinator] { get set }
 
     func start()
+}
+
+protocol RMDetailsCoordinator: RMCoordinator {
+    func showCharacterDetails(for character: RMCharacterProtocol)
+    func showEpisodeDetails(for episode: RMEpisodeProtocol)
+    func showLocationDetails(for location: RMLocationProtocol)
 }

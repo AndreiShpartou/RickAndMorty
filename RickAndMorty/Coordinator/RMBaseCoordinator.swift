@@ -8,13 +8,20 @@
 import UIKit
 
 class RMBaseCoordinator: RMCoordinator {
-    weak var parentCoordinator: RMCoordinator?
-    var childCoordinators: [RMCoordinator] = []
     var navigationController: UINavigationController
+    var childCoordinators: [RMCoordinator] = []
 
     required init(navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
 
     func start() {}
+
+    func addChildCoordinator(_ coordinator: RMCoordinator) {
+        childCoordinators.append(coordinator)
+    }
+
+    func removeChildCoordinator(_ coordinator: RMCoordinator) {
+        childCoordinators = childCoordinators.filter { $0 !== coordinator }
+    }
 }
