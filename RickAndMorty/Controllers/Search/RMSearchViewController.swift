@@ -15,6 +15,9 @@ import UIKit
 // Configurable controller to search
 // MARK: - VC Implementation
 final class RMSearchViewController: UIViewController {
+
+    weak var coordinator: RMSearchCoordinator?
+
     // Views
     private let searchView: RMSearchViewProtocol
     private let searchInputView: RMSearchInputViewProtocol
@@ -179,11 +182,7 @@ extension RMSearchViewController: RMSearchResultsHandlerDelegate {
             return
         }
 
-        let viewModel = RMLocationDetailsViewViewModel(location: locationModel)
-        let viewController = RMLocationDetailsViewController(viewModel: viewModel)
-        navigationItem.largeTitleDisplayMode = .never
-
-        navigationController?.pushViewController(viewController, animated: true)
+        coordinator?.showLocationDetails(for: locationModel)
     }
 
     func didTapCharacterAt(index: Int) {
@@ -191,11 +190,7 @@ extension RMSearchViewController: RMSearchResultsHandlerDelegate {
             return
         }
 
-        let viewModel = RMCharacterDetailsViewViewModel(character: characterModel)
-        let viewController = RMCharacterDetailsViewController(viewModel: viewModel)
-        navigationItem.largeTitleDisplayMode = .never
-
-        navigationController?.pushViewController(viewController, animated: true)
+        coordinator?.showCharacterDetails(for: characterModel)
     }
 
     func didTapEpisodeAt(index: Int) {
@@ -203,11 +198,7 @@ extension RMSearchViewController: RMSearchResultsHandlerDelegate {
             return
         }
 
-        let viewModel = RMEpisodeDetailsViewViewModel(episode: episodeModel)
-        let viewController = RMEpisodeDetailsViewController(viewModel: viewModel)
-        navigationItem.largeTitleDisplayMode = .never
-
-        navigationController?.pushViewController(viewController, animated: true)
+        coordinator?.showEpisodeDetails(for: episodeModel)
     }
 
     func didLoadMoreResults(with newIndexPath: [IndexPath]) {

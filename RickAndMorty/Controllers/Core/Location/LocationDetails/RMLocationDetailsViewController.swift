@@ -11,6 +11,8 @@ import UIKit
 // MARK: - ViewController Implementation
 final class RMLocationDetailsViewController: UIViewController {
 
+    weak var coordinator: RMDetailsCoordinator?
+
     private let detailsView: RMLocationDetailsViewProtocol
     private let collectionHandler: RMLocationDetailsCollectionHandler
     private let viewModel: RMLocationDetailsViewViewModelProtocol
@@ -107,12 +109,8 @@ extension RMLocationDetailsViewController: RMLocationDetailsCollectionHandlerDel
             guard let character = viewModel.character(at: index) else {
                 return
             }
-            let characterVM = RMCharacterDetailsViewViewModel(character: character)
-            let characterVC = RMCharacterDetailsViewController(viewModel: characterVM)
-            characterVC.title = character.name
-            characterVC.navigationItem.largeTitleDisplayMode = .never
 
-            navigationController?.pushViewController(characterVC, animated: true)
+            coordinator?.showCharacterDetails(for: character)
         }
     }
 }

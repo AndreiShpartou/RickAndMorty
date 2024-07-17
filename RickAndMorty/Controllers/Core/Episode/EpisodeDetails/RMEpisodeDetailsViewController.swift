@@ -11,6 +11,8 @@ import UIKit
 // MARK: - ViewController Implementation
 final class RMEpisodeDetailsViewController: UIViewController {
 
+    weak var coordinator: RMDetailsCoordinator?
+
     private let detailsView: RMEpisodeDetailsViewProtocol
     private let collectionHandler: RMEpisodeDetailsCollectionHandler
     private let viewModel: RMEpisodeDetailsViewViewModelProtocol
@@ -108,12 +110,8 @@ extension RMEpisodeDetailsViewController: RMEpisodeDetailsCollectionHandlerDeleg
             guard let character = viewModel.character(at: index) else {
                 return
             }
-            let characterVM = RMCharacterDetailsViewViewModel(character: character)
-            let characterVC = RMCharacterDetailsViewController(viewModel: characterVM)
-            characterVC.title = character.name
-            characterVC.navigationItem.largeTitleDisplayMode = .never
 
-            navigationController?.pushViewController(characterVC, animated: true)
+            coordinator?.showCharacterDetails(for: character)
         }
     }
 }

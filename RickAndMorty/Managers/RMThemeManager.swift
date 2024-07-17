@@ -34,12 +34,12 @@ class RMThemeStorage: RMThemeStorageProtocol {
 // Manage dark / light mode
 class RMThemeManager {
     // Shared singleton instance
-    static let shared = RMThemeManager()
-
-    private var themeStorage: RMThemeStorageProtocol = RMThemeStorage()
+    private var themeStorage: RMThemeStorageProtocol
 
     // MARK: - Init
-    private init() {}
+    init(themeStorage: RMThemeStorageProtocol = RMThemeStorage()) {
+        self.themeStorage = themeStorage
+    }
 
     // MARK: - PublicMethods
     func applyCurrentTheme() {
