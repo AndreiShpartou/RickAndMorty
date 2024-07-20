@@ -89,9 +89,7 @@ extension RMEpisodeCollectionHandler: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard viewModel.shouldShowLoadMoreIndicator,
               !viewModel.isLoadingMoreEpisodes,
-              !viewModel.cellViewModels.isEmpty,
-              let nextUrlString = viewModel.nextUrlString,
-              let url = URL(string: nextUrlString) else {
+              !viewModel.cellViewModels.isEmpty else {
             return
         }
 
@@ -100,7 +98,7 @@ extension RMEpisodeCollectionHandler: UIScrollViewDelegate {
         let totalScrollViewFixedHeight = scrollView.frame.size.height
 
         if totalContentHeight != 0, offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
-            viewModel.fetchAdditionalEpisodesWithDelay(0.1, url: url)
+            viewModel.fetchAdditionalEpisodesWithDelay(0.1)
         }
     }
 }

@@ -33,7 +33,7 @@ final class RMLocationDetailsViewViewModel: RMLocationDetailsViewViewModelProtoc
     }
 
     // Fetch character model
-    func character(at index: Int) -> RMCharacterProtocol? {
+    func getCharacter(at index: Int) -> RMCharacterProtocol? {
         return characters?[index]
     }
 

@@ -75,7 +75,7 @@ final class RMLocationViewViewModel: RMLocationViewViewModelProtocol {
         guard let urlString = apiInfo?.next,
               let url = URL(string: urlString),
               let request = RMRequest(url: url) else {
-
+            NSLog(RMServiceError.failedToCreateRequest.localizedDescription)
             isLoadingMoreLocations = false
 
             return

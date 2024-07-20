@@ -71,9 +71,14 @@ final class RMEpisodeListViewViewModel: RMEpisodeListViewViewModelProtocol {
     }
 
     // Paginate if additional episodes are needed
-    func fetchAdditionalEpisodes(url: URL) {
+    func fetchAdditionalEpisodes() {
         isLoadingMoreEpisodes = true
-        guard let request = RMRequest(url: url) else {
+        guard let urlString = apiInfo?.next,
+              let url = URL(string: urlString),
+              let request = RMRequest(url: url) else {
+            NSLog(RMServiceError.failedToCreateRequest.localizedDescription)
+            isLoadingMoreEpisodes = false
+
             return
         }
 
@@ -93,10 +98,10 @@ final class RMEpisodeListViewViewModel: RMEpisodeListViewViewModelProtocol {
     }
 
     // MARK: - Delay
-    func fetchAdditionalEpisodesWithDelay(_ delay: TimeInterval, url: URL) {
+    func fetchAdditionalEpisodesWithDelay(_ delay: TimeInterval) {
         isLoadingMoreEpisodes = true
         Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in
-            self?.fetchAdditionalEpisodes(url: url)
+            self?.fetchAdditionalEpisodes()
         }
     }
 

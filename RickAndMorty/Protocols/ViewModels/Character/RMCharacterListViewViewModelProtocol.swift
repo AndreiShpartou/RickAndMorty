@@ -15,8 +15,8 @@ protocol RMCharacterListViewViewModelProtocol: AnyObject {
     var isLoadingMoreCharacters: Bool { get }
 
     func fetchCharacters()
-    func fetchAdditionalCharacters(url: URL)
-    func fetchAdditionalCharactersWithDelay(_ delay: TimeInterval, url: URL)
+    func fetchAdditionalCharacters()
+    func fetchAdditionalCharactersWithDelay(_ delay: TimeInterval)
     func getCharacter(at index: Int) -> RMCharacterProtocol
 }
 
