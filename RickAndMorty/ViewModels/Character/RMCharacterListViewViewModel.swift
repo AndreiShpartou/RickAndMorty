@@ -69,11 +69,14 @@ final class RMCharacterListViewViewModel: RMCharacterListViewViewModelProtocol {
     }
 
     // Paginate if additional characters are needed
-    func fetchAdditionalCharacters(url: URL) {
+    func fetchAdditionalCharacters() {
         isLoadingMoreCharacters = true
-        guard let request = RMRequest(url: url) else {
+        guard let urlString = apiInfo?.next,
+              let url = URL(string: urlString),
+              let request = RMRequest(url: url) else {
             NSLog(RMServiceError.failedToCreateRequest.localizedDescription)
             isLoadingMoreCharacters = false
+
             return
         }
 
@@ -97,10 +100,10 @@ final class RMCharacterListViewViewModel: RMCharacterListViewViewModelProtocol {
     }
 
     // MARK: - Delay
-    func fetchAdditionalCharactersWithDelay(_ delay: TimeInterval, url: URL) {
+    func fetchAdditionalCharactersWithDelay(_ delay: TimeInterval) {
         isLoadingMoreCharacters = true
         Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in
-            self?.fetchAdditionalCharacters(url: url)
+            self?.fetchAdditionalCharacters()
         }
     }
 

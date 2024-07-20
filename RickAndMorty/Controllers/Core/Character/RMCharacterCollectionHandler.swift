@@ -98,9 +98,7 @@ extension RMCharacterCollectionHandler: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard viewModel.shouldShowLoadMoreIndicator,
               !viewModel.isLoadingMoreCharacters,
-              !viewModel.cellViewModels.isEmpty,
-              let nextUrlString = viewModel.nextUrlString,
-              let url = URL(string: nextUrlString) else {
+              !viewModel.cellViewModels.isEmpty else {
             return
         }
 
@@ -109,7 +107,7 @@ extension RMCharacterCollectionHandler: UIScrollViewDelegate {
         let totalScrollViewFixedHeight = scrollView.frame.size.height
 
         if totalContentHeight != 0, offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
-            viewModel.fetchAdditionalCharactersWithDelay(0.1, url: url)
+            viewModel.fetchAdditionalCharactersWithDelay(0.1)
         }
     }
 }

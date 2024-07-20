@@ -12,7 +12,7 @@ protocol RMLocationDetailsViewViewModelProtocol: AnyObject {
     var sections: [RMSectionType] { get }
 
     func fetchLocationData()
-    func character(at index: Int) -> RMCharacterProtocol?
+    func getCharacter(at index: Int) -> RMCharacterProtocol?
     func getDataToShare() -> [Any]
 }
 

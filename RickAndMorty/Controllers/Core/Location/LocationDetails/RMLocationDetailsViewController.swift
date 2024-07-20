@@ -106,7 +106,7 @@ extension RMLocationDetailsViewController: RMLocationDetailsCollectionHandlerDel
     func didSelectItemAt(_ section: Int, _ index: Int) {
         let sectionType = viewModel.sections[section]
         if case .characters = sectionType {
-            guard let character = viewModel.character(at: index) else {
+            guard let character = viewModel.getCharacter(at: index) else {
                 return
             }
 

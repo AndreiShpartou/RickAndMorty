@@ -12,7 +12,7 @@ protocol RMEpisodeDetailsViewViewModelProtocol: AnyObject {
     var sections: [RMSectionType] { get }
 
     func fetchEpisodeData()
-    func character(at index: Int) -> RMCharacterProtocol?
+    func getCharacter(at index: Int) -> RMCharacterProtocol?
     func getDataToShare() -> [Any]
 }
 
