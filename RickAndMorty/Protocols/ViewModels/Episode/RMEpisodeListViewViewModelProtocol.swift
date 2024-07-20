@@ -15,8 +15,8 @@ protocol RMEpisodeListViewViewModelProtocol: AnyObject {
     var isLoadingMoreEpisodes: Bool { get }
 
     func fetchEpisodes()
-    func fetchAdditionalEpisodes(url: URL)
-    func fetchAdditionalEpisodesWithDelay(_ delay: TimeInterval, url: URL)
+    func fetchAdditionalEpisodes()
+    func fetchAdditionalEpisodesWithDelay(_ delay: TimeInterval)
     func getEpisode(at index: Int) -> RMEpisodeProtocol
 }
 
