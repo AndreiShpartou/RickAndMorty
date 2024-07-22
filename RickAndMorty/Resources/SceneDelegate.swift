@@ -16,14 +16,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
-        let navigationController = UINavigationController()
-        setupCoordination(with: navigationController)
-
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = navigationController
-        window.makeKeyAndVisible()
-
         self.window = window
+
+        setupCoordination()
 
         // Apply Dark/Light mode
         RMThemeManager().applyCurrentTheme()
@@ -32,14 +28,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 // MARK: - SetupCoordination
 extension SceneDelegate {
-    private func setupCoordination(with navController: UINavigationController) {
-        appCoordinator = RMAppCoordinator(navigationController: navController)
-        appCoordinator?.start()
-
+    private func setupCoordination() {
+        appCoordinator = RMAppCoordinator(window: window)
         // Settings for double tap scrolling
         let tabBarViewController = appCoordinator?.tabBarViewController
         tabBarViewController?.delegate = self
         previousNavigationController = tabBarViewController?.viewControllers?.first as? UINavigationController
+
+        appCoordinator?.start()
     }
 }
 
