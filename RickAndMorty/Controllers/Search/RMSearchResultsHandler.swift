@@ -42,6 +42,10 @@ extension RMSearchResultsHandler {
 // MARK: - UITableViewDataSource
 extension RMSearchResultsHandler: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if tableView.isHidden {
+            return Constants.defaultCountOfSearchResults
+        }
+
         return cellViewModels.count
     }
 
@@ -73,6 +77,10 @@ extension RMSearchResultsHandler: UITableViewDelegate {
 // MARK: - UICollectionViewDataSource
 extension RMSearchResultsHandler: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if collectionView.isHidden {
+            return Constants.defaultCountOfSearchResults
+        }
+
         return cellViewModels.count
     }
 

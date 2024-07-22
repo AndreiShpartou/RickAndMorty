@@ -39,12 +39,13 @@ final class RMEpisodeViewController: UIViewController {
         super.viewDidLoad()
 
         setupController()
+        addLongLivedObservers()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        addObservers()
+        addShortLivedObservers()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -58,7 +59,11 @@ final class RMEpisodeViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
-        removeObservers()
+        removeShortLivedObservers()
+    }
+
+    deinit {
+        removeLongLivedObservers()
     }
 }
 
@@ -94,14 +99,24 @@ extension RMEpisodeViewController {
         )
     }
 
-    private func addObservers() {
+    private func addShortLivedObservers() {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(tabBarItemDoubleTapped),
             name: .tabBarItemDoubleTapped,
             object: nil
         )
+    }
 
+    private func removeShortLivedObservers() {
+        NotificationCenter.default.removeObserver(
+            self,
+            name: .tabBarItemDoubleTapped,
+            object: nil
+        )
+    }
+
+    private func addLongLivedObservers() {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(orientationDidChange),
@@ -110,13 +125,7 @@ extension RMEpisodeViewController {
         )
     }
 
-    private func removeObservers() {
-        NotificationCenter.default.removeObserver(
-            self,
-            name: .tabBarItemDoubleTapped,
-            object: nil
-        )
-
+    private func removeLongLivedObservers() {
         NotificationCenter.default.removeObserver(
             self,
             name: UIDevice.orientationDidChangeNotification,

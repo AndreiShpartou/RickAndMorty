@@ -8,10 +8,10 @@
 import UIKit
 
 class RMBaseCoordinator: RMCoordinator {
-    var navigationController: UINavigationController
+    var navigationController: UINavigationController?
     var childCoordinators: [RMCoordinator] = []
 
-    required init(navigationController: UINavigationController) {
+    required init(navigationController: UINavigationController? = nil) {
         self.navigationController = navigationController
     }
 

@@ -15,7 +15,7 @@ class RMLocationCoordinator: RMBaseCoordinator {
         let locationVC = RMLocationViewController()
         locationVC.coordinator = self
 
-        navigationController.pushViewController(locationVC, animated: false)
+        navigationController?.pushViewController(locationVC, animated: false)
     }
 
     // MARK: - Public
@@ -24,7 +24,7 @@ class RMLocationCoordinator: RMBaseCoordinator {
         let detailsVC = getLocationVC(for: location)
         detailsVC.coordinator = self
 
-        navigationController.pushViewController(detailsVC, animated: true)
+        navigationController?.pushViewController(detailsVC, animated: true)
     }
 
     // Head over from other coordinators
@@ -32,7 +32,7 @@ class RMLocationCoordinator: RMBaseCoordinator {
         let detailsVC = getLocationVC(for: location)
         detailsVC.coordinator = coordinator
 
-        coordinator.navigationController.pushViewController(detailsVC, animated: true)
+        coordinator.navigationController?.pushViewController(detailsVC, animated: true)
     }
 
     // MARK: - Private
@@ -63,6 +63,6 @@ extension RMLocationCoordinator: RMSearchCoordinator {
         searchVC.coordinator = self
         searchVC.navigationItem.largeTitleDisplayMode = .never
 
-        navigationController.pushViewController(searchVC, animated: true)
+        navigationController?.pushViewController(searchVC, animated: true)
     }
 }
