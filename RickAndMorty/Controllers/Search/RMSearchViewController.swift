@@ -57,11 +57,6 @@ final class RMSearchViewController: UIViewController {
         super.viewDidLoad()
 
         setupController()
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
         addObservers()
     }
 
@@ -71,9 +66,7 @@ final class RMSearchViewController: UIViewController {
         searchInputView.presentKeyboard()
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-
+    deinit {
         removeObservers()
     }
 }
