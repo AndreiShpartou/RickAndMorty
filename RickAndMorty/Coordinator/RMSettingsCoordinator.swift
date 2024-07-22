@@ -12,6 +12,6 @@ class RMSettingsCoordinator: RMBaseCoordinator {
         let settingsVC = RMSettingsViewController()
         settingsVC.coordinator = self
 
-        navigationController.pushViewController(settingsVC, animated: false)
+        navigationController?.pushViewController(settingsVC, animated: false)
     }
 }

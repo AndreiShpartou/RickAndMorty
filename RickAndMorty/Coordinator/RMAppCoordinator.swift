@@ -15,14 +15,23 @@ class RMAppCoordinator: RMBaseCoordinator {
     private var episodeCoordinator: RMEpisodeCoordinator?
     private var settingsCoordinator: RMSettingsCoordinator?
 
+    private var window: UIWindow?
+
+    // MARK: - Init
+    init(window: UIWindow?) {
+        self.window = window
+        super.init()
+
+        setupCoordinator()
+    }
+
+    required init(navigationController: UINavigationController? = nil) {
+        fatalError("init(navigationController:) has not been implemented")
+    }
+
     override func start() {
-        tabBarViewController.viewControllers = []
-        setupSubCoordinators()
-        // MainTabBar
-        tabBarViewController.viewControllers = childCoordinators.map {
-            return $0.navigationController
-        }
-        navigationController.setViewControllers([tabBarViewController], animated: false)
+        window?.rootViewController = tabBarViewController
+        window?.makeKeyAndVisible()
     }
 
     // MARK: - Public
@@ -73,6 +82,14 @@ class RMAppCoordinator: RMBaseCoordinator {
             imageSystemName: "gear",
             tag: 3
         )
+    }
+
+    private func setupCoordinator() {
+        setupSubCoordinators()
+        // MainTabBar
+        tabBarViewController.viewControllers = childCoordinators.compactMap {
+            return $0.navigationController
+        }
     }
 
     private func createCoordinator<T: RMBaseCoordinator>(type: T.Type, title: String, imageSystemName: String, tag: Int) -> T {

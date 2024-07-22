@@ -13,7 +13,7 @@ class RMEpisodeCoordinator: RMBaseCoordinator {
         let episodeVC = RMEpisodeViewController()
         episodeVC.coordinator = self
 
-        navigationController.pushViewController(episodeVC, animated: false)
+        navigationController?.pushViewController(episodeVC, animated: false)
     }
 
     // MARK: - Public
@@ -22,7 +22,7 @@ class RMEpisodeCoordinator: RMBaseCoordinator {
         let detailsVC = createVC(for: episode)
         detailsVC.coordinator = self
 
-        navigationController.pushViewController(detailsVC, animated: true)
+        navigationController?.pushViewController(detailsVC, animated: true)
     }
 
     // Head over from another detail VC
@@ -30,7 +30,7 @@ class RMEpisodeCoordinator: RMBaseCoordinator {
         let detailsVC = createVC(for: episode)
         detailsVC.coordinator = coordinator
 
-        coordinator.navigationController.pushViewController(detailsVC, animated: true)
+        coordinator.navigationController?.pushViewController(detailsVC, animated: true)
     }
 
     // MARK: - Private
@@ -61,6 +61,6 @@ extension RMEpisodeCoordinator: RMSearchCoordinator {
         searchVC.coordinator = self
         searchVC.navigationItem.largeTitleDisplayMode = .never
 
-        navigationController.pushViewController(searchVC, animated: true)
+        navigationController?.pushViewController(searchVC, animated: true)
     }
 }

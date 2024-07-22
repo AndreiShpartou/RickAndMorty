@@ -15,7 +15,7 @@ class RMCharacterCoordinator: RMBaseCoordinator {
         let characterVC = RMCharacterViewController()
         characterVC.coordinator = self
 
-        navigationController.pushViewController(characterVC, animated: false)
+        navigationController?.pushViewController(characterVC, animated: false)
     }
 
     // MARK: - Public
@@ -24,7 +24,7 @@ class RMCharacterCoordinator: RMBaseCoordinator {
         let detailsVC = getDetailVC(for: character)
         detailsVC.coordinator = self
 
-        navigationController.pushViewController(detailsVC, animated: true)
+        navigationController?.pushViewController(detailsVC, animated: true)
     }
 
     // Head over from other coordinators
@@ -32,7 +32,7 @@ class RMCharacterCoordinator: RMBaseCoordinator {
         let detailsVC = getDetailVC(for: character)
         detailsVC.coordinator = coordinator
 
-        coordinator.navigationController.pushViewController(detailsVC, animated: true)
+        coordinator.navigationController?.pushViewController(detailsVC, animated: true)
     }
 
     // MARK: - Private
@@ -64,6 +64,6 @@ extension RMCharacterCoordinator: RMSearchCoordinator {
         searchVC.coordinator = self
         searchVC.navigationItem.largeTitleDisplayMode = .never
 
-        navigationController.pushViewController(searchVC, animated: true)
+        navigationController?.pushViewController(searchVC, animated: true)
     }
 }

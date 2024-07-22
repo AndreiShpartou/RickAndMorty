@@ -7,7 +7,7 @@
 import UIKit
 
 protocol RMCoordinator: AnyObject {
-    var navigationController: UINavigationController { get set }
+    var navigationController: UINavigationController? { get set }
     var childCoordinators: [RMCoordinator] { get set }
 
     func start()
