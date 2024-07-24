@@ -1,19 +1,19 @@
 # Rick and Morty App
-
-![App Banner](images/banner.png)
+![Static Badge](https://img.shields.io/badge/_Swift-blue?style=flat) ![Static Badge](https://img.shields.io/badge/_UIKit-red?style=flat) ![Static Badge](https://img.shields.io/badge/_iOS-15.0-purple?style=flat) ![Static Badge](https://img.shields.io/badge/_MVVM--C-gray?style=flat)
+![App Banner](https://github-production-user-asset-6210df.s3.amazonaws.com/147600788/351609161-36185212-5534-43df-a8ee-b5cc0025f4e5.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240724%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240724T070941Z&X-Amz-Expires=300&X-Amz-Signature=4500330d520b3def219b531111bb506b532026235e1d2ba7889139dfb3df6d54&X-Amz-SignedHeaders=host&actor_id=147600788&key_id=0&repo_id=809779801)
 
 Welcome to the Rick and Morty App! This application provides an interface to explore characters, locations, and episodes from the popular TV show "Rick and Morty".
 
 ## Table of Contents
 
-- [Features](#features)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Architecture](#architecture)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
+- **[Features](#features)**
+- **[Requirements](#requirements)**
+- **[Installation](#installation)**
+- **[Usage](#usage)**
+- **[Architecture](#architecture)**
+- **[Contributing](#contributing)**
+- **[License](#license)**
+- **[Contact](#contact)**
 
 ## Features
 
@@ -25,20 +25,20 @@ Welcome to the Rick and Morty App! This application provides an interface to exp
 
 ## Requirements
 
-- iOS 14.0+
-- Xcode 12.0+
-- Swift 5.0+
+- **Xcode**: 15.0.1 or newer (Recommended)
+- **iOS**: 15.0+
+- **Swift**: 5.0+
 
 ## Installation
 
 1. Clone the repo:
     ```sh
-    git clone https://github.com/yourusername/rick-and-morty-app.git
+    git clone https://github.com/AndreiShpartou/RickAndMorty.git
     ```
 
 2. Navigate to the project directory:
     ```sh
-    cd rick-and-morty-app
+    cd RickAndMorty
     ```
 
 3. Open the project in Xcode:
@@ -58,24 +58,17 @@ Welcome to the Rick and Morty App! This application provides an interface to exp
 
 ## Architecture
 
-The app is built using the **MVVM-C (Model-View-ViewModel-Coordinator)** architecture pattern to ensure a clean and scalable codebase.
+The app is built using the **MVVM-C** architecture pattern to ensure a clean and scalable codebase.
 
 ## Contributing
 
-Contributions are welcome! Please follow these steps to contribute:
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature/your-feature-name`).
-3. Commit your changes (`git commit -m 'Add some feature'`).
-4. Push to the branch (`git push origin feature/your-feature-name`).
-5. Open a Pull Request.
+Contributions are welcome!
+If you find any bugs or have suggestions for improvement, please create an issue or submit a pull request
 
 ## License
-
+The data and images are used without claim of ownership and belong to their respective owners.
 Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-Andrei Shpartou - [your-email@example.com](mailto:your-email@example.com)
-
-Project Link: [https://github.com/yourusername/rick-and-morty-app](https://github.com/yourusername/rick-and-morty-app)
+[AndreiShpartou@gmail.com](mailto:AndreiShpartou@gmail.com)
