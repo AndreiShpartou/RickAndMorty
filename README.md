@@ -1,6 +1,7 @@
 # Rick and Morty App
 ![Static Badge](https://img.shields.io/badge/_Swift-blue?style=flat) ![Static Badge](https://img.shields.io/badge/_UIKit-red?style=flat) ![Static Badge](https://img.shields.io/badge/_iOS-15.0-purple?style=flat) ![Static Badge](https://img.shields.io/badge/_MVVM--C-gray?style=flat)
-![App Banner](https://github-production-user-asset-6210df.s3.amazonaws.com/147600788/351609161-36185212-5534-43df-a8ee-b5cc0025f4e5.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240724%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240724T070941Z&X-Amz-Expires=300&X-Amz-Signature=4500330d520b3def219b531111bb506b532026235e1d2ba7889139dfb3df6d54&X-Amz-SignedHeaders=host&actor_id=147600788&key_id=0&repo_id=809779801)
+
+![App Banner](Rick&MortyAppBanner.png)
 
 Welcome to the Rick and Morty App! This application provides an interface to explore characters, locations, and episodes from the popular TV show "Rick and Morty".
 
