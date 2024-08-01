@@ -21,7 +21,7 @@
 		6C497EF12C17429100775F3F /* RMSettingsViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C497EF02C17429100775F3F /* RMSettingsViewViewModel.swift */; };
 		6C497EF32C1742C800775F3F /* RMSettingsCellViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C497EF22C1742C800775F3F /* RMSettingsCellViewViewModel.swift */; };
 		6C497EF52C17435E00775F3F /* RMSettingsOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C497EF42C17435E00775F3F /* RMSettingsOption.swift */; };
-		6C4A53E52C464FB000E47829 /* RMCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4A53E42C464FB000E47829 /* RMCoordinator.swift */; };
+		6C4A53E52C464FB000E47829 /* RMCoordinatorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4A53E42C464FB000E47829 /* RMCoordinatorProtocol.swift */; };
 		6C4A53E82C46501900E47829 /* RMBaseCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4A53E72C46501900E47829 /* RMBaseCoordinator.swift */; };
 		6C4A53EA2C46509200E47829 /* RMAppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4A53E92C46509200E47829 /* RMAppCoordinator.swift */; };
 		6C4A53EC2C4651B100E47829 /* RMCharacterCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4A53EB2C4651B100E47829 /* RMCharacterCoordinator.swift */; };
@@ -149,7 +149,7 @@
 		6C497EF02C17429100775F3F /* RMSettingsViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMSettingsViewViewModel.swift; sourceTree = "<group>"; };
 		6C497EF22C1742C800775F3F /* RMSettingsCellViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMSettingsCellViewViewModel.swift; sourceTree = "<group>"; };
 		6C497EF42C17435E00775F3F /* RMSettingsOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMSettingsOption.swift; sourceTree = "<group>"; };
-		6C4A53E42C464FB000E47829 /* RMCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMCoordinator.swift; sourceTree = "<group>"; };
+		6C4A53E42C464FB000E47829 /* RMCoordinatorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMCoordinatorProtocol.swift; sourceTree = "<group>"; };
 		6C4A53E72C46501900E47829 /* RMBaseCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMBaseCoordinator.swift; sourceTree = "<group>"; };
 		6C4A53E92C46509200E47829 /* RMAppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMAppCoordinator.swift; sourceTree = "<group>"; };
 		6C4A53EB2C4651B100E47829 /* RMCharacterCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMCharacterCoordinator.swift; sourceTree = "<group>"; };
@@ -275,63 +275,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6C14DABA2C3E8318009CBC26 /* Episode */ = {
-			isa = PBXGroup;
-			children = (
-				6C14DABE2C3EAEAD009CBC26 /* RMEpisodeListViewProtocol.swift */,
-				6C14DABB2C3E8325009CBC26 /* EpisodeDetails */,
-			);
-			path = Episode;
-			sourceTree = "<group>";
-		};
-		6C14DABB2C3E8325009CBC26 /* EpisodeDetails */ = {
-			isa = PBXGroup;
-			children = (
-				6C14DABC2C3E8367009CBC26 /* RMEpisodeDetailsViewProtocol.swift */,
-			);
-			path = EpisodeDetails;
-			sourceTree = "<group>";
-		};
-		6C322C2D2C3BDAF000B3E06B /* Episode */ = {
-			isa = PBXGroup;
-			children = (
-				6C14DAB42C3E6C9B009CBC26 /* RMEpisodeListViewViewModelProtocol.swift */,
-				6C855EDB2C39709500F28575 /* RMEpisodeCollectionViewCellViewModelProtocol.swift */,
-				6C322C2E2C3BDBD200B3E06B /* EpisodeDetails */,
-			);
-			path = Episode;
-			sourceTree = "<group>";
-		};
-		6C322C2E2C3BDBD200B3E06B /* EpisodeDetails */ = {
-			isa = PBXGroup;
-			children = (
-				6C0B6E722C3C1ADB00B3FAC4 /* RMEpisodeDetailsViewViewModelProtocol.swift */,
-				6C322C2F2C3BDBE200B3E06B /* RMEpisodeInfoCollectionViewCellViewModelProtocol.swift */,
-			);
-			path = EpisodeDetails;
-			sourceTree = "<group>";
-		};
-		6C497EEF2C17428400775F3F /* Settings */ = {
-			isa = PBXGroup;
-			children = (
-				6C497EF02C17429100775F3F /* RMSettingsViewViewModel.swift */,
-				6C497EF22C1742C800775F3F /* RMSettingsCellViewViewModel.swift */,
-				6C497EF42C17435E00775F3F /* RMSettingsOption.swift */,
-			);
-			path = Settings;
-			sourceTree = "<group>";
-		};
 		6C4A53E32C464F9B00E47829 /* Coordinator */ = {
 			isa = PBXGroup;
 			children = (
-				6C4A53E42C464FB000E47829 /* RMCoordinator.swift */,
-			);
-			path = Coordinator;
-			sourceTree = "<group>";
-		};
-		6C4A53E62C46500400E47829 /* Coordinator */ = {
-			isa = PBXGroup;
-			children = (
+				6C4A53E42C464FB000E47829 /* RMCoordinatorProtocol.swift */,
 				6C4A53E72C46501900E47829 /* RMBaseCoordinator.swift */,
 				6C4A53E92C46509200E47829 /* RMAppCoordinator.swift */,
 				6C4A53EB2C4651B100E47829 /* RMCharacterCoordinator.swift */,
@@ -339,141 +286,18 @@
 				6C4A53EF2C4651C900E47829 /* RMEpisodeCoordinator.swift */,
 				6C4A53F12C4651D400E47829 /* RMSettingsCoordinator.swift */,
 			);
-			path = Coordinator;
-			sourceTree = "<group>";
-		};
-		6C65ECBA2C3FD627009FE3A0 /* Location */ = {
-			isa = PBXGroup;
-			children = (
-				6C65ECC92C4009FB009FE3A0 /* RMLocationViewViewModelProtocol.swift */,
-				6C65ECC72C4004AB009FE3A0 /* RMLocationTableViewCellViewModelProtocol.swift */,
-				6C65ECBB2C3FD62E009FE3A0 /* LocationDetails */,
-			);
-			path = Location;
-			sourceTree = "<group>";
-		};
-		6C65ECBB2C3FD62E009FE3A0 /* LocationDetails */ = {
-			isa = PBXGroup;
-			children = (
-				6C65ECBC2C3FD63B009FE3A0 /* RMLocationDetailsViewViewModelProtocol.swift */,
-			);
-			path = LocationDetails;
-			sourceTree = "<group>";
-		};
-		6C65ECBE2C3FF365009FE3A0 /* Location */ = {
-			isa = PBXGroup;
-			children = (
-				6C65ECCB2C40208B009FE3A0 /* RMLocationViewProtocol.swift */,
-				6C65ECBF2C3FF36D009FE3A0 /* LocationDetails */,
-			);
-			path = Location;
-			sourceTree = "<group>";
-		};
-		6C65ECBF2C3FF36D009FE3A0 /* LocationDetails */ = {
-			isa = PBXGroup;
-			children = (
-				6C65ECC02C3FF379009FE3A0 /* RMLocationDetailsViewProtocol.swift */,
-			);
-			path = LocationDetails;
-			sourceTree = "<group>";
-		};
-		6C65ECC22C3FF506009FE3A0 /* Location */ = {
-			isa = PBXGroup;
-			children = (
-				6CAA56EE2C0DC8BD00BCEB29 /* RMLocationViewController.swift */,
-				6C65ECCD2C4022DA009FE3A0 /* RMLocationTableViewHandler.swift */,
-				6C65ECC32C3FF50A009FE3A0 /* LocationDetails */,
-			);
-			path = Location;
-			sourceTree = "<group>";
-		};
-		6C65ECC32C3FF50A009FE3A0 /* LocationDetails */ = {
-			isa = PBXGroup;
-			children = (
-				6CA132FF2C19A5D10040C32F /* RMLocationDetailsViewController.swift */,
-				6C65ECC52C3FF58D009FE3A0 /* RMLocationDetailsCollectionHandler.swift */,
-			);
-			path = LocationDetails;
-			sourceTree = "<group>";
-		};
-		6C65ECC42C3FF51E009FE3A0 /* Settings */ = {
-			isa = PBXGroup;
-			children = (
-				6CAA56F22C0DC8D300BCEB29 /* RMSettingsViewController.swift */,
-			);
-			path = Settings;
-			sourceTree = "<group>";
-		};
-		6C6637202C369A17007A2640 /* Protocols */ = {
-			isa = PBXGroup;
-			children = (
-				6C4A53E32C464F9B00E47829 /* Coordinator */,
-				6CE13C8C2C37C81200102E46 /* Managers */,
-				6CE13C922C37DBFE00102E46 /* APIClient */,
-				6C66372A2C36C60F007A2640 /* Models */,
-				6C6637272C36C5E7007A2640 /* Views */,
-				6C6637232C369A4D007A2640 /* ViewModels */,
-			);
-			path = Protocols;
-			sourceTree = "<group>";
-		};
-		6C6637232C369A4D007A2640 /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-				6C899BE22C411672002E40E0 /* Search */,
-				6C6637242C369A59007A2640 /* Character */,
-				6C65ECBA2C3FD627009FE3A0 /* Location */,
-				6C322C2D2C3BDAF000B3E06B /* Episode */,
-			);
-			path = ViewModels;
-			sourceTree = "<group>";
-		};
-		6C6637242C369A59007A2640 /* Character */ = {
-			isa = PBXGroup;
-			children = (
-				6C66371E2C3698C6007A2640 /* RMCharacterListViewViewModelProtocol.swift */,
-				6C855EE12C3998EC00F28575 /* RMCharacterCollectionViewCellViewModelProtocol.swift */,
-				6C855ED82C39672400F28575 /* CharacterDetails */,
-			);
-			path = Character;
-			sourceTree = "<group>";
-		};
-		6C6637272C36C5E7007A2640 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				6C899BE32C41167F002E40E0 /* Search */,
-				6C66372B2C36C61B007A2640 /* Character */,
-				6C65ECBE2C3FF365009FE3A0 /* Location */,
-				6C14DABA2C3E8318009CBC26 /* Episode */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		6C66372A2C36C60F007A2640 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				6CEA20432C3AB654004E3059 /* RMCharacterProtocol.swift */,
-				6C65ECB82C3FD4B2009FE3A0 /* RMLocationProtocol.swift */,
-				6CEA20412C3AB0F9004E3059 /* RMEpisodeProtocol.swift */,
-				6CF8AF422C439DFA002A7638 /* APIResponseTypes */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		6C66372B2C36C61B007A2640 /* Character */ = {
-			isa = PBXGroup;
-			children = (
-				6C6637282C36C5F4007A2640 /* RMCharacterListViewProtocol.swift */,
-				6CEA20452C3AF859004E3059 /* CharacterDetails */,
-			);
-			path = Character;
+			name = Coordinator;
+			path = Protocols/Coordinator;
 			sourceTree = "<group>";
 		};
 		6C6642362C16D44400BDD264 /* EpisodeDetails */ = {
 			isa = PBXGroup;
 			children = (
+				6C14DABC2C3E8367009CBC26 /* RMEpisodeDetailsViewProtocol.swift */,
 				6C6B495D2C159C9C006FE1B2 /* RMEpisodeDetailsView.swift */,
+				6C99FA052C148B1B0077198F /* RMEpisodeDetailsViewController.swift */,
 				6C6642372C16D47D00BDD264 /* RMEpisodeInfoCollectionViewCell.swift */,
+				6C14DAB82C3E7EC9009CBC26 /* RMEpisodeDetailsCollectionHandler.swift */,
 			);
 			path = EpisodeDetails;
 			sourceTree = "<group>";
@@ -481,86 +305,27 @@
 		6C6642392C16D52300BDD264 /* EpisodeDetails */ = {
 			isa = PBXGroup;
 			children = (
+				6C0B6E722C3C1ADB00B3FAC4 /* RMEpisodeDetailsViewViewModelProtocol.swift */,
 				6C6B495B2C159BCC006FE1B2 /* RMEpisodeDetailsViewViewModel.swift */,
+				6C322C2F2C3BDBE200B3E06B /* RMEpisodeInfoCollectionViewCellViewModelProtocol.swift */,
 				6C66423A2C16D54900BDD264 /* RMEpisodeInfoCollectionViewCellViewModel.swift */,
 			);
 			path = EpisodeDetails;
 			sourceTree = "<group>";
 		};
-		6C6B495F2C15A3BE006FE1B2 /* Episode */ = {
-			isa = PBXGroup;
-			children = (
-				6C6B49602C15A3CE006FE1B2 /* RMEpisodeListView.swift */,
-				6C99F9FC2C142E630077198F /* RMEpisodeCollectionViewCell.swift */,
-				6C6642362C16D44400BDD264 /* EpisodeDetails */,
-			);
-			path = Episode;
-			sourceTree = "<group>";
-		};
-		6C7809492C257B9A004BCFB1 /* Character */ = {
-			isa = PBXGroup;
-			children = (
-				6C7F49952C1068150079CE8E /* RMCharacterListViewViewModel.swift */,
-				6C7F499D2C10B9D40079CE8E /* RMCharacterCollectionViewCellViewModel.swift */,
-				6C99F9FE2C142E910077198F /* CharacterDetails */,
-			);
-			path = Character;
-			sourceTree = "<group>";
-		};
-		6C78094A2C257BA1004BCFB1 /* Location */ = {
-			isa = PBXGroup;
-			children = (
-				6CA132F82C1979E90040C32F /* RMLocationViewViewModel.swift */,
-				6CA132FD2C198C4F0040C32F /* RMLocationTableViewCellViewModel.swift */,
-				6C78094C2C257BDB004BCFB1 /* LocationDetails */,
-			);
-			path = Location;
-			sourceTree = "<group>";
-		};
-		6C78094B2C257BB6004BCFB1 /* Episode */ = {
-			isa = PBXGroup;
-			children = (
-				6C6B49622C15A821006FE1B2 /* RMEpisodeListViewViewModel.swift */,
-				6C99FA032C142EFF0077198F /* RMEpisodeCollectionViewCellViewModel.swift */,
-				6C6642392C16D52300BDD264 /* EpisodeDetails */,
-			);
-			path = Episode;
-			sourceTree = "<group>";
-		};
 		6C78094C2C257BDB004BCFB1 /* LocationDetails */ = {
 			isa = PBXGroup;
 			children = (
+				6C65ECBC2C3FD63B009FE3A0 /* RMLocationDetailsViewViewModelProtocol.swift */,
 				6CA133042C19C2300040C32F /* RMLocationDetailsViewViewModel.swift */,
 			);
 			path = LocationDetails;
 			sourceTree = "<group>";
 		};
-		6C78094D2C257C05004BCFB1 /* Other */ = {
-			isa = PBXGroup;
-			children = (
-				6C95DE372C1EBF2C00BC0FB6 /* RMTableLoadingFooterView.swift */,
-				6C7A21F82C11A701001E4C81 /* RMFooterLoadingCollectionReusableView.swift */,
-			);
-			path = Other;
-			sourceTree = "<group>";
-		};
-		6C7FA1F42C0F6E250022E66F /* DataTypes */ = {
-			isa = PBXGroup;
-			children = (
-				6CAA56E72C0DC75B00BCEB29 /* RMCharacter.swift */,
-				6CB6CB002C0F08770079ADE1 /* RMCharacterStatus.swift */,
-				6CB6CB022C0F08E10079ADE1 /* RMCharacterGender.swift */,
-				6CAA56E92C0DC76500BCEB29 /* RMLocation.swift */,
-				6CB6CAFA2C0F06840079ADE1 /* RMOriginLocation.swift */,
-				6CB6CAFC2C0F07810079ADE1 /* RMSingleLocation.swift */,
-				6CAA56E52C0DC74B00BCEB29 /* RMEpisode.swift */,
-			);
-			path = DataTypes;
-			sourceTree = "<group>";
-		};
 		6C7FA1F52C0F6E2F0022E66F /* APIResponseTypes */ = {
 			isa = PBXGroup;
 			children = (
+				6CF8AF432C439E37002A7638 /* RMPagedResponseProtocol.swift */,
 				6C2A546A2C42A71E000DE01A /* RMResponseInfo.swift */,
 				6C7F49932C102D640079CE8E /* RMGetAllCharactersResponse.swift */,
 				6C7F498F2C102D430079CE8E /* RMGetAllLocationsResponse.swift */,
@@ -569,128 +334,39 @@
 			path = APIResponseTypes;
 			sourceTree = "<group>";
 		};
-		6C82542D2C1AC1910017C887 /* Search */ = {
-			isa = PBXGroup;
-			children = (
-				6C82542E2C1AC1AC0017C887 /* RMSearchView.swift */,
-				6C8254372C1AC5BC0017C887 /* RMSearchInputView.swift */,
-				6CAECE0A2C1D862A00D62BCA /* RMSearchResultsView.swift */,
-				6C8254322C1AC54F0017C887 /* RMNoSearchResultsView.swift */,
-			);
-			path = Search;
-			sourceTree = "<group>";
-		};
-		6C8254342C1AC55F0017C887 /* Search */ = {
-			isa = PBXGroup;
-			children = (
-				6C8254302C1AC2E80017C887 /* RMSearchViewViewModel.swift */,
-				6C8254392C1AC5CF0017C887 /* RMSearchInputViewViewModel.swift */,
-				6CAECE082C1D5F3600D62BCA /* RMSearchResultsViewViewModel.swift */,
-				6C8254352C1AC57A0017C887 /* RMNoSearchResultsViewViewModel.swift */,
-			);
-			path = Search;
-			sourceTree = "<group>";
-		};
-		6C82543D2C1B0E390017C887 /* Search */ = {
-			isa = PBXGroup;
-			children = (
-				6C6B49642C15DC2C006FE1B2 /* RMSearchViewController.swift */,
-				6C82543B2C1B0A0C0017C887 /* RMSearchOptionPickerViewController.swift */,
-				6C899BF22C4155F8002E40E0 /* RMSearchResultsHandler.swift */,
-			);
-			path = Search;
-			sourceTree = "<group>";
-		};
-		6C84003B2C1840D70049EE9E /* Settings */ = {
-			isa = PBXGroup;
-			children = (
-				6C84003C2C18410A0049EE9E /* RMSettingsView.swift */,
-			);
-			path = Settings;
-			sourceTree = "<group>";
-		};
-		6C855ED82C39672400F28575 /* CharacterDetails */ = {
-			isa = PBXGroup;
-			children = (
-				6C855ED92C39673900F28575 /* RMCharacterDetailsViewViewModelProtocol.swift */,
-				6C855EDF2C39731100F28575 /* RMCharacterPhotoCollectionViewCellViewModelProtocol.swift */,
-				6C855EDD2C3972BB00F28575 /* RMCharacterInfoCollectionViewCellViewModelProtocol.swift */,
-			);
-			path = CharacterDetails;
-			sourceTree = "<group>";
-		};
-		6C899BE22C411672002E40E0 /* Search */ = {
-			isa = PBXGroup;
-			children = (
-				6C2A54592C427314000DE01A /* RMSearchViewViewModelProtocol.swift */,
-				6C899BE62C411E51002E40E0 /* RMSearchInputViewViewModelProtocol.swift */,
-				6C2A545B2C4295B8000DE01A /* RMSearchResultsViewViewModelProtocol.swift */,
-			);
-			path = Search;
-			sourceTree = "<group>";
-		};
-		6C899BE32C41167F002E40E0 /* Search */ = {
-			isa = PBXGroup;
-			children = (
-				6C899BEE2C41475B002E40E0 /* RMSearchViewProtocol.swift */,
-				6C899BEA2C4126F8002E40E0 /* RMSearchInputViewProtocol.swift */,
-				6C899BF02C41559D002E40E0 /* RMSearchResultsViewProtocol.swift */,
-			);
-			path = Search;
-			sourceTree = "<group>";
-		};
 		6C99F9F62C142DDC0077198F /* CharacterDetails */ = {
 			isa = PBXGroup;
 			children = (
+				6CEA20462C3AF87D004E3059 /* RMCharacterDetailsViewProtocol.swift */,
 				6C7A21F42C119CD8001E4C81 /* RMCharacterDetailsView.swift */,
+				6C7A21F22C119C22001E4C81 /* RMCharacterDetailsViewController.swift */,
 				6C99F9F82C142E380077198F /* RMCharacterPhotoCollectionViewCell.swift */,
 				6C99F9FA2C142E4A0077198F /* RMCharacterInfoCollectionViewCell.swift */,
+				6CEA20492C3B0665004E3059 /* RMCharacterDetailsCollectionHandler.swift.swift */,
 			);
 			path = CharacterDetails;
-			sourceTree = "<group>";
-		};
-		6C99F9F72C142DFD0077198F /* Character */ = {
-			isa = PBXGroup;
-			children = (
-				6C7F49972C1069520079CE8E /* RMCharacterListView.swift */,
-				6C7F499B2C10B7FD0079CE8E /* RMCharacterCollectionViewCell.swift */,
-				6C99F9F62C142DDC0077198F /* CharacterDetails */,
-			);
-			path = Character;
 			sourceTree = "<group>";
 		};
 		6C99F9FE2C142E910077198F /* CharacterDetails */ = {
 			isa = PBXGroup;
 			children = (
+				6C855ED92C39673900F28575 /* RMCharacterDetailsViewViewModelProtocol.swift */,
 				6C7A21F62C119D05001E4C81 /* RMCharacterDetailsViewViewModel.swift */,
+				6C855EDF2C39731100F28575 /* RMCharacterPhotoCollectionViewCellViewModelProtocol.swift */,
 				6C99F9FF2C142EE60077198F /* RMCharacterPhotoCollectionViewCellViewModel.swift */,
+				6C855EDD2C3972BB00F28575 /* RMCharacterInfoCollectionViewCellViewModelProtocol.swift */,
 				6C99FA012C142EF20077198F /* RMCharacterInfoCollectionViewCellViewModel.swift */,
 			);
 			path = CharacterDetails;
 			sourceTree = "<group>";
 		};
-		6C9F72CC2C3000460093DFD6 /* Other */ = {
-			isa = PBXGroup;
-			children = (
-				6C9F72CD2C3000590093DFD6 /* RMShareItem.swift */,
-			);
-			path = Other;
-			sourceTree = "<group>";
-		};
-		6CA132F52C1975630040C32F /* Location */ = {
-			isa = PBXGroup;
-			children = (
-				6CA132F62C1975870040C32F /* RMLocationView.swift */,
-				6CA132FA2C198B490040C32F /* RMLocationTableViewCell.swift */,
-				6CA133012C19C0570040C32F /* LocationDetails */,
-			);
-			path = Location;
-			sourceTree = "<group>";
-		};
 		6CA133012C19C0570040C32F /* LocationDetails */ = {
 			isa = PBXGroup;
 			children = (
+				6C65ECC02C3FF379009FE3A0 /* RMLocationDetailsViewProtocol.swift */,
 				6CA133022C19C0800040C32F /* RMLocationDetailsView.swift */,
+				6CA132FF2C19A5D10040C32F /* RMLocationDetailsViewController.swift */,
+				6C65ECC52C3FF58D009FE3A0 /* RMLocationDetailsCollectionHandler.swift */,
 			);
 			path = LocationDetails;
 			sourceTree = "<group>";
@@ -714,14 +390,11 @@
 		6CAA56C72C0DC00A00BCEB29 /* RickAndMorty */ = {
 			isa = PBXGroup;
 			children = (
-				6C6637202C369A17007A2640 /* Protocols */,
-				6C4A53E62C46500400E47829 /* Coordinator */,
-				6CAA56E12C0DC56200BCEB29 /* Managers */,
+				6CD8428E2C5B909800451120 /* App */,
+				6C4A53E32C464F9B00E47829 /* Coordinator */,
 				6CAA56E02C0DC55900BCEB29 /* APIClient */,
-				6CAA56DE2C0DC51800BCEB29 /* Models */,
-				6CAA56DD2C0DC50E00BCEB29 /* Views */,
-				6CAA56DC2C0DC50000BCEB29 /* Controllers */,
-				6CAA56DF2C0DC51B00BCEB29 /* ViewModels */,
+				6CAA56E12C0DC56200BCEB29 /* Managers */,
+				6CD842732C5B803200451120 /* Scenes */,
 				6CAA56E22C0DC56A00BCEB29 /* Resources */,
 				6CE13C8F2C37D0AD00102E46 /* Helpers */,
 				6CAA56D62C0DC00B00BCEB29 /* Info.plist */,
@@ -729,59 +402,15 @@
 			path = RickAndMorty;
 			sourceTree = "<group>";
 		};
-		6CAA56DC2C0DC50000BCEB29 /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				6CAA56CC2C0DC00A00BCEB29 /* RMTabViewController.swift */,
-				6C82543D2C1B0E390017C887 /* Search */,
-				6CAA56EB2C0DC88200BCEB29 /* Core */,
-			);
-			path = Controllers;
-			sourceTree = "<group>";
-		};
-		6CAA56DD2C0DC50E00BCEB29 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				6C82542D2C1AC1910017C887 /* Search */,
-				6C99F9F72C142DFD0077198F /* Character */,
-				6CA132F52C1975630040C32F /* Location */,
-				6C6B495F2C15A3BE006FE1B2 /* Episode */,
-				6C84003B2C1840D70049EE9E /* Settings */,
-				6C78094D2C257C05004BCFB1 /* Other */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		6CAA56DE2C0DC51800BCEB29 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				6C7FA1F52C0F6E2F0022E66F /* APIResponseTypes */,
-				6C7FA1F42C0F6E250022E66F /* DataTypes */,
-				6C9F72CC2C3000460093DFD6 /* Other */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		6CAA56DF2C0DC51B00BCEB29 /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-				6C8254342C1AC55F0017C887 /* Search */,
-				6C7809492C257B9A004BCFB1 /* Character */,
-				6C78094A2C257BA1004BCFB1 /* Location */,
-				6C78094B2C257BB6004BCFB1 /* Episode */,
-				6C497EEF2C17428400775F3F /* Settings */,
-				6CEA203E2C3A8F42004E3059 /* Other */,
-			);
-			path = ViewModels;
-			sourceTree = "<group>";
-		};
 		6CAA56E02C0DC55900BCEB29 /* APIClient */ = {
 			isa = PBXGroup;
 			children = (
+				6CE13C952C37EA2600102E46 /* RMServiceProtocol.swift */,
 				6CAA56F72C0DE62F00BCEB29 /* RMService.swift */,
 				6CAA56F42C0DE62000BCEB29 /* RMRequest.swift */,
 				6CAA56F92C0DEB5700BCEB29 /* RMEndpoint.swift */,
 				6CE13C992C384C2000102E46 /* RMServiceError.swift */,
+				6C7FA1F52C0F6E2F0022E66F /* APIResponseTypes */,
 			);
 			path = APIClient;
 			sourceTree = "<group>";
@@ -789,7 +418,9 @@
 		6CAA56E12C0DC56200BCEB29 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				6CE13C8D2C37C83A00102E46 /* RMImageLoaderProtocol.swift */,
 				6CA524172C12D8E500B6909F /* RMImageLoader.swift */,
+				6CE13C972C37EB3E00102E46 /* RMAPICacheManagerProtocol.swift */,
 				6C6B49592C157776006FE1B2 /* RMAPICacheManager.swift */,
 				6C595D0F2C2EB10000FD08E4 /* RMThemeManager.swift */,
 			);
@@ -801,59 +432,290 @@
 			children = (
 				6CAA56D12C0DC00B00BCEB29 /* Assets.xcassets */,
 				6CAA56D32C0DC00B00BCEB29 /* LaunchScreen.storyboard */,
-				6CAA56C82C0DC00A00BCEB29 /* AppDelegate.swift */,
-				6CAA56CA2C0DC00A00BCEB29 /* SceneDelegate.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		6CAA56EB2C0DC88200BCEB29 /* Core */ = {
+		6CD842732C5B803200451120 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
-				6CE13C8B2C37C55600102E46 /* Character */,
-				6C65ECC22C3FF506009FE3A0 /* Location */,
-				6CD1541D2C3D96D300278BEB /* Episode */,
-				6C65ECC42C3FF51E009FE3A0 /* Settings */,
+				6CD8427B2C5B80A400451120 /* Search */,
+				6CD8427A2C5B80A000451120 /* Character */,
+				6CD842792C5B809C00451120 /* Location */,
+				6CD842782C5B809900451120 /* Episode */,
+				6CD842772C5B809400451120 /* Settings */,
+				6CD842762C5B808F00451120 /* Other */,
 			);
-			path = Core;
+			path = Scenes;
 			sourceTree = "<group>";
 		};
-		6CD1541D2C3D96D300278BEB /* Episode */ = {
+		6CD842762C5B808F00451120 /* Other */ = {
 			isa = PBXGroup;
 			children = (
-				6CAA56F02C0DC8C700BCEB29 /* RMEpisodeViewController.swift */,
-				6C14DAB62C3E6D4E009CBC26 /* RMEpisodeCollectionHandler.swift */,
-				6CD1541E2C3D96DF00278BEB /* EpisodeDetails */,
+				6CD8428D2C5B812E00451120 /* Model */,
+				6CD8428C2C5B812D00451120 /* View */,
+				6CD8428B2C5B812900451120 /* ViewModel */,
+			);
+			path = Other;
+			sourceTree = "<group>";
+		};
+		6CD842772C5B809400451120 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				6CD8427E2C5B80BF00451120 /* Model */,
+				6CD8427D2C5B80BD00451120 /* View */,
+				6CD8427C2C5B80B100451120 /* ViewModel */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		6CD842782C5B809900451120 /* Episode */ = {
+			isa = PBXGroup;
+			children = (
+				6CD842812C5B80CD00451120 /* Model */,
+				6CD842802C5B80CA00451120 /* View */,
+				6CD8427F2C5B80C500451120 /* ViewModel */,
 			);
 			path = Episode;
 			sourceTree = "<group>";
 		};
-		6CD1541E2C3D96DF00278BEB /* EpisodeDetails */ = {
+		6CD842792C5B809C00451120 /* Location */ = {
 			isa = PBXGroup;
 			children = (
-				6C99FA052C148B1B0077198F /* RMEpisodeDetailsViewController.swift */,
-				6C14DAB82C3E7EC9009CBC26 /* RMEpisodeDetailsCollectionHandler.swift */,
+				6CD842842C5B80D800451120 /* Model */,
+				6CD842832C5B80D500451120 /* View */,
+				6CD842822C5B80D100451120 /* ViewModel */,
 			);
-			path = EpisodeDetails;
+			path = Location;
 			sourceTree = "<group>";
 		};
-		6CE13C8B2C37C55600102E46 /* Character */ = {
+		6CD8427A2C5B80A000451120 /* Character */ = {
 			isa = PBXGroup;
 			children = (
-				6CAA56EC2C0DC8AD00BCEB29 /* RMCharacterViewController.swift */,
-				6C6637252C369C95007A2640 /* RMCharacterCollectionHandler.swift */,
-				6CEA20482C3AFB1E004E3059 /* CharacterDetails */,
+				6CD842872C5B80E300451120 /* Model */,
+				6CD842862C5B80E100451120 /* View */,
+				6CD842852C5B80DD00451120 /* ViewModel */,
 			);
 			path = Character;
 			sourceTree = "<group>";
 		};
-		6CE13C8C2C37C81200102E46 /* Managers */ = {
+		6CD8427B2C5B80A400451120 /* Search */ = {
 			isa = PBXGroup;
 			children = (
-				6CE13C8D2C37C83A00102E46 /* RMImageLoaderProtocol.swift */,
-				6CE13C972C37EB3E00102E46 /* RMAPICacheManagerProtocol.swift */,
+				6CD8428A2C5B80ED00451120 /* Model */,
+				6CD842892C5B80EB00451120 /* View */,
+				6CD842882C5B80E700451120 /* ViewModel */,
 			);
-			path = Managers;
+			path = Search;
+			sourceTree = "<group>";
+		};
+		6CD8427C2C5B80B100451120 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				6C497EF02C17429100775F3F /* RMSettingsViewViewModel.swift */,
+				6C497EF22C1742C800775F3F /* RMSettingsCellViewViewModel.swift */,
+				6C497EF42C17435E00775F3F /* RMSettingsOption.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		6CD8427D2C5B80BD00451120 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				6C84003C2C18410A0049EE9E /* RMSettingsView.swift */,
+				6CAA56F22C0DC8D300BCEB29 /* RMSettingsViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		6CD8427E2C5B80BF00451120 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		6CD8427F2C5B80C500451120 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				6C14DAB42C3E6C9B009CBC26 /* RMEpisodeListViewViewModelProtocol.swift */,
+				6C6B49622C15A821006FE1B2 /* RMEpisodeListViewViewModel.swift */,
+				6C855EDB2C39709500F28575 /* RMEpisodeCollectionViewCellViewModelProtocol.swift */,
+				6C99FA032C142EFF0077198F /* RMEpisodeCollectionViewCellViewModel.swift */,
+				6C6642392C16D52300BDD264 /* EpisodeDetails */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		6CD842802C5B80CA00451120 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				6C14DABE2C3EAEAD009CBC26 /* RMEpisodeListViewProtocol.swift */,
+				6C6B49602C15A3CE006FE1B2 /* RMEpisodeListView.swift */,
+				6CAA56F02C0DC8C700BCEB29 /* RMEpisodeViewController.swift */,
+				6C99F9FC2C142E630077198F /* RMEpisodeCollectionViewCell.swift */,
+				6C14DAB62C3E6D4E009CBC26 /* RMEpisodeCollectionHandler.swift */,
+				6C6642362C16D44400BDD264 /* EpisodeDetails */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		6CD842812C5B80CD00451120 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				6CEA20412C3AB0F9004E3059 /* RMEpisodeProtocol.swift */,
+				6CAA56E52C0DC74B00BCEB29 /* RMEpisode.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		6CD842822C5B80D100451120 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				6C65ECC92C4009FB009FE3A0 /* RMLocationViewViewModelProtocol.swift */,
+				6CA132F82C1979E90040C32F /* RMLocationViewViewModel.swift */,
+				6C65ECC72C4004AB009FE3A0 /* RMLocationTableViewCellViewModelProtocol.swift */,
+				6CA132FD2C198C4F0040C32F /* RMLocationTableViewCellViewModel.swift */,
+				6C78094C2C257BDB004BCFB1 /* LocationDetails */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		6CD842832C5B80D500451120 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				6C65ECCB2C40208B009FE3A0 /* RMLocationViewProtocol.swift */,
+				6CA132F62C1975870040C32F /* RMLocationView.swift */,
+				6CAA56EE2C0DC8BD00BCEB29 /* RMLocationViewController.swift */,
+				6CA132FA2C198B490040C32F /* RMLocationTableViewCell.swift */,
+				6C65ECCD2C4022DA009FE3A0 /* RMLocationTableViewHandler.swift */,
+				6CA133012C19C0570040C32F /* LocationDetails */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		6CD842842C5B80D800451120 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				6C65ECB82C3FD4B2009FE3A0 /* RMLocationProtocol.swift */,
+				6CAA56E92C0DC76500BCEB29 /* RMLocation.swift */,
+				6CB6CAFA2C0F06840079ADE1 /* RMOriginLocation.swift */,
+				6CB6CAFC2C0F07810079ADE1 /* RMSingleLocation.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		6CD842852C5B80DD00451120 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				6C66371E2C3698C6007A2640 /* RMCharacterListViewViewModelProtocol.swift */,
+				6C7F49952C1068150079CE8E /* RMCharacterListViewViewModel.swift */,
+				6C855EE12C3998EC00F28575 /* RMCharacterCollectionViewCellViewModelProtocol.swift */,
+				6C7F499D2C10B9D40079CE8E /* RMCharacterCollectionViewCellViewModel.swift */,
+				6C99F9FE2C142E910077198F /* CharacterDetails */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		6CD842862C5B80E100451120 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				6C6637282C36C5F4007A2640 /* RMCharacterListViewProtocol.swift */,
+				6C7F49972C1069520079CE8E /* RMCharacterListView.swift */,
+				6CAA56EC2C0DC8AD00BCEB29 /* RMCharacterViewController.swift */,
+				6C7F499B2C10B7FD0079CE8E /* RMCharacterCollectionViewCell.swift */,
+				6C6637252C369C95007A2640 /* RMCharacterCollectionHandler.swift */,
+				6C99F9F62C142DDC0077198F /* CharacterDetails */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		6CD842872C5B80E300451120 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				6CEA20432C3AB654004E3059 /* RMCharacterProtocol.swift */,
+				6CAA56E72C0DC75B00BCEB29 /* RMCharacter.swift */,
+				6CB6CB002C0F08770079ADE1 /* RMCharacterStatus.swift */,
+				6CB6CB022C0F08E10079ADE1 /* RMCharacterGender.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		6CD842882C5B80E700451120 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				6C8254352C1AC57A0017C887 /* RMNoSearchResultsViewViewModel.swift */,
+				6C2A54592C427314000DE01A /* RMSearchViewViewModelProtocol.swift */,
+				6C8254302C1AC2E80017C887 /* RMSearchViewViewModel.swift */,
+				6C899BE62C411E51002E40E0 /* RMSearchInputViewViewModelProtocol.swift */,
+				6C8254392C1AC5CF0017C887 /* RMSearchInputViewViewModel.swift */,
+				6C2A545B2C4295B8000DE01A /* RMSearchResultsViewViewModelProtocol.swift */,
+				6CAECE082C1D5F3600D62BCA /* RMSearchResultsViewViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		6CD842892C5B80EB00451120 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				6C899BEE2C41475B002E40E0 /* RMSearchViewProtocol.swift */,
+				6C82542E2C1AC1AC0017C887 /* RMSearchView.swift */,
+				6C6B49642C15DC2C006FE1B2 /* RMSearchViewController.swift */,
+				6C82543B2C1B0A0C0017C887 /* RMSearchOptionPickerViewController.swift */,
+				6C899BEA2C4126F8002E40E0 /* RMSearchInputViewProtocol.swift */,
+				6C8254372C1AC5BC0017C887 /* RMSearchInputView.swift */,
+				6C899BF02C41559D002E40E0 /* RMSearchResultsViewProtocol.swift */,
+				6CAECE0A2C1D862A00D62BCA /* RMSearchResultsView.swift */,
+				6C899BF22C4155F8002E40E0 /* RMSearchResultsHandler.swift */,
+				6C8254322C1AC54F0017C887 /* RMNoSearchResultsView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		6CD8428A2C5B80ED00451120 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		6CD8428B2C5B812900451120 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				6CEA203F2C3A8FD1004E3059 /* RMSectionType.swift */,
+				6C899BE42C411DB1002E40E0 /* RMDynamicOption.swift */,
+				6C899BE82C411F94002E40E0 /* RMConfigType.swift */,
+				6C2A545D2C42962E000DE01A /* RMSearchResultsType.swift */,
+				6CBAB7772C4510A700B422C6 /* RMBorderColors.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		6CD8428C2C5B812D00451120 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				6CAA56CC2C0DC00A00BCEB29 /* RMTabViewController.swift */,
+				6C95DE372C1EBF2C00BC0FB6 /* RMTableLoadingFooterView.swift */,
+				6C7A21F82C11A701001E4C81 /* RMFooterLoadingCollectionReusableView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		6CD8428D2C5B812E00451120 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				6C9F72CD2C3000590093DFD6 /* RMShareItem.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		6CD8428E2C5B909800451120 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				6CAA56C82C0DC00A00BCEB29 /* AppDelegate.swift */,
+				6CAA56CA2C0DC00A00BCEB29 /* SceneDelegate.swift */,
+			);
+			path = App;
 			sourceTree = "<group>";
 		};
 		6CE13C8F2C37D0AD00102E46 /* Helpers */ = {
@@ -865,51 +727,6 @@
 				6CE13C932C37E08F00102E46 /* RMURLParser.swift */,
 			);
 			path = Helpers;
-			sourceTree = "<group>";
-		};
-		6CE13C922C37DBFE00102E46 /* APIClient */ = {
-			isa = PBXGroup;
-			children = (
-				6CE13C952C37EA2600102E46 /* RMServiceProtocol.swift */,
-			);
-			path = APIClient;
-			sourceTree = "<group>";
-		};
-		6CEA203E2C3A8F42004E3059 /* Other */ = {
-			isa = PBXGroup;
-			children = (
-				6CEA203F2C3A8FD1004E3059 /* RMSectionType.swift */,
-				6C899BE42C411DB1002E40E0 /* RMDynamicOption.swift */,
-				6C899BE82C411F94002E40E0 /* RMConfigType.swift */,
-				6C2A545D2C42962E000DE01A /* RMSearchResultsType.swift */,
-				6CBAB7772C4510A700B422C6 /* RMBorderColors.swift */,
-			);
-			path = Other;
-			sourceTree = "<group>";
-		};
-		6CEA20452C3AF859004E3059 /* CharacterDetails */ = {
-			isa = PBXGroup;
-			children = (
-				6CEA20462C3AF87D004E3059 /* RMCharacterDetailsViewProtocol.swift */,
-			);
-			path = CharacterDetails;
-			sourceTree = "<group>";
-		};
-		6CEA20482C3AFB1E004E3059 /* CharacterDetails */ = {
-			isa = PBXGroup;
-			children = (
-				6C7A21F22C119C22001E4C81 /* RMCharacterDetailsViewController.swift */,
-				6CEA20492C3B0665004E3059 /* RMCharacterDetailsCollectionHandler.swift.swift */,
-			);
-			path = CharacterDetails;
-			sourceTree = "<group>";
-		};
-		6CF8AF422C439DFA002A7638 /* APIResponseTypes */ = {
-			isa = PBXGroup;
-			children = (
-				6CF8AF432C439E37002A7638 /* RMPagedResponseProtocol.swift */,
-			);
-			path = APIResponseTypes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1066,7 +883,7 @@
 				6C99FA022C142EF20077198F /* RMCharacterInfoCollectionViewCellViewModel.swift in Sources */,
 				6CE13C942C37E08F00102E46 /* RMURLParser.swift in Sources */,
 				6C855EE22C3998EC00F28575 /* RMCharacterCollectionViewCellViewModelProtocol.swift in Sources */,
-				6C4A53E52C464FB000E47829 /* RMCoordinator.swift in Sources */,
+				6C4A53E52C464FB000E47829 /* RMCoordinatorProtocol.swift in Sources */,
 				6C6B49652C15DC2C006FE1B2 /* RMSearchViewController.swift in Sources */,
 				6C2A545E2C42962E000DE01A /* RMSearchResultsType.swift in Sources */,
 				6C6637292C36C5F4007A2640 /* RMCharacterListViewProtocol.swift in Sources */,
