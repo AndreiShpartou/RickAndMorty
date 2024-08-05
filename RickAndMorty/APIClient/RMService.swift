@@ -25,7 +25,6 @@ final class RMService: RMServiceProtocol {
     ///   - completion: Callback with data or error
     func execute<T: Codable>(
         _ request: RMRequest,
-        expecting type: T.Type,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
         if let cachedData = cacheManager.cachedResponse(
@@ -33,7 +32,7 @@ final class RMService: RMServiceProtocol {
             url: request.url
         ) {
             do {
-                let result = try JSONDecoder().decode(type.self, from: cachedData)
+                let result = try JSONDecoder().decode(T.self, from: cachedData)
                 completion(.success(result))
             } catch {
                 completion(.failure(error))
@@ -54,7 +53,7 @@ final class RMService: RMServiceProtocol {
 
             // Decode response
             do {
-                let result = try JSONDecoder().decode(type.self, from: data)
+                let result = try JSONDecoder().decode(T.self, from: data)
                 self?.cacheManager.setCache(
                     for: request.endpoint,
                     url: request.url,
