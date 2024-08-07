@@ -60,9 +60,8 @@ final class RMCharacterDetailsViewViewModel: RMCharacterDetailsViewViewModelProt
         requests.forEach { request in
             group.enter()
             service.execute(
-                request,
-                expecting: RMEpisode.self
-            ) { result in
+                request
+            ) { (result: Result<RMEpisode, Error>) in
                 defer {
                     group.leave()
                 }

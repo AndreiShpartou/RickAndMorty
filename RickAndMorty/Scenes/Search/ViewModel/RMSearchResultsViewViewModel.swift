@@ -74,7 +74,7 @@ final class RMSearchResultsViewViewModel: RMSearchResultsViewViewModelProtocol {
             return
         }
 
-        service.execute(request, expecting: expecting) { [weak self] result in
+        service.execute(request) { [weak self] (result: Result<T, Error>) in
             self?.processFetchedResults(result: result, completion: completion)
         }
     }

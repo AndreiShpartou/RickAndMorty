@@ -132,9 +132,8 @@ final class RMSearchViewViewModel: RMSearchViewViewModelProtocol {
     private func makeSearchAPICall<T: Codable>(_ type: T.Type, request: RMRequest) {
         processSearchHandler?()
         service.execute(
-            request,
-            expecting: type
-        ) { [weak self] result in
+            request
+        ) { [weak self] (result: Result<T, Error>) in
                 // Notify view of results, no results, or error
                 switch result {
                 case .success(let model):

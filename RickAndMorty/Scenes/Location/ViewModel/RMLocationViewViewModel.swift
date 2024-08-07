@@ -57,9 +57,8 @@ final class RMLocationViewViewModel: RMLocationViewViewModelProtocol {
     // MARK: - Fetching locations
     func fetchLocations() {
         service.execute(
-            .listLocationsRequests,
-            expecting: RMGetAllLocationsResponse.self
-        ) { [weak self] result in
+            .listLocationsRequests
+        ) { [weak self] (result: Result<RMGetAllLocationsResponse, Error>) in
             switch result {
             case .success(let responseModel):
                 self?.handleInitialFetchSuccess(responseModel)
@@ -83,8 +82,7 @@ final class RMLocationViewViewModel: RMLocationViewViewModelProtocol {
 
         service.execute(
             request,
-            expecting: RMGetAllLocationsResponse.self,
-            completion: { [weak self] result in
+            completion: { [weak self] (result: Result<RMGetAllLocationsResponse, Error>) in
                 switch result {
                 case .success(let responseModel):
                     self?.handleAdditionalFetchSuccess(responseModel)
