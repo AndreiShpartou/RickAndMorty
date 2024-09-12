@@ -58,9 +58,8 @@ final class RMEpisodeListViewViewModel: RMEpisodeListViewViewModelProtocol {
     // Fetch initial set of episodes(20)
     func fetchEpisodes() {
         RMService.shared.execute(
-            .listEpisodesRequests,
-            expecting: RMGetAllEpisodesResponse.self
-        ) { [weak self] result in
+            .listEpisodesRequests
+        ) { [weak self] (result: Result<RMGetAllEpisodesResponse, Error>) in
             switch result {
             case .success(let responseModel):
                 self?.handleInitialFetchSuccess(responseModel)
@@ -84,8 +83,7 @@ final class RMEpisodeListViewViewModel: RMEpisodeListViewViewModelProtocol {
 
         RMService.shared.execute(
             request,
-            expecting: RMGetAllEpisodesResponse.self,
-            completion: { [weak self] result in
+            completion: { [weak self] (result: Result<RMGetAllEpisodesResponse, Error>) in
                 switch result {
                 case .success(let responseModel):
                     self?.handleAdditionalFetchSuccess(responseModel)

@@ -59,9 +59,8 @@ final class RMLocationDetailsViewViewModel: RMLocationDetailsViewViewModelProtoc
         requests.forEach { request in
             group.enter()
             service.execute(
-                request,
-                expecting: RMCharacter.self
-            ) { result in
+                request
+            ) { (result: Result<RMCharacter, Error>) in
                     defer {
                         group.leave()
                     }

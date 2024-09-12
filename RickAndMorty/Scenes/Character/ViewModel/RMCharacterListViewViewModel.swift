@@ -56,9 +56,8 @@ final class RMCharacterListViewViewModel: RMCharacterListViewViewModelProtocol {
     // Fetch initial set of characters(20)
     func fetchCharacters() {
         service.execute(
-            .listCharactersRequests,
-            expecting: RMGetAllCharactersResponse.self
-        ) { [weak self] result in
+            .listCharactersRequests
+        ) { [weak self] (result: Result<RMGetAllCharactersResponse, Error>) in
             switch result {
             case .success(let responseModel):
                 self?.handleInitialFetch(responseModel)
@@ -82,8 +81,7 @@ final class RMCharacterListViewViewModel: RMCharacterListViewViewModelProtocol {
 
         service.execute(
             request,
-            expecting: RMGetAllCharactersResponse.self,
-            completion: { [weak self] result in
+            completion: { [weak self] (result: Result<RMGetAllCharactersResponse, Error>) in
                 switch result {
                 case .success(let responseModel):
                     self?.appendNewCharacters(responseModel)
