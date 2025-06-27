@@ -44,7 +44,7 @@ Welcome to the Rick and Morty App! This application provides an interface to exp
 
 3. Open the project in Xcode:
     ```sh
-    open RickAndMorty.xcworkspace
+    open RickAndMorty.xcodeproj
     ```
 
 ## Usage
